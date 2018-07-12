@@ -1,0 +1,440 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Linking to Javascript/CSS libraries -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="{% static "libraries/css/simple-sidebar.css" %}" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "libraries/hopscotch/css/hopscotch.css" %}"></link>
+    <script type="text/javascript" src="{% static "libraries/hopscotch/js/hopscotch.js" %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="{% static "lib/d3.v3.min.js" %}"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/css/bootstrap-slider.min.css">
+    <script type="text/javascript" src="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/bootstrap-slider.min.js"></script>
+
+    <!-- Linking to CSS stylesheet -->
+    <link rel="stylesheet" type="text/css" href="{% static "code/inteface.css" %}">
+
+    <title>Budgeting Tool</title>
+
+</head>
+
+<body onload="generate_epsilon_table(); ">
+<body>
+
+<div id="setdataset" style="padding:10px 10px 10px 50px;background:#f2f2e6;">
+<table>
+    <tr>
+        <td title="This demonstration is linked to a test instance of Dataverse at https://beta.dataverse.org &#13;  You can select one of the example datasets by name, or any other dataset (including your own) by entering the file ID number below." align="right">
+            Select Dataverse dataset for demonstration:
+        </td>
+        <td title="This demonstration is linked to a test instance of Dataverse at https://beta.dataverse.org &#13;  You can select one of the example datasets by name, or any other dataset (including your own) by entering the file ID number below." style="padding:0 0 0 8px;">
+            <select name="dataselect" id="dataselect" onchange="changedataset(this.value)">
+            <option value="0">- Select -</option>
+            <option value="20" selected="selected" >Census PUMS</option>
+            <option value="5126">Science Teachers and Climate Change</option>
+            <option value="5127">Voter Validation CCES</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td title="You can select any dataset on the test Dataverse instance at https://beta.dataverse.org by entering its unique file ID number, or use one of the datasets provided in the selection box above." align="right">
+            or enter Dataverse fileid number:
+        </td>
+        <td title="You can select any dataset on the test Dataverse instance at https://beta.dataverse.org by entering its unique file ID number, or use one of the datasets provided in the selection box above." style="padding:0 0 0 8px;">
+            <input type="text" name="altfileid" onchange="overridedataset(this.value)" maxlength="5" style="width: 50px;" >
+            <button type="button" class="manualinfo" data-load-url="psiIntroduction.html" data-toggle="modal" data-target="#myModal" data-id="data"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: 12px;"></span></button>
+        </td>
+    </tr>
+    <button title="Show a video describing the features and use of this budgeting tool." onclick="location.href='http://beta.dataverse.org/custom/DifferentialPrivacyPrototype/video/BudgetInterfaceDemo.mp4';" style="color:#108db7;float:right; margin-right: 10%; margin-top:0.5em; padding-right:0.5em; padding-top:0.5em;">
+        <span class="glyphicon glyphicon-play-circle" style="color:#108db7; font-size: 22px; vertical-align: middle; margin-bottom: 0.125em; margin-top: -0.125em;" aria-hidden="true"></span>
+        Watch a Video Overview of this Tool</button>
+</table>
+</div>
+
+
+
+
+    <div class="flex-container">
+        <header>
+            <table style="width:100%">
+              <tr>
+                <td style="width:5%">
+                </td>
+                <td style='width:60%'>
+                    <div title="This is the name, in Dataverse, of the selected example dataset." id="datasetName" style="text-align:left;">
+                        <h2 style="display:inline;">Dataset Name</h2>
+                    </div>
+                    <div id="datasetSmallName" style="text-align:left;">
+                    </div>
+                    <div id="datasetHelp" style="text-align:left;">
+                    </div>
+                </td>
+
+                <td style=''>
+                                <h4 title="These are adjustable parameters that define the level of privacy protection guaranteed by the differentially private released statistics." style="display: inline-block; padding-right:5px;"> Privacy Loss Parameters</h4>
+                                <button id="edit_button" style='color:#108db7;' onclick="edit_parameters_window()">Edit Parameters</button>
+                                <button type="button" class="manualinfo" data-load-url="psiIntroduction.html" data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
+
+
+                        <div id='display_parameters'>
+                        <table align="center">
+                          <tr>
+                            <td style="text-align:right; padding-right: 15px;">
+                              Epsilon (&epsilon;):
+                            </td>
+                            <td id="epsilonDisplay" style="text-align:left;">
+                              0.5000
+                            </td>
+                          </tr>
+                          <tr>
+                            <td style="text-align:right; padding-right: 15px;">
+                              Delta (&delta;):
+                            </td>
+                            <td id="deltaDisplay" style="text-align:left;">
+                              1&times;10<sup>-6</sup>
+                            </td>
+                          </tr>
+                        </table>
+                    </div>
+                </td>
+
+              </tr>
+            </table>
+
+
+
+                           <!--  <div title="This is the name, in Dataverse, of the selected example dataset." id="datasetName" style="text-align:center;">
+                        <h2 style="display:inline;">Dataset Name</h2>
+                    </div>
+
+                    <h4 title="These are adjustable parameters that define the level of privacy protection guaranteed by the differentially private released statistics.">
+                        Privacy Parameters
+                        <button type="button" class="manualinfo" data-load-url="psiIntroduction.html" data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:#ADD8E6;font-size: 12px;"></span></button>
+                    </h4> -->
+
+         </header>
+
+      <div style="height: 550px">
+        <!-- Variable Selection -->
+        <nav class="variable_sidebar variable_sidebar_compress">
+            <!-- Searchbar -->
+            <input id='live-search-box' style="display:none" type="text" class="live-search-box" placeholder="Search variable names">
+            <!-- Variable List -->
+            <ul id="variable_sidebar" class="live-search-list"></ul>
+            <button id="group_vars" class="group-vars-button" onclick="group_vars_window()">Multivariate Statistics</button>
+            <input id="new-transform-box" size=16 style="display:none" type="text" class="transformation-box" placeholder="Name <- Formula" onfocusout="newtransform(this)"> <button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='transformer'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
+        </nav>
+
+
+        <article class="main middle_column_compress">
+            <!-- Page Content: Bubbles -->
+            <div id="bubble_form" style=""></div>
+
+        </article>
+
+        <!-- Epsilon Sidebar Table -->
+        <nav id="epsilon_sidebar" class="epsilon_sidebar epsilon_sidebar_fixed">
+            <div id="epsilon_sidebar_top"></div>
+            <div id="epsilon_sidebar_bottom">
+            <div  id="slider_div" style="text-align:center; display:none;">
+                  <input style="width:90%;" id="re_slider" data-slider-tooltip="hide" data-slider-id="RES" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
+                  <br>
+                  <span id="re_label">Reserved Budget: <span id="re_value">0</span>%</span>
+                  <button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='reserve'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
+               </div>
+            </div>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="../images/dpr.png" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
+                </div>
+                <div class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--
+    <div class="modal fade" id="myModal3">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="../images/dpr.png" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
+                </div>
+                <div style="margin:15px;">
+                <div>
+                If you were an actual researcher depositing your own data, first we would ask you to affirm some characteristics of your data:
+                    <div style="border: 1px solid green; margin:15px; padding:20px;">
+                        <input type="checkbox" checked> Your dataset must be tabular with rows corresponding to subjects and columns corresponding to variables. </br>
+                        <input type="checkbox" checked> There should not be any missing values (empty cells in the table).</br>
+                        <input type="checkbox" checked> It is assumed that the total number of observations (rows) in the dataset is public information and can be released. This value is not treated in a privacy preserving manner.</br>
+                        <div style="text-align:center; padding-top: 10px;">
+                            <button type="button" class="btn btn-default">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                Then we would ask you to supply values of parameters measuring allowable privacy loss. Below is an example of what the editing parameters interface looks like.  You can't edit the parameters here, but you can once you enter the prototype:
+                    <div style="border: 1px solid green; margin:15px; padding-top:20px;padding-bottom:20px;">
+                        <table align="center" style=""><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input name="epsilon" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy." value=0.1 style="color: black;" type="text" placeholder="Epsilon" readonly></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;"><input name="delta" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value=0.000001 style="color: black;" type="text" placeholder="Delta" readonly> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray;" value="Use Exponential Notation"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input name="SS" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder="" readonly> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray;" value="Clear"></td></tr></table><div style="text-align:center; padding-top: 10px;"><button type="button" class="btn btn-default">Submit</button></div>
+                    </div>
+                </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+-->
+ <!-- JM Revised text below: -->
+    <div class="modal fade" id="myModal3">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="../images/dpr.png" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
+                </div>
+
+                <div style="margin:15px; overflow:auto; height:600px;">
+                <!-- blocked for UI/UX
+                <div>
+               Please affirm the following characteristics of your dataset:
+                    <div style="border: 1px solid green; margin:15px; padding:20px;">
+                        <input type="checkbox" checked> This dataset is tabular with rows corresponding to individuals and columns corresponding to variables (attributes). </br>
+                        <input type="checkbox" checked> There are no missing values in the data (empty cells in the table).</br>
+                        <input type="checkbox" checked> The total number of observations (rows) in the dataset is public information and can be released. This value is not treated in a privacy preserving manner.</br>
+                        <div style="text-align:center; padding-top: 10px;">
+                            <button type="button" class="btn btn-default">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+               -->
+                <div id="privacy-loss-params-info">
+                <h4>Privacy Loss Parameters</h4>
+               The level of privacy protection for individuals in the dataset is governed by two <q>privacy loss parameters</q>, &epsilon; and &delta;. You can think of &delta; as the probability of a blatant privacy violation. As such,  &delta; should be kept quite small. &epsilon; should be set to a small constant. Larger &epsilon; corresponds to less privacy and more accurate statistics. We do not recommend &epsilon; exceeding 1. Below is Harvard's list of varying levels of sensitivity for datasets and reasonable privacy loss parameters for each level. The recommendations below are just a guideline. See <a href="http://files.vpr.harvard.edu/files/vpr-documents/files/data_classification_table_abridged_7.23.13_0.pdf" target="_blank">Harvard's secure data classifications</a> for more information.
+               <p>
+                <ol>
+ 				    <li>Public information: It is not necessary to use differential privacy for public information.</li>
+  					<li>Information the disclosure of which would not cause material harm, but which the University has chosen to keep confidential: (&epsilon;=1, &delta;=10<sup>-5</sup>=0.00001)</li>
+                    <li>Information that could cause risk of material harm to individuals or the University if disclosed: (&epsilon;=.25, &delta;=10<sup>-6</sup>=0.000001)</li>
+                    <li>Information that would likely cause serious harm to individuals or the University if disclosed: (&epsilon;=.05, &delta;=10<sup>-7</sup>=0.0000001)</li>
+                	<li>Information that would cause severe harm to individuals or the University if disclosed: It is not recommended that the PSI tool be used with such severely sensitive data.</li>
+                </ol>
+               </p>
+
+               <h4>Secrecy of the Sample</h4>
+				<p>
+				If the data is a random and secret sample from a larger population of known size, then the accuracy of the released statistics can be boosted without changing the privacy guarantee.   Here, secret means that the choice of the people in the sample will not be revealed.
+				</p>
+				<p>
+				This boost requires an estimate of the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay to underestimate but could violate privacy if you overestimate.
+				</p>
+				<p>
+                Set the privacy loss parameters for your dataset below and if secrecy of the sample applies to your data, estimate the size of the population from which it was drawn:
+				</p>
+                </div>
+                    <div style="border: 1px solid green; margin:15px; padding-top:20px;padding-bottom:20px;">
+                        <table align="center" style=""><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input name="epsilon" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Epsilon" onchange="epsilon_check(this)"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;"><input name="delta" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Delta" onchange="delta_check(this)"> <!-- <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray;" value="Use Exponential Notation">--></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input name="SS" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder="" onchange="global_parameters_SS(this)"> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray;" value="Clear"></td></tr></table><div style="text-align:center; padding-top: 10px;"><a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick="update_ed()" class="btn btn-info" role="button">Submit</a></div>
+                    </div>
+                </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal4">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="../images/dpr.png" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
+                </div>
+                <div class="modal-body">
+                    <div>
+                    <h4>Variables</h4>
+
+                    <p>The variables in the dataset are listed below, along with a default data type that has been inferred from the dataset. If the data type for a variable is not correct, please select the appropraite option from the dropdown menu. It is possible to return to this window and make changes later when choosing variables for analysis, by clicking the button beside the variable type displayed.</p>
+                    </div>
+                    <div>
+                    <ul id="variable-modal"></ul>
+                    </div>
+                    <p class="text-center">
+                    <a href="#myModal6" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selecting variable types for multivariate statistics -->
+    <div class="modal fade" id="myModal5">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="../images/dpr.png" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
+                </div>
+                <div class="modal-body">
+                    <div>
+                    <h4>Variables</h4>
+
+                    <p>The variables in the dataset are listed below, along with a default data type that has been inferred from the dataset. If the data type for a variable is not correct, please select the appropraite option from the dropdown menu. It is possible to return to this window and make changes later when choosing variables for analysis, by clicking the button beside the variable type displayed.</p>
+                    </div>
+                    <div>
+                    <ul id="variable-modal"></ul>
+                    </div>
+                    <p class="text-center">
+                    <a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal6">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="../images/dpr.png" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
+                </div>
+                <div class="modal-body">
+                    <div>
+                    <h4>Data Ranges</h4>
+
+                    <p>Set the lower and upper bounds of the data for each of the variables in the dataset by entering the appropriate values in the text fields below.</p>
+                    <p>Clicking on a variable will select it. Setting the bounds for a selected variable will set the bounds for all other selected variables at the same time.</p>
+                    </div>
+                    <div>
+                    <ul></ul>
+                    </div>
+                    <p class="text-center">
+                    <a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a>
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal2">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">PSI (&Psi;): Editing Parameters</h3>
+                </div>
+                <div id="modal-body-edit-window" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="groupVarsModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h3 class="modal-title">Select Variables</h3>
+                </div>
+                <div id="modal-body-group-vars" class="modal-body">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="group_vars_window_closed()">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--Table and Submit Buttons in Footer -->
+
+    <footer>
+        <div>
+           <button title="This shows the full underlying table that is being constructed, containing all the metadata information, and budgeting of epsilon and accuracies." onclick='report();' style="color:gray;">Show Underlying Table</button>
+            <button id="submit_button" title="This button creates a differentially private release of the statistics presently requested, at their budgeted values of the privacy parameters." onclick='submit();' style="color:red;">Submit Statistics and Generate Differentially Private Release</button>
+
+            <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="psiIntroduction.html" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
+            <br>
+            PSI (&Psi;): a Private data Sharing Interface
+        </div>
+    </footer>
+
+
+    <script>
+        // open the modal window from an info button
+        $('#myModal').on('shown.bs.modal', function(event) {
+        // reset the scroll to top
+        $('#myModal .modal-body').scrollTop(0);
+        // get the section and loadurl using data
+        var button = $(event.relatedTarget);
+        var loadurl = button.data('load-url');
+        var section = button.data('id');
+
+
+        // load in the page content from separate document, calculate offset and scroll in the callback
+        $(this).find('.modal-body').load(loadurl, function(){
+        //scroll the container
+            if (typeof section !== 'undefined') {
+                var sectionOffset = $('#' + section).offset();
+                // get the top of the section
+                console.log(sectionOffset);
+                $('#myModal .modal-body').animate({
+                    scrollTop: sectionOffset.top -150
+                }, "fast");
+            };
+        });
+        });
+    </script>
+    <script type="text/javascript" src="interface.js"></script>
+    <script type="text/javascript">
+        console.log(UI);  // UI set from url in interface.js
+        // open the modal window on page load
+        $(window).load(function(){
+        $('#myModal').modal('show');
+        if(UI){
+            $('#myModal').find('.modal-body').load("psiOpen.html"); //JM for UI/UX
+        }else{
+           $('#myModal').find('.modal-body').load("psiOpenPrototype.html");
+            //$('#myModal').find('.modal-body').load("psiOpen.html");
+        };
+        });
+
+
+    </script>
+
+</body>
+
+</html>
