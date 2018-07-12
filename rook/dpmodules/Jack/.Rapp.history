@@ -1,0 +1,104 @@
+source("/Users/jackmurtagh/Documents/compgapexperiments.R")
+run()
+source("/Users/jackmurtagh/Documents/compgapexperiments.R")
+run()
+source("/Users/jackmurtagh/Documents/compgapexperiments.R")
+run()
+source("/Users/jackmurtagh/Documents/compgapexperiments.R")
+run()
+source("/Users/jackmurtagh/Documents/compgapexperiments.R")
+run()
+eps <- .01
+c <- .1
+(1+exp(eps+c))/(1+exp(eps))
+exp(c/2)
+exp(c)
+k <- 50
+d <- (2^(-20))
+dg <- 2^(-15)
+c <- .01
+prod <- (1-d)^(k)
+prod
+a <- 1-exp(-((k*c)/2))
+a
+a <- 1-exp(-((k*c)/2))*dg
+a
+aa/prod
+a/prod
+exp(-((k*c)/2))
+(1-dg)/prod
+k*d
+k*d <dg
+source("/Users/jackmurtagh/Documents/InvertSteadyState.R")
+mat <- t(RLmatfull(36))
+write.table(mat, file="/Users/jackmurtagh/Documents/matrix.csv", sep=",")
+source("/Users/jackmurtagh/Documents/InvertSteadyState.R")
+mat <- RLmatfull(100)
+mat <- t(mat)
+mat
+a <- forceSolve(mat)
+a
+rowsumvec(a)
+colsumvec(a)
+b <- scaletoward(mat)
+b
+rowsumvec(b)
+colsumvec(b)
+colsumvec(b)-rowsumvec(b)
+sum(abs(colsumvec(b)-rowsumvec(b)))
+source("/Users/jackmurtagh/Documents/InvertSteadyState.R")
+b <- scaletoward(mat)
+c <- scaleaverage(mat)
+c
+b <- scaletoward(mat)
+c <- scaleaverage(mat)
+rowsumvec(c)
+rowsumvec(b)
+colsumvec(c)
+source("/Users/jackmurtagh/Documents/InvertSteadyState.R")
+b <- scaletoward(mat)
+c <- scaleaverage(mat)
+mat <- RLmatfull(324)
+mat <- t(mat)
+b <- scaletoward(mat)
+c <- scaleaverage(mat)
+f <- funciton(d){return(d^2+2d+1)}
+f <- function(d){return(d^2+2d+1)}
+x <- function(a){a+1}
+d <- 6
+d^2
+x <- function(a){return(a+1)}
+x(7)
+f <- function(d){return(2d+1)}
+f <- function(d){return(d^2+2*d+1)}
+f(4)
+f(2)
+f <- function(d){return(d^2-6*d+1)}
+f(4)
+f(5)
+f(6)
+.3*.9+.2*.62+.1+.4*84
+.3*.9+.2*.62+.1+.4*.84
+.3*.9+.2*.62+.1
+(.8-0.494)/.4
+(.83-0.494)/.4
+setwd("/Users/jackmurtagh/Documents/Github/PrivateZelig/dpmodules/Jack/")
+elist <- runif(5,min=0,max=.03)#
+dlist <- rep(2^-24,times=6)#
+del <- sum(dlist)+2^-24#
+sum(elist)#
+elist[6]<- ""#
+eps <- .1#
+params <- cbind(elist,dlist)#
+update_parameters(params,0,eps,del)
+source("update_parameters.R")
+source("CompositionTheorems.R")
+elist <- runif(5,min=0,max=.03)#
+dlist <- rep(2^-24,times=6)#
+del <- sum(dlist)+2^-24#
+sum(elist)#
+elist[6]<- ""#
+eps <- .1#
+params <- cbind(elist,dlist)#
+update_parameters(params,0,eps,del)
+elist

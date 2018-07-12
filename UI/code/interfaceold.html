@@ -1,0 +1,87 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <title>Interface</title>
+  <link rel="stylesheet" href="../lib/slick.grid.css" type="text/css"/>
+  <link rel="stylesheet" href="../css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css"/>
+  <link rel="stylesheet" href="examples.css" type="text/css"/>
+  <style>
+    .cell-title {
+      font-weight: bold;
+    }
+
+    .cell-effort-driven {
+      text-align: center;
+    }
+  
+    .changed {
+      background: pink;
+    }
+    
+  </style>
+</head>
+<body>
+<div id="datasetName" style="text-align:center;margin-top:1em">
+  <h2 style="display:inline;">Dataset Name</h2>
+</div>
+<div style="position:relative; margin-top: 25px;" align="center">
+  <div style="width:880px;" align="center">
+    <div id="myGrid" style="width:890px;height:300px;"></div>
+<p align="right">
+<button type="button" title="Calculate statistics with current settings" onclick="submit();" >Submit</button>
+</p>
+  </div>
+
+   
+  <div class="options-panel" style="position:relative; width:170px; left:560px; top:-345px;">
+  <div style="position:relative; " align="center" >
+    <h2>Advanced Options:</h2>
+    <form >  
+    Epsilon: <br>
+    <input type="text" name="epsilonbox" id="epsilonbox" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy." style="width: 70px;" value=".1" onchange = "epsChange();" >
+    <br>
+    Delta:<br>
+     <input type="text" name="deltabox" id="deltabox" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy."style="width: 70px;" value=".0000001" onchange = "deltaChange();">
+    <br>
+    Beta:<br>
+     <input type="text" name="betabox" id="betabox" title="Probability that the error for a given statistic exceeds the estimate reported in the Accuracy column." style="width: 70px;" value=".05" onchange = "betaChange();" >
+    <br>
+   <!-- Accuracy Type:--><br>
+     <input type="text" readonly=true name="accType" id="accType" title="The 'Relative' option displays accuracy values relative to the size of the database (as a percentage) and 'Absolute' displays accuracies in the same units the variable has in the dataset" style="width: 70px;" value="Relative" onclick = "accTypeChange();"  >
+    <br> 
+     Secrecy of the Sample:<br>
+     <input type="text" name="secSamp" id="secSamp" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate. " style="width: 70px;" value="" onchange = "secSampChange();" >
+    <br>
+     Functioning Epsilon:<br>
+     <input type="text" readonly=true name="funcEp" id="funcEp" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." style="width: 70px;" value="";" >
+    <br>
+   </form>
+   
+  </div>
+</div>
+
+
+<script type="text/javascript" src="../lib/d3.v3.min.js"></script>
+
+<script src="../lib/firebugx.js"></script>
+
+<script src="../lib/jquery-1.7.min.js"></script>
+<script src="../lib/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="../lib/jquery.event.drag-2.2.js"></script>
+
+<script src="../lib/slick.core.js"></script>
+<script src="../plugins/slick.cellrangedecorator.js"></script>
+<script src="../plugins/slick.cellrangeselector.js"></script>
+<script src="../plugins/slick.cellselectionmodel.js"></script>
+<script src="../plugins/slick.checkboxselectcolumn.js"></script>
+<script src="../plugins/slick.rowselectionmodel.js"></script>
+<script src="../lib/slick.formatters.js"></script>
+<script src="../lib/slick.editors.js"></script>
+<script src="../lib/slick.grid.js"></script>
+
+<script src="wireframe.js">
+  
+</script>
+</body>
+</html>

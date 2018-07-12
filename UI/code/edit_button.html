@@ -1,0 +1,146 @@
+<style>
+img {
+    display: block;
+    margin: 0 auto;
+}
+</style>
+
+<table id="parameter_editing_table" align="center">
+  <tr>
+    <td style="text-align:right; padding-right: 15px;">
+      <span title="Main privacy loss parameter. Smaller values correspond to more privacy and more noise in output statistics.">Epsilon (&epsilon;):</span>
+    </td>
+    <td style="padding-left: 15px;">
+      <input id="epsilon_value" name="epsilon" onfocusout="epsilon_check(this)" title="Main privacy loss parameter. Smaller values correspond to more privacy and more noise in output statistics." value="0.1" style="color: black;" type="text" placeholder="Epsilon">
+    </td>
+  </tr>
+  <tr>
+    <td style="text-align:right; padding-right: 15px;">
+      <span title = "Privacy loss parameter interpreted as the probability of blatant privacy violation. Smaller values correspond to more privacy and more noise in output statistics.">Delta (&delta;):</span>
+    </td>
+    <td style="padding-left: 15px;">
+      <input id="delta_value" name="delta" onfocusout="delta_check(this)"  title = "Privacy loss parameter interpreted as the probability of blatant privacy violation. Smaller values correspond to more privacy and more noise in output statistics." value="0.000001" style="color: black;" type="text" placeholder="Delta">
+    </td>
+  </tr>
+  <tr>
+    <td style="text-align:right; padding-right: 15px;">
+      <span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample will not be revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Secrecy of the Sample:</span>
+    </td>
+    <td style="padding-left: 15px;">
+      <input id="SS" name="SS" onfocusout="global_parameters_SS(this)" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample will not be revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder=""> <input title="Remove any entered value for the secrecy of the sample, and revert privacy loss parameters to the values without adjustment." type="button" style="color:gray;" onclick="clear_SS()" value="Clear">
+    </td>
+  </tr>
+
+  <tr id="FE" style="display:none;">
+    <td style="text-align:right; padding-right: 15px; padding-top:15px;">
+      <span title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields.">Functioning Epsilon:</span>
+    </td>
+    <td style="padding-left: 15px; padding-top:15px;">
+      <input id="FE_value" name="FE" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." value="" style="color: black;" type="text" placeholder="none if no Sec. Sample" readonly>
+    </td>
+  </tr>
+
+  <tr id="FD" style="display:none;">
+    <td style="text-align:right; padding-right: 15px;">
+      <span title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields.">Functioning Delta:</span>
+    </td>
+    <td style="padding-left: 15px;">
+      <input id="FD_value" name="FD" title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields." value="" style="color: black;" type="text" placeholder="none if no Sec. Sample" readonly>
+    </td>
+  </tr>
+</table>
+
+<div style="text-align:center; padding-top: 40px;">
+<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Submit</button>
+<div>
+
+<!-- Display No Secrecy Sample  -->
+<!-- 
+
+<table align="center">
+<tr>
+<td style="text-align:right; padding-right: 15px;">
+Epsilon (&epsilon;):
+</td>
+<td style="padding-left: 15px;">
+V
+</td>
+</tr>
+<tr>
+<td style="text-align:right; padding-right: 15px;">
+Delta (&delta;):
+</td>
+<td style="padding-left: 15px;">
+d
+</td>
+</tr>
+<tr>
+<td style="text-align:right; padding-right: 15px;">
+Secrecy of the Sample:
+</td>
+<td style="padding-left: 15px;">
+Unknown
+</td>
+</tr>
+<tr>
+<td style='text-align:center; padding-top: 10px;' colspan='2'>
+Edit
+</td>
+</tr>
+</table>
+
+
+
+
+ -->
+
+
+
+
+<!-- With SS provided -->
+<!-- 
+<table align="center">
+<tr>
+<td style="text-align:right; padding-right: 15px;">
+Epsilon (&epsilon;):
+</td>
+<td style="padding-left: 15px;">
+V
+</td>
+<td style="text-align:right; padding-right: 15px; padding-left: 60px;">
+Functioning Epsilon:
+</td>
+<td style="padding-left: 15px;">
+V
+</td>
+</tr>
+
+<tr>
+<td style="text-align:right; padding-right: 15px; padding-left: 60px;">
+Delta (&delta;):
+</td>
+<td style="padding-left: 15px;">
+d
+</td>
+<td style="text-align:right; padding-right: 15px;">
+Functioning Delta:
+</td>
+<td style="padding-left: 15px;">
+V
+</td>
+</tr>
+
+<tr>
+<td style='text-align:center' colspan='4'>
+Secrecy of the Sample: <span style="padding-left:30px;">Unknown</span>
+</td>
+</tr>
+
+<tr>
+<td style='text-align:center; padding-top: 10px;' colspan='4'>
+Edit
+</td>
+</tr>
+</table>
+
+ -->

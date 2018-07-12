@@ -1,0 +1,246 @@
+<style>
+img {
+    display: block;
+    margin: 0 auto;
+}
+</style>
+<div id="welcome">
+<p>
+This tool helps data depositors release information describing their datasets while protecting privacy by allowing them to distribute a privacy budget across different possible statistical calculations. This tool is called the <i>budgeter</i>.  Data depositors select which statistics they would like to calculate and are given estimates of how accurately each statistic can be computed. They can also redistribute their privacy budget according to which statistics they think are most valuable in their dataset.
+</p>
+<p>
+Below is a brief introduction to differential privacy, the mathematical framework that guarantees privacy, as well as an overview of all the features and requirements of this tool.  This explanatory page can be reviewed at any point by clicking any of the information buttons, marked <span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span>.
+</p>
+<br>
+<br>
+</div>
+
+<div id="intro">
+<h4>Introduction to differential privacy</h4>
+<p>
+Differential privacy is a rigorous mathematical framework for making statistical information about private datasets available. This is done in such a way that guarantees that information about specific individuals in the dataset does not leak out.
+</p>
+<p>
+In the simplest setting, consider an algorithm that analyzes a dataset and computes statistics about it (such as the data's mean, variance, median, mode, etc.). Such an algorithm is said to be differentially private if by looking at the output, one cannot tell whether or not any individual's data was included in the original dataset. In other words, the guarantee of a differentially private algorithm is that its behavior hardly changes when a single individual joins or leaves the dataset -- anything the algorithm might output on a database containing some individual's information is almost as likely to have come from a database without that individual's information. Most notably, this guarantee holds for any individual and any dataset. Therefore, regardless of how eccentric any single individual's details are, and regardless of the details of anyone else in the database, the guarantee of differential privacy still holds.
+</p>
+<p>
+The definition of differential privacy emerged from a long line of work applying algorithmic ideas to the study of privacy (Dinur and Nissim `03; Dwork and Nissim `04; Blum, Dwork, McSherry, and Nissim `05), culminating with work of Dwork, McSherry, Nissim, and Smith `06.
+</p>
+</div>
+
+<div id="data">
+<h4>Data requirements</h4>
+<ul>
+<li>Your dataset must be tabular with rows corresponding to individuals and columns corresponding to variables (attributes). </li>
+<li>It is assumed that the total number of observations (rows) in the dataset is public information and can be released.  This value is not treated in a privacy-preserving manner.</li>
+</ul>
+</div>
+
+<div id="parameters">
+<h4>Privacy Loss Parameters</h4>
+<p>
+The level of privacy protection in differential privacy is governed by two parameters: epsilon (&epsilon;) and delta (&delta;). The smaller these numbers, the more privacy is guaranteed. However, if these numbers are too small, the released statistics will become inaccurate.
+</p>
+<p>
+Typical epsilon values are in the regime of .01-1. We recommend that your epsilon does not exceed 1. This table gives some intuition about the effects of different choices of epsilon (top row).</p>
+
+<img src="../images/DPInterpretationofEpsilonTable.png" align="middle">
+<p>
+Imagine that an adversary -- a person who wants to learn private information about you-- has a prior belief about the probability that you have some trait. These are listed in the vertical column on the left. If your data were in a dataset, the table shows the new belief that that adversary could infer from looking at differentially private statistics about the dataset with differing values of epsilon. For example, if an adversary had a prior belief of 10% that you have a particular trait, then outputs from a differentially private algorithm with epsilon set to .2 could update his belief to at most 11.95%.
+</p>
+
+<p>
+In the worst case, delta is the probability that all information about the dataset is leaked. For this reason, delta is typically set to a very small number, such as the probability that somebody can break an encryption scheme. We recommend a delta of one in a million or smaller.
+</p>
+<p>
+For a given level of privacy protection, there are limits on how much statistical information can be released and how accurately. It is important, therefore, to make judicious choices about how to use the limited budget that you have. The budgeter tool assists you in making those choices.
+</p>
+
+ Below is Harvard's list of varying levels of sensitivity for datasets and reasonable privacy loss parameters for each level. The recommendations below are just a guideline. See <a href="http://files.vpr.harvard.edu/files/vpr-documents/files/data_classification_table_abridged_7.23.13_0.pdf">Harvard's secure data classifications</a> for more information.
+   <p>
+	<ol>
+		<li>Public information: It is not necessary to use differential privacy for public information.</li>
+		<li>Information the disclosure of which would not cause material harm, but which the University has chosen to keep confidential: (&epsilon;=1, &delta;=10<sup>-5</sup>=0.00001)</li>
+		<li>Information that could cause risk of material harm to individuals or the University if disclosed: (&epsilon;=.25, &delta;=10<sup>-6</sup>=0.000001)</li>
+		<li>Information that would likely cause serious harm to individuals or the University if disclosed: (&epsilon;=.05, &delta;=10<sup>-7</sup>=0.0000001)</li>
+		<li>Information that would cause severe harm to individuals or the University if disclosed: It is not recommended that the PSI tool be used with such severely sensitive data.</li>
+	</ol>
+   </p>
+</div>
+
+<div id="functioning">
+<h4>Functioning Privacy Loss Parameters</h4>
+<p>
+There might be some instances when the global privacy guarantee (&epsilon;, &delta;) will be different from the budget that is actually available to spend in the current session. This occurs when using the Secrecy of the Sample or the Reserve Budget features. When using Secrecy of the Sample, your budget will be larger than expected. On the other side, reserving budget for future users is achieved by limiting your own budget. In both of these cases, we represent the amount of budget that actually can be spent in the current session as "functioning epsilon" and "functioning delta". When relevant, these will appear next to the global epsilon and delta in the top right of the interface.
+</p>
+</div>
+
+<div id="secofsamp">
+<h4>Secrecy of the Sample</h4>
+<p>
+If the dataset being deposited is a random and secret sample taken from a larger population of known size, then the accuracy of the released statistics can be boosted without changing the privacy guarantee.   Here, "secret" means that the choice of the people in the sample will not be revealed.
+</p>
+<p>
+In order to obtain this boost, you are required to provide an estimate of the size of the larger population. It is important to be conservative in your estimate because exaggerating the size of the larger population could lead to a violation of privacy. In other words, it is okay to underestimate.
+</p>
+</div>
+
+
+<div id="statistics">
+<h4>Available Privacy Preserving Statistics</h4>
+<p>
+When using the tool you will select statistics to be released one by one. You will begin by choosing a variable from the left panel. This will spawn a box in the center panel that will prompt you to fill in the variable type (e.g. boolean, numerical, categorical), and then to select which statistic(s) to compute for that variable. We currently support the following statistics:
+</p>
+<h5><b>Univariate Statistics:</b></h5>
+<p>
+<div id="Mean_help"><b>Mean:</b> Computes the average value of the variable.</div>
+</p>
+<p>
+<div id="Histogram_help"><b>Histogram:</b> Computes a bar graph of the different values represented in the variable.</div>
+</p>
+<p>
+<div id="Quantile_help"><b>Quantile:</b> This computes the full cumulative distribution function, or CDF, of the variable, which can then be used to calculate any desired quantile (e.g. the median or percentiles).</div>
+</p>
+<h5><b>Multivariate Statistics</b></h5>
+To compute a statistic that involves more than one variable, click the button labelled "Multivariate Statistics". A window will pop up asking you to choose the set of variables that will be involved in the multivarate statistic. Once you select these, a new "grouped" variable will show up in the left variable panel. Select this new variable to release a multiviate statistic.
+<p>
+<b>Regression models:</b> The tool supports Ordinary Least Squares, Logistic, and Probit regression models.
+</p>
+<p>
+<b>Average Treatment Effect on the Treated (ATT with Matching):</b> First performs coarsened exact matching and then uses the matched dataset to compute the ATT and a confidence interval.
+</p>
+</div>
+
+<div id="metadata">
+<h4>Entering Metadata</h4>
+<p>
+The algorithms used to generate these statistics may require certain auxiliary information about the variables, which we refer to as <i>metadata</i>.  Different statistics require different metadata.  The tool will only ask for the metadata needed to complete the set of statistics you have chosen.
+</p>
+<p>
+Here are the meanings of the metadata values:
+</p>
+<p>
+<div id="Upper_Bound_help"><b>Upper Bound:</b> The largest possible value that this variable can take on. Any observations in the raw data beyond this value will be replaced with this bound (sometimes this is referred to as <i>top-coding</i> or <i>censoring</i>).  For example, if the upper bound on age is entered as 100, and a person in the data had a recorded age of 105, this observation would be overridden to the value of 100 for the calculation of any statistics.</div>
+</p>
+<p>
+<div id="Lower_Bound_help"><b>Lower Bound:</b> The smallest possible value that this variable can take on. Any observations in the raw data below this value will be replaced with this bound.</div>
+</p>
+<p>
+<div id="Granularity_help"><b>Granularity:</b> The minimum positive distance between two different records. For example, if income is reported to the nearest $100, then the granularity of the variable is 100. If income is reported exactly to the cent, then granularity is .01.</div>
+</p>
+<p>
+<div id="Number_of_Bins_help"><b>Number of Bins:</b> For numerical data, this specifies the number of bins to group the data into for histogram.</div>
+</p>
+<p>
+<div id="Bin_Names_help"><b>Bin names:</b> Comma-separated list of all possible categories the variable can take on. For example: red, white, blue. You can also use the shorthand 2:5 to represent 2, 3, 4, 5 or C:G to represent C, D, E, F, G for example. For histograms this input is optional but we strongly recommend supplying it as histograms computed without bin names are typically much less accurate.</div>
+</p>
+<p>
+<div id="Coarsening_help"><b>Coarsening:</b> Specifies the scale of the numerical variables that are to be matched on.</div>
+</p>
+<p>
+<div id="Matching_Multiplier"><b>Matching Multiplier:</b> A positive integer indicating the structure of matched strata.</div>
+</p>
+<p>
+Remember that it is important to fill in the metadata <i>as though you have never seen the data</i>. For example, if there is an age variable in the dataset, a lower bound of 0 and an upper bound of 100 are reasonable guesses for the range of ages in any dataset.  If on the other hand, it is public information that the dataset is a survey of US voters, then putting an age lower bound of 18 would be appropriate. Using specific information from the dataset to fill in metadata can lead to a privacy violation. In the above example, this means that you should not look at the dataset to find the oldest or youngest person and record his or her age in the metadata, but rather provide a general, reasonable range.  If this task feels too unnatural, we recommend asking a research assistant to fill in the metadata. This should be somebody who has never seen the raw data but is familiar with how it was collected and the names of the variables.
+</p>
+</div>
+
+
+<div id="missingData">
+<h4>Missing Data</h4>
+<p>
+Most real world datasets contain some missing data. PSI has a few ways of handling this described below.
+</p>
+<ul>
+<li> <b>Random value:</b> This is the default for numerical variables. Missing values are imputed uniformly at random from the range supplied in the metadata.
+<li> <b>Fixed value:</b> All missing values are replaced with the same value, which you supply when you select 'Fixed value'.
+<li> <b>Custom range:</b> Missing values are imputed uniformly at random from a custom range that you supply when you pick this option. <b>Important</b> ranges must be given in the following format: lower:upper where both 'lower' and 'upper' are numbers.
+<li> <b>Separate bin:</b> This is the default for categorical variables. Missing values will be treated as a separate category in the dataset.
+<li> <b>Random bin:</b> This is the default for boolean variables. Missing values are placed into a uniformly random category from the dataset.
+</ul>
+For all regressions, the procedure described in 'Random value' is run for each variable involved in the regression.
+</div>
+
+<div id="accuracy">
+<h4>Error and Confidence Level (&alpha;)</h4>
+<p>
+Every statistic that you add has an associated error value. This is a theoretical bound on the worst-case error for the current parameters set for the statistic. There is a confidence level parameter alpha (&alpha;) that represents the probability that the error in the final computed statistics exceeds the error bound listed in the table. Alpha is set at a default of .05 and can be changed. The interpretation of these accuracies differs across statistics. If "error" is the number reported in the error column of the table and n is the number of people in the dataset, then the errors should be interpreted in the following ways for each statistic:
+</p>
+<p>
+<b>Mean:</b>   With probability 1-&alpha;:  <center> true mean - error &le; output mean  &le; true mean + error </center>
+</p>
+<p>
+<b>Quantiles:</b> For each <i>t</i>, the algorithm's output count of the number of data points less than <i>t</i> satisfies the following with probability 1-&alpha;:  <center>  true count - error &le; output count &le; true count + error </center>
+</p>
+<p>
+<b>Histogram:</b>  For each bar in the outputted bar graph we have the following with probability 1-&alpha;: <center> true count-error &le; output count on that bar &le; true count + error </center>
+</p>
+<p>
+<b>Regressions:</b>
+</p>
+<p>
+<b>ATT with Matching:</b> With probability 1-&alpha;: the number of matched treated units used in the ATT algorithm will differ from the true number by at most error. Note that this does not take into account the additional noise in the confidence interval.
+</p>
+<p>
+At any time you may request that certain statistics have more or less error by editing the error column. This will result in a reapportioning of the global epsilon across all of the statistics. There are limits to how accurate the statistics can be. This tool uses an optimal composition theorem for differential privacy to ensure that the statistics are as accurate as possible while maintaining the global privacy guarantee.
+</p>
+</div>
+
+<div id="hold">
+<h4>Hold</h4>
+<p>
+Clicking “hold” for a particular statistic fixes the portion of your budget to be spent on that statistic. As you add, remove, or edit the error for other statistics, the held statistics will maintain their portion of the budget. You cannot hold every statistic.
+</p>
+</div>
+
+<div id="reserve">
+<h4>Reserving Privacy Budget</h4>
+<p>
+PSI gives data depositors the option to reserve a portion of their privacy budget for future users to ask further queries of the data. Giving some of the budget to future users users limits the number of statistics released by the data depositor (who may know more about which attributes in the data are most interesting), but provides more flexibility for future users to ask the queries that are most relevant to their interests.
+</p>
+<p>
+In the bottom right corner of the interface there is a slider to control what percentage of the privacy budget is being reserved for future users.
+</p>
+</div>
+
+<div id="transformer">
+<h4>Variable Transformations</h4>
+<p>
+This tool allows you to apply R-like transformations to the dataset before running statistics.
+</p>
+<p>
+Transformations have the form `my_new_variable_name <- some formula`. For example:
+<ul>
+<li> You could take the log of a variable: `log_income <- log(income)`
+<li> Take the sum of multiple variables: `total <- profits + losses`
+<!--Use results of transformations in later ones (EXPERIMENTAL): `shifted_log_income <- log_income + 10`
+Use R-like ifelse expressions: `canDrink <- ifelse(country == âUnited Statesâ, age >= 21, age >= 18)`
+Do NA coercion: `ageDefault30 <- ifelse(is.na(age), age, 30`  -->
+<li> If you prefer, use `=` instead of `<-`: `log_income = log(income)`
+<li>More math: `base ** exponent`, equivalently `base ^ exponent`, `sqrt(x)`, `exp(x)`, `log(x)` (natural log), `log(x, base)`.
+<li>Comparisons: `==, !=` (work for strings), `<, >, <=, >=` (do not work for strings)
+<li>Boolean logic: `&&, ||` or equivalently `&, |`.
+<li>Type coercion: `as.numerical(x), as.logical(x), as.categorical(x)` or equivalently `as.character(x)`
+</ul>
+</p>
+<p>
+Just like R, we always try to coerce types to do the most logical thing.
+For example, `3.4 * TRUE` is `3.4`, `3.4 * FALSE` is `0.0`.
+</p>
+</div>
+
+
+<div id="submit">
+<h4>Submit and Show Buttons</h4>
+<p>
+In the footer of the tool are two buttons, the red <i>Submit Table</i> button, and the gray button titled <i>Show Underlying Table</i> (which may not appear in some versions).
+</p>
+<p>
+<b>Submit Table</b>
+When you are finished selecting all of your statistics and are satisfied with the accuracies, click the Submit button. This will compute all of the differentially private statistics and generate a file for you to view.
+</p>
+<p>
+<b>Show Underlying Table</b>
+As the tool accumulates information from the user, such as privacy loss parameters, requested statistics, metadata, desired accuracies, and released values, this information is built up into an underlying table describing the dataset.  This button allows this table to be inspected.  This table is rarely of direct interest, but is useful in presentations for demonstrating how some features of the prototype are working.
+</p>
+</div>
