@@ -234,7 +234,7 @@ function initTypes() {
     // Retrieve from dataverse API
   } else {
     // Read from local'
-    var_types_url =  "../../data/preprocess_4_v1-0.json";
+    var_types_url =  "data/preprocess_4_v1-0.json";
   }
 
   d3.json(var_types_url, function(json_data) {
@@ -1327,6 +1327,7 @@ function display_help(text) {
 
 // Display help id
 function display_help_id(id) {
+  console.log("In display help id");
   d3.select("#datasetName").selectAll("h2").html('');
   d3.select("#datasetSmallName").html('<h4 style="display:inline;">' + dataTitle + '</h4>');
   $("#datasetHelp").load('psiIntroduction.html #' + id);
@@ -1481,6 +1482,7 @@ function jamestoggle(button) {
 function make_bubble (variable) {
     var variable_raw = variable;
     variable = variable.replace(/\s/g, '_');
+    console.log("make_bubble")
     var blank_bubble =
     "<div id='" + variable + "'>" +
         "<div class='bubble' id='bubble_" + variable + "'>" +
@@ -1491,6 +1493,7 @@ function make_bubble (variable) {
             "<div id='panel_" + variable + "' class='panel'>" +
                 "<div id='formula_" + variable + "' class ='formulas'> </div>" +
                 "<div id='variable_types_" + variable + "' class='variable_types'>";
+      
                 if(variable in grouped_var_dict){
                 	var varlist = grouped_var_dict[variable];
                 	var v;
@@ -1498,7 +1501,7 @@ function make_bubble (variable) {
                   blank_bubble += "Variable Types";
 
                   blank_bubble += "&nbsp;&nbsp;<a href='#myModal5' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal5(\"" + variable + "\")' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
-
+                  
                 	blank_bubble += "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 	blank_bubble += "<table>";
                 	for(var i=0; i< varlist.length; i++){
@@ -1714,6 +1717,7 @@ function parameter_fields (variable, type_chosen) {
 		needed_parameters = needed_parameters.unique();
 		// makes blank html text
 		var parameter_field = "<table>";
+    console.log("param fields");
 		if(needed_parameters.length > 0){
 			parameter_field+="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='metadata'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
 		}
@@ -2595,6 +2599,7 @@ function toggle_reserved_epsilon_tool () {
 // Creates Epsilon
 function generate_epsilon_table () {
     var completed_statistic = false;
+    console.log("gen eps table");
     var epsilon_table =
     "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
     "<table id='epsilon_table' style='width: calc(100% - 30px);'>" +

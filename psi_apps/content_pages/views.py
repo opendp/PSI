@@ -4,3 +4,6 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 def interface(request):
     return render(request, 'interface.html')
+
+def psiintroduction(request):
+	return render(request, 'psiIntroduction.html')
