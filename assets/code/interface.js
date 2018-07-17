@@ -242,7 +242,6 @@ function initTypes() {
     // Loop through all the variables
     for(var key in json_variables) {
       var current_variable = json_variables[key];
-      console.log(current_variable)
       // Boolean
       if (current_variable['binary'] == 'yes') {
         types_for_vars[key] = 'Boolean';
@@ -401,7 +400,8 @@ if (ddiurl) {
     // neither a full ddi url, nor file id supplied; use one of the sample DDIs that come with
     // the app, in the data directory:
     //metadataurl="../../data/Census_PUMS5_California_Subsample-ddi.xml";  // This is PUMS example metadata file
-    metadataurl="../../data/pumsmetaui.xml"; //For UI/UX
+    //metadataurl="../../data/pumsmetaui.xml"; //For UI/UX
+    metadataurl="getXML";
     console.log("Retrieving Metadata Locally");
 }
 
@@ -421,6 +421,7 @@ var data = [];
 var VarList =[];
 var dataTitle;
 d3.xml(metadataurl, "application/xml", function(xml) {
+    console.log("XML", xml);
     var vars = xml.documentElement.getElementsByTagName("var");
     var Variables = [];
     var type;
@@ -2219,7 +2220,6 @@ function Validation (valid_entry, entry) {
 // Regex: http://www.w3schools.com/jsref/jsref_obj_regexp.asp
 // Validate form based on entry_type info
 function ValidateInput (input, valid_entry, variable, univar) {
-    console.log("called from validateInput")
     // Actual input validation
     // if variable is a grouped variable, univar contains the single variable that was just edited
     var entry = input.value;
@@ -2601,7 +2601,6 @@ function toggle_reserved_epsilon_tool () {
 // Creates Epsilon
 function generate_epsilon_table () {
     var completed_statistic = false;
-    console.log("gen eps table");
     var epsilon_table =
     "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
     "<table id='epsilon_table' style='width: calc(100% - 30px);'>" +

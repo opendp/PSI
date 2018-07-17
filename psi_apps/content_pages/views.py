@@ -27,6 +27,10 @@ def getData(request):
 	##print(data)
 	return JsonResponse(data)
 
+def getXML(request):
+	file = open(os.path.join(BASE_DIR, "data/pumsmetaui.xml"))
+	return HttpResponse(file.read())
+
 
 ## LOAD LOCAL DATA
 
