@@ -234,7 +234,7 @@ function initTypes() {
     // Retrieve from dataverse API
   } else {
     // Read from local'
-    var_types_url =  "data/preprocess_4_v1-0.json";
+    var_types_url = "getData";
   }
 
   d3.json(var_types_url, function(json_data) {
@@ -242,6 +242,7 @@ function initTypes() {
     // Loop through all the variables
     for(var key in json_variables) {
       var current_variable = json_variables[key];
+      console.log(current_variable)
       // Boolean
       if (current_variable['binary'] == 'yes') {
         types_for_vars[key] = 'Boolean';
@@ -1331,6 +1332,7 @@ function display_help_id(id) {
   d3.select("#datasetName").selectAll("h2").html('');
   d3.select("#datasetSmallName").html('<h4 style="display:inline;">' + dataTitle + '</h4>');
   $("#datasetHelp").load('psiIntroduction.html #' + id);
+  //$("#datasetHelp").load(PSI_INTRO_URL);
 }
 
 // Makes the checkboxes

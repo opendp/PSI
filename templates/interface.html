@@ -17,7 +17,7 @@
     <script type="text/javascript" src="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/bootstrap-slider.min.js"></script>
 
     <!-- Linking to CSS stylesheet -->
-    <link rel="stylesheet" type="text/css" href="{% static "code/inteface.css" %}">
+    <link rel="stylesheet" type="text/css" href="{% static "code/interface.css" %}">
 
     <title>Budgeting Tool</title>
 
@@ -47,7 +47,7 @@
         </td>
         <td title="You can select any dataset on the test Dataverse instance at https://beta.dataverse.org by entering its unique file ID number, or use one of the datasets provided in the selection box above." style="padding:0 0 0 8px;">
             <input type="text" name="altfileid" onchange="overridedataset(this.value)" maxlength="5" style="width: 50px;" >
-            <button type="button" class="manualinfo" data-load-url="{% url "psiintroduction" %}" data-toggle="modal" data-target="#myModal" data-id="data"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: 12px;"></span></button>
+            <button type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}" data-toggle="modal" data-target="#myModal" data-id="data"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: 12px;"></span></button>
         </td>
     </tr>
     <button title="Show a video describing the features and use of this budgeting tool." onclick="location.href='http://beta.dataverse.org/custom/DifferentialPrivacyPrototype/video/BudgetInterfaceDemo.mp4';" style="color:#108db7;float:right; margin-right: 10%; margin-top:0.5em; padding-right:0.5em; padding-top:0.5em;">
@@ -78,7 +78,7 @@
                 <td style=''>
                                 <h4 title="These are adjustable parameters that define the level of privacy protection guaranteed by the differentially private released statistics." style="display: inline-block; padding-right:5px;"> Privacy Loss Parameters</h4>
                                 <button id="edit_button" style='color:#108db7;' onclick="edit_parameters_window()">Edit Parameters</button>
-                                <button type="button" class="manualinfo" data-load-url="{% url "psiintroduction" %}"data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
+                                <button type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}"data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
 
 
                         <div id='display_parameters'>
@@ -114,7 +114,8 @@
 
                     <h4 title="These are adjustable parameters that define the level of privacy protection guaranteed by the differentially private released statistics.">
                         Privacy Parameters
-                        <button type="button" class="manualinfo" data-load-url="psiIntroduction.html" data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:#ADD8E6;font-size: 12px;"></span></button>
+                        <button type="button" class="manualinfo" data-load-url="psiIntroduction.html" data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:#ADD8E6;font-size: 12px;"><
+                        /span></button>
                     </h4> -->
 
          </header>
@@ -127,7 +128,7 @@
             <!-- Variable List -->
             <ul id="variable_sidebar" class="live-search-list"></ul>
             <button id="group_vars" class="group-vars-button" onclick="group_vars_window()">Multivariate Statistics</button>
-            <input id="new-transform-box" size=16 style="display:none" type="text" class="transformation-box" placeholder="Name <- Formula" onfocusout="newtransform(this)"> <button type='button' class='manualinfo' data-load-url="{% url "psiintroduction" %}" data-toggle='modal' data-target='#myModal' data-id='transformer'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
+            <input id="new-transform-box" size=16 style="display:none" type="text" class="transformation-box" placeholder="Name <- Formula" onfocusout="newtransform(this)"> <button type='button' class='manualinfo' data-load-url="{% url "psiIntroduction" %}" data-toggle='modal' data-target='#myModal' data-id='transformer'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
         </nav>
 
 
@@ -145,7 +146,7 @@
                   <input style="width:90%;" id="re_slider" data-slider-tooltip="hide" data-slider-id="RES" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
                   <br>
                   <span id="re_label">Reserved Budget: <span id="re_value">0</span>%</span>
-                  <button type='button' class='manualinfo' data-load-url="{% url "psiintroduction" %}" data-toggle='modal' data-target='#myModal' data-id='reserve'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
+                  <button type='button' class='manualinfo' data-load-url="{% url "psiIntroduction" %}" data-toggle='modal' data-target='#myModal' data-id='reserve'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
                </div>
             </div>
         </nav>
@@ -386,7 +387,7 @@
            <button title="This shows the full underlying table that is being constructed, containing all the metadata information, and budgeting of epsilon and accuracies." onclick='report();' style="color:gray;">Show Underlying Table</button>
             <button id="submit_button" title="This button creates a differentially private release of the statistics presently requested, at their budgeted values of the privacy parameters." onclick='submit();' style="color:red;">Submit Statistics and Generate Differentially Private Release</button>
 
-            <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="{% url "psiintroduction" %}" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
+            <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
             <br>
             PSI (&Psi;): a Private data Sharing Interface
         </div>
@@ -418,6 +419,12 @@
         });
         });
     </script>
+
+    <script type="text/javascript">
+        var PSI_INTRO_URL = "{% url "psiIntroduction" %}";
+
+    </script>
+
     <script type="text/javascript" src="{% static "code/interface.js" %}"></script>
     <script type="text/javascript">
         console.log(UI);  // UI set from url in interface.js
@@ -425,9 +432,9 @@
         $(window).load(function(){
         $('#myModal').modal('show');
         if(UI){
-            $('#myModal').find('.modal-body').load("psiOpen.html"); //JM for UI/UX
+            $('#myModal').find('.modal-body').load("{% url "psiOpen" %}"); //JM for UI/UX
         }else{
-           $('#myModal').find('.modal-body').load("psiOpenPrototype.html");
+           $('#myModal').find('.modal-body').load("{% url "psiOpenPrototype" %}");
             //$('#myModal').find('.modal-body').load("psiOpen.html");
         };
         });
