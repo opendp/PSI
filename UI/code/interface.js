@@ -1603,8 +1603,8 @@ function generate_modal6 () {
   $('#myModal6').find('.modal-body ul').html("");
   var table_output = "";
   table_output += "<table style='table-layout: fixed;'>";
-  // select/unselect all button
-  table_output += "<tr><td><button id='all_vars_button' onclick='select_bound_vars()' value='Select all'></button></td><td></td><td></td></tr>";
+  // select/deselect all button
+  table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button' onclick='select_bound_vars()'>Select All</button></td><td></td><td></td></tr>";
   table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Lower Bound</b></td><td><b>Upper Bound</b></td></tr>"; // Header
   for (var n = 0; n < uni_variable_list.length; n++) {
     var var_entry = uni_variable_list[n];
@@ -1684,14 +1684,19 @@ function check_group_types(variable) {
 }
 
 function select_bound_vars () {
-  document.getElementById("all_vars_button").setAttribute('value', 'Unselect all');
-  document.getElementById("all_vars_button").setAttribute('onclick', 'unselect_bound_vars()');
+  document.getElementById("all_vars_button").innerHTML = 'Deselect All';
+  document.getElementById("all_vars_button").setAttribute('onclick', 'deselect_bound_vars()');
+  for (var i = 0; i < uni_variable_list.length; i++) {
+    select_bounds_group(uni_variable_list[i]);
+  }
 }
 
-function unselect_bound_vars () {
-  document.getElementById("all_vars_button").setAttribute('value', 'Select all');
+function deselect_bound_vars () {
+  document.getElementById("all_vars_button").innerHTML = 'Select All';
   document.getElementById("all_vars_button").setAttribute('onclick', 'select_bound_vars()');
-
+  for (var i = 0; i < uni_variable_list.length; i++) {
+    unselect_bounds_group(uni_variable_list[i]);
+  }
 }
 
 
@@ -2226,7 +2231,6 @@ function Validation (valid_entry, entry) {
 // Regex: http://www.w3schools.com/jsref/jsref_obj_regexp.asp
 // Validate form based on entry_type info
 function ValidateInput (input, valid_entry, variable, univar) {
-    console.log("called from validateInput")
     // Actual input validation
     // if variable is a grouped variable, univar contains the single variable that was just edited
     var entry = input.value;
