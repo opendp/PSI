@@ -1603,6 +1603,8 @@ function generate_modal6 () {
   $('#myModal6').find('.modal-body ul').html("");
   var table_output = "";
   table_output += "<table style='table-layout: fixed;'>";
+  // select/unselect all button
+  table_output += "<tr><td><button id='all_vars_button' onclick='select_bound_vars()' value='Select all'></button></td><td></td><td></td></tr>";
   table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Lower Bound</b></td><td><b>Upper Bound</b></td></tr>"; // Header
   for (var n = 0; n < uni_variable_list.length; n++) {
     var var_entry = uni_variable_list[n];
@@ -1679,6 +1681,17 @@ function check_group_types(variable) {
 		type_selected(type_chosen, variable);
 	}
 // type_selected(document.getElementById('variable_type_' + subtype + '_group_'+variable).value, subtype);
+}
+
+function select_bound_vars () {
+  document.getElementById("all_vars_button").setAttribute('value', 'Unselect all');
+  document.getElementById("all_vars_button").setAttribute('onclick', 'unselect_bound_vars()');
+}
+
+function unselect_bound_vars () {
+  document.getElementById("all_vars_button").setAttribute('value', 'Select all');
+  document.getElementById("all_vars_button").setAttribute('onclick', 'select_bound_vars()');
+
 }
 
 
