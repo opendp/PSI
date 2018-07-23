@@ -6,5 +6,8 @@ SECRET_KEY = 'i9m7!1oij3-yx8o0xq09j4ow_^t2hazhyt#t@r^kr6n1ad3!*t'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+ALLOWED_HOSTS = ['*']
+#('localhost', '127.0.0.1', '0.0.0.0',)
 
-R_DEV_SERVER_BASE = 'http://0.0.0.0:8000/custom/'
+
+ROOK_SERVER = 'http://0.0.0.0:8000/custom/'

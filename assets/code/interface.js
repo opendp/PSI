@@ -602,7 +602,8 @@ function talktoR(action, variable, stat) {
    //}
 
    console.log(jsonout)
-   urlcall = base+"privateAccuraciesapp";
+   // urlcall = base+"privateAccuraciesapp";
+   urlcall = "rook-custom/privateAccuraciesapp"
    console.log("urlcall out: ", urlcall);
    makeCorsRequest(urlcall, estimateSuccess, estimateFail, jsonout);
 }
@@ -819,7 +820,8 @@ function talktoRtwo(btn) {
    //}
 
 	console.log(jsonout)
-    urlcall = base+"privateStatisticsapp";
+    // urlcall = base+"privateStatisticsapp";
+    urlcall = "rook-custom/privateStatisticsapp"
     console.log("urlcall out: ", urlcall);
 
     makeCorsRequest(urlcall, statisticsSuccess, estimateFail, jsonout);
@@ -907,7 +909,14 @@ function makeCorsRequest(url,callback, warningcallback, json) {
      };
      console.log("sending")
      console.log(json);
-     xhr.send("tableJSON="+encodeURIComponent(json));
+
+     // let body = new FormData();
+     // body.append('data', json)
+     var print_var = "tableJSON=" + encodeURIComponent(json)
+     console.log("table JSON");
+     console.log(print_var)
+     //xhr.send("tableJSON="+encodeURIComponent(json));
+     xhr.send(json);
 }
 
 
@@ -2108,7 +2117,8 @@ function newtransform(x) {
     var jsonout = JSON.stringify({formula: formula, names: variable_list})
 
     console.log(jsonout)
-    urlcall = rappURL+"verifyTransformapp";
+    // urlcall = rappURL+"verifyTransformapp";
+    urlcall = "rook-custom/verifyTransformapp";
     console.log("urlcall out: ", urlcall);
     makeCorsRequest(urlcall, newtransSuccess, newtransFailure, jsonout);
     }

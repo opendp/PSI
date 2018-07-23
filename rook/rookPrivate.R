@@ -7,12 +7,15 @@
 ##  12/11/14 jH
 ##
 
+print("in rook private")
+
 
 privateStatistics.app <-function(env){
     production<-FALSE     ## Toggle:  TRUE - Production, FALSE - Local Development
     if(production){
         sink(file = stderr(), type = "output")
     }
+
 
     print("Entered privateStatistics app")
     
@@ -23,7 +26,9 @@ privateStatistics.app <-function(env){
     warning <- FALSE
     message <- "nothing"
     
+
     valid <- jsonlite::validate(request$POST()$tableJSON)
+
     print(valid)
 
     ## Check the POST sent to the app appears to be valid JSON
@@ -186,6 +191,8 @@ privateAccuracies.app <- function(env){
     message <- "nothing"
     
     valid <- jsonlite::validate(request$POST()$tableJSON)
+
+    print("valid")
     print(valid)
 
     if(!valid) {
