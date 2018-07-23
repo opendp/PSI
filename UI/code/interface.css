@@ -314,3 +314,9 @@ footer {
 .bound_buffer {
   width: 50px;
 }
+
+.bounds_all_button {
+  margin-left: 20px;
+  width: 100px;
+  margin-bottom: 10px;
+}
