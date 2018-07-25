@@ -43,6 +43,7 @@ source(paste(modulesPath,"cem-utilities.R", sep=""))
 source(paste(modulesPath,"dpATT.R", sep=""))
 source(paste(modulesPath,"dpCEM.R", sep=""))
 source(paste(modulesPath,"CEM_getFunctions.R", sep=""))
+source(paste(modulesPath,"updatedRttpd.R", sep=""))
 
 #source PSIlence
 UsePackage <- TRUE
@@ -80,7 +81,7 @@ if(!production){
         stop()
     }
     
-    R.server <- Rhttpd$new()
+    R.server <- Rhttpd2$new()
     
     cat("Type:", typeof(R.server), "Class:", class(R.server))
     R.server$add(app = File$new(getwd()), name = "pic_dir")
