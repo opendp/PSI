@@ -7,8 +7,6 @@
 ##  12/11/14 jH
 ##
 
-print("in rook private")
-
 
 privateStatistics.app <-function(env){
     production<-FALSE     ## Toggle:  TRUE - Production, FALSE - Local Development
