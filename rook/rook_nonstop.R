@@ -5,7 +5,9 @@ source('rookSetup.R')
 # Now make the console go to sleep. Of course the web server will still be
 # running.
 while (TRUE) {
-  Sys.sleep(1 * 60 * 60) # restart every 24 hours
+  print('(rook restarts every hour)')
+  Sys.sleep(1 * 60 * 60) # restart every hour
+
   source("rookrestart.R")
 }
 # If we get here then the web server didn't start up properly
