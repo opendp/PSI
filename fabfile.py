@@ -1,6 +1,7 @@
 import os
 import sys
-from fabric import Connection, task
+from fabric import task
+from invoke import run as fab_local
 import django
 
 # ----------------------------------------------------
@@ -30,18 +31,34 @@ except Exception as e:
     print("WARNING: Can't configure Django. %s" % e)
 
 
-def run_local_cmd(desc, cmd):
+def run_local_cmd(cmd, description=None):
     """Run a command on the host"""
     print('-' * 40)
-    print(desc)
+    if description:
+        print(description)
     print(cmd)
     print('-' * 40)
-    conn = Connection('host')
-    conn.local(cmd)
+    fab_local(cmd)
 
 @task
 def run_rook(context):
     """Run the rook server via the command line"""
     cmd = 'cd rook; Rscript rook_nonstop.R'
 
-    run_local_cmd(run_rook.__doc__, cmd)
+    run_local_cmd(cmd, run_rook.__doc__)
+
+@task
+def init_db(context):
+    """Initialize the django database--if needed"""
+    cmd = ('python manage.py check;'
+           'python manage.py migrate')
+    run_local_cmd(cmd, init_db.__doc__)
+
+@task
+def run_web(context):
+    """Run the django web app"""
+    init_db(context)
+
+    cmd = ('python manage.py runserver 0.0.0.0:8080')
+
+    run_local_cmd(cmd, run_web.__doc__)
