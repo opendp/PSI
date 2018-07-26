@@ -47,6 +47,18 @@ def run_rook(context):
 
     run_local_cmd(cmd, run_rook.__doc__)
 
+# @task
+# def create_django_superuser():
+#     """(Test only) Create superuser with username: dev_admin. Password is printed to the console."""
+#     User.objects.create_superuser('admin', '', 'admin')
+
+
+@task
+def collect_static(context):
+    """Run the Django collectstatic command"""
+    local('python manage.py collectstatic --noinput')
+
+
 @task
 def init_db(context):
     """Initialize the django database--if needed"""
@@ -59,6 +71,7 @@ def run_web(context):
     """Run the django web app"""
     init_db(context)
 
-    cmd = ('python manage.py runserver 0.0.0.0:8080')
+    cmd = ('python manage.py createsuperuser;'
+           'python manage.py runserver 8080')
 
     run_local_cmd(cmd, run_web.__doc__)
