@@ -8,7 +8,7 @@
 
 production<-FALSE     ## Toggle:  TRUE - Production, FALSE - Local Development
 
-packageList<-c("Rook","jsonlite","openssl", "devtools") 
+packageList<-c("Rook","jsonlite","openssl", "devtools")
 for(i in 1:length(packageList)){
     if (!require(packageList[i],character.only = TRUE)){
         install.packages(packageList[i], repos="http://lib.stat.cmu.edu/R/CRAN/")
@@ -21,6 +21,7 @@ for(i in 1:length(packageList)){
 library(Rook)
 library(jsonlite)
 
+source("rookhealthcheck.R")
 modulesPath<-("dpmodules/Jack/")
 libraryPath<-("../PSI-Library/R/")
 source(paste(modulesPath,"DPUtilities.R", sep=""))
@@ -74,23 +75,28 @@ if(!production){
     } else {
         status <- .Call(tools:::startHTTPD, myInterface, myPort)
     }
-    
-    
+
+
     if( status!=0 ){
         print("WARNING: Error setting interface or port")
         stop()
     }
-    
+
+    # Allow listening outside of the local host
+    #
+    unlockBinding("httpdPort", environment(tools:::startDynamicHelp))
+    assign("httpdPort", myPort, environment(tools:::startDynamicHelp))
+
     R.server <- Rhttpd2$new()
-    
+
     cat("Type:", typeof(R.server), "Class:", class(R.server))
     R.server$add(app = File$new(getwd()), name = "pic_dir")
     print(R.server)
-    
-    R.server$start(listen=myInterface, port=myPort)
+
+    #R.server$start(listen=myInterface, port=myPort)
     R.server$listenAddr <- myInterface
     R.server$listenPort <- myPort
-    
+
 }
 
 source("rookPrivate.R")
@@ -101,6 +107,7 @@ if(!production){
     R.server$add(app = privateAccuracies.app, name = "privateAccuraciesapp")
     R.server$add(app = privateStatistics.app, name = "privateStatisticsapp")
     R.server$add(app = verifyTransform.app, name = "verifyTransformapp")
+    R.server$add(app = healthcheck.app, name="healthcheckapp")
     print(R.server)
 }
 
