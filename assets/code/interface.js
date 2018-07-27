@@ -234,7 +234,7 @@ function initTypes() {
     // Retrieve from dataverse API
   } else {
     // Read from local'
-    var_types_url = "getData";
+    var_types_url =  "../../data/preprocess_4_v1-0.json";
   }
 
   d3.json(var_types_url, function(json_data) {
@@ -400,8 +400,7 @@ if (ddiurl) {
     // neither a full ddi url, nor file id supplied; use one of the sample DDIs that come with
     // the app, in the data directory:
     //metadataurl="../../data/Census_PUMS5_California_Subsample-ddi.xml";  // This is PUMS example metadata file
-    //metadataurl="../../data/pumsmetaui.xml"; //For UI/UX
-    metadataurl="getXML";
+    metadataurl="../../data/pumsmetaui.xml"; //For UI/UX
     console.log("Retrieving Metadata Locally");
 }
 
@@ -421,7 +420,6 @@ var data = [];
 var VarList =[];
 var dataTitle;
 d3.xml(metadataurl, "application/xml", function(xml) {
-    console.log("XML", xml);
     var vars = xml.documentElement.getElementsByTagName("var");
     var Variables = [];
     var type;
@@ -1329,11 +1327,9 @@ function display_help(text) {
 
 // Display help id
 function display_help_id(id) {
-  console.log("In display help id");
   d3.select("#datasetName").selectAll("h2").html('');
   d3.select("#datasetSmallName").html('<h4 style="display:inline;">' + dataTitle + '</h4>');
   $("#datasetHelp").load('psiIntroduction.html #' + id);
-  //$("#datasetHelp").load(PSI_INTRO_URL);
 }
 
 // Makes the checkboxes
@@ -1485,7 +1481,6 @@ function jamestoggle(button) {
 function make_bubble (variable) {
     var variable_raw = variable;
     variable = variable.replace(/\s/g, '_');
-    console.log("make_bubble")
     var blank_bubble =
     "<div id='" + variable + "'>" +
         "<div class='bubble' id='bubble_" + variable + "'>" +
@@ -1496,7 +1491,6 @@ function make_bubble (variable) {
             "<div id='panel_" + variable + "' class='panel'>" +
                 "<div id='formula_" + variable + "' class ='formulas'> </div>" +
                 "<div id='variable_types_" + variable + "' class='variable_types'>";
-      
                 if(variable in grouped_var_dict){
                 	var varlist = grouped_var_dict[variable];
                 	var v;
@@ -1504,7 +1498,7 @@ function make_bubble (variable) {
                   blank_bubble += "Variable Types";
 
                   blank_bubble += "&nbsp;&nbsp;<a href='#myModal5' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal5(\"" + variable + "\")' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
-                  
+
                 	blank_bubble += "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 	blank_bubble += "<table>";
                 	for(var i=0; i< varlist.length; i++){
@@ -1609,6 +1603,8 @@ function generate_modal6 () {
   $('#myModal6').find('.modal-body ul').html("");
   var table_output = "";
   table_output += "<table style='table-layout: fixed;'>";
+  // select/deselect all button
+  table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button' onclick='select_bound_vars()'>Select All</button></td><td></td><td></td></tr>";
   table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Lower Bound</b></td><td><b>Upper Bound</b></td></tr>"; // Header
   for (var n = 0; n < uni_variable_list.length; n++) {
     var var_entry = uni_variable_list[n];
@@ -1687,6 +1683,22 @@ function check_group_types(variable) {
 // type_selected(document.getElementById('variable_type_' + subtype + '_group_'+variable).value, subtype);
 }
 
+function select_bound_vars () {
+  document.getElementById("all_vars_button").innerHTML = 'Deselect All';
+  document.getElementById("all_vars_button").setAttribute('onclick', 'deselect_bound_vars()');
+  for (var i = 0; i < uni_variable_list.length; i++) {
+    select_bounds_group(uni_variable_list[i]);
+  }
+}
+
+function deselect_bound_vars () {
+  document.getElementById("all_vars_button").innerHTML = 'Select All';
+  document.getElementById("all_vars_button").setAttribute('onclick', 'select_bound_vars()');
+  for (var i = 0; i < uni_variable_list.length; i++) {
+    unselect_bounds_group(uni_variable_list[i]);
+  }
+}
+
 
 // Enables Collapsable Sections for JS Generated HTML
 function accordion (bubble) {
@@ -1720,7 +1732,6 @@ function parameter_fields (variable, type_chosen) {
 		needed_parameters = needed_parameters.unique();
 		// makes blank html text
 		var parameter_field = "<table>";
-    console.log("param fields");
 		if(needed_parameters.length > 0){
 			parameter_field+="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='metadata'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
 		}
@@ -3536,13 +3547,13 @@ function edit_parameters_window () {
     }
     html += '<tr id="reserved_epsilon_row" style="display:none;"><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Reserved Budget:</span></td><td style="padding-left: 15px;"><input id="reserved_epsilon_value" name="reserved_epsilon" onfocusout="reserved_epsilon_check(this)" title="Reserving epsilon will decrease your privacy budget, but will enable future researchers to make queries on your dataset." value="' + reserved_epsilon + '" style="color: black;" type="text" placeholder="Reserved Budget"> <input title="" type="button" style="color:gray; width:200px;" onclick="remove_reserved_epsilon_field()" value="Remove Reserve Epsilon"></td></tr>';
 
-    html += '<tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row"><input id="delta_value" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + global_delta + '" style="color: black;" type="text" placeholder="Delta">  <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width:200px;" onclick="change_to_exponential_form(\'D\')" value="Use Exponential Notation"></td></tr>';
+    html += '<tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row"><input id="delta_value" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + global_delta + '" style="color: black;" type="text" placeholder="Delta">  <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'D\')" value="Exponential"></td></tr>';
     if(!interactive){
 		if (SS_value_past == '') {
-		  html += '<tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input id="SS" name="SS" onfocusout="global_parameters_SS(this)" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder=""> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray; width:200px;" onclick="clear_SS()" value="Clear"></td></tr><tr id="FE" style="display:none;"><td style="text-align:right; padding-right: 15px; padding-top:15px;"><span title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields.">Functioning Epsilon:</span></td><td style="padding-left: 15px; padding-top:15px;"><div id="FE_value" name="FE" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." style="color: black;"></div></td></tr><tr id="FD" style="display:none;"><td style="text-align:right; padding-right: 15px;"><span title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields.">Functioning Delta:</span></td><td style="padding-left: 15px;"><div id="FD_value" name="FD" title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields." style="color: black;" ></div></td></tr></table>';
+		  html += '<tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input id="SS" name="SS" onfocusout="global_parameters_SS(this)" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder=""> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray; width:100px;" onclick="clear_SS()" value="Clear"></td></tr><tr id="FE" style="display:none;"><td style="text-align:right; padding-right: 15px; padding-top:15px;"><span title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields.">Functioning Epsilon:</span></td><td style="padding-left: 15px; padding-top:15px;"><div id="FE_value" name="FE" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." style="color: black;"></div></td></tr><tr id="FD" style="display:none;"><td style="text-align:right; padding-right: 15px;"><span title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields.">Functioning Delta:</span></td><td style="padding-left: 15px;"><div id="FD_value" name="FD" title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields." style="color: black;" ></div></td></tr></table>';
 		}
 		else {
-		  html += '<tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input id="SS" name="SS" onfocusout="global_parameters_SS(this)" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="' + SS_value_past + '" style="color: black;" type="text" placeholder=""> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray; width:200px;" onclick="clear_SS()" value="Clear"></td></tr><tr id="FE" style=""><td style="text-align:right; padding-right: 15px; padding-top:15px;"><span title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields.">Functioning Epsilon:</span></td><td style="padding-left: 15px; padding-top:15px;"><div id="FE_value" name="FE" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." style="color: black;">' + global_fe.toFixed(4) + '</div></td></tr><tr id="FD" style=""><td style="text-align:right; padding-right: 15px;"><span title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields.">Functioning Delta:</span></td><td style="padding-left: 15px;"><div id="FD_value" name="FD" title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields." style="color: black;" >' + global_fd.toFixed(10) + '</div></td></tr></table>';
+		  html += '<tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input id="SS" name="SS" onfocusout="global_parameters_SS(this)" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="' + SS_value_past + '" style="color: black;" type="text" placeholder=""> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray; width:100px;" onclick="clear_SS()" value="Clear"></td></tr><tr id="FE" style=""><td style="text-align:right; padding-right: 15px; padding-top:15px;"><span title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields.">Functioning Epsilon:</span></td><td style="padding-left: 15px; padding-top:15px;"><div id="FE_value" name="FE" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." style="color: black;">' + global_fe.toFixed(4) + '</div></td></tr><tr id="FD" style=""><td style="text-align:right; padding-right: 15px;"><span title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields.">Functioning Delta:</span></td><td style="padding-left: 15px;"><div id="FD_value" name="FD" title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields." style="color: black;" >' + global_fd.toFixed(10) + '</div></td></tr></table>';
 		}
    }
     html += '<div id="privacy-loss-params-info-edit" style="margin-top: 40px"></div>';
@@ -3606,9 +3617,9 @@ function group_vars_window_closed(){
 	 }
 }
 
-function change_to_exponential_form (key) {
+function change_to_exponential_form (key, suffix='') {
   if (key == 'D') {
-    var entry = document.getElementById('delta_value').value;
+    var entry = document.getElementById('delta_value' + suffix).value;
     var digits = entry.toString().length - window_global_delta_power;
     if (entry.includes('.') && !entry.includes('0.')) {
       digits = digits - 1;
@@ -3619,8 +3630,8 @@ function change_to_exponential_form (key) {
     if (digits < 0 || digits > 20) {
       digits = base_toFixed_amt;
     }
-    var delta_html = '<input id="delta_value_base" name="delta_base" onfocusout="delta_check_exp(this,\'base\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta_base).toFixed(digits) + '" style="color: black;width:107.5px" type="text" placeholder="Delta Base">&times;10<sup>-<input id="delta_value_power" name="delta_power" onfocusout="delta_check_exp(this, \'power\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + window_global_delta_power + '" style="color: black;width:25px;" type="text" placeholder="Delta Power"></sup> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width:200px;" onclick="change_to_exponential_form(\'E\')" value="Use Decimal Notation">';
-    document.getElementById('delta_row').innerHTML = delta_html;
+    var delta_html = '<input id="delta_value_base' + suffix + '" name="delta_base" onfocusout="delta_check_exp(this,\'base\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta_base).toFixed(digits) + '" style="color: black;width:107.5px" type="text" placeholder="Delta Base">&times;10<sup>-<input id="delta_value_power" name="delta_power" onfocusout="delta_check_exp(this, \'power\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + window_global_delta_power + '" style="color: black;width:25px;" type="text" placeholder="Delta Power"></sup> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'E\',\'' + suffix + '\')" value="Decimal">';
+    document.getElementById('delta_row' + suffix).innerHTML = delta_html;
     scientific_notion_for_delta_toggle = true;
 
     if (window_SS_value_past != '') {
@@ -3628,15 +3639,15 @@ function change_to_exponential_form (key) {
     }
   }
   else if (key == 'E') {
-    var entry = document.getElementById('delta_value_base').value;
+    var entry = document.getElementById('delta_value_base' + suffix).value;
     var digits = parseInt(window_global_delta_power) + entry.toString().length - 1;
     if (entry.includes('.')) {
       digits = digits - 1;
     }
 
     if (digits < 20) {
-      var delta_html = '<input id="delta_value" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta).toFixed(digits) + '" style="color: black;" type="text" placeholder="Delta"> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width:200px;" onclick="change_to_exponential_form(\'D\')" value="Use Exponential Notation">';
-      document.getElementById('delta_row').innerHTML = delta_html;
+      var delta_html = '<input id="delta_value' + suffix + '" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta).toFixed(digits) + '" style="color: black;" type="text" placeholder="Delta"> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'D\',\'' + suffix + '\')" value="Exponential">';
+      document.getElementById('delta_row' + suffix).innerHTML = delta_html;
       scientific_notion_for_delta_toggle = false;
 
       if (window_SS_value_past != '') {
