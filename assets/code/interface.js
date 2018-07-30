@@ -3369,8 +3369,14 @@ function epsilon_check (epsilon) {
 }
 
 function update_ed() {
-  document.getElementById("epsilonDisplay").textContent = parseFloat(global_epsilon).toFixed(4);
-  document.getElementById("deltaDisplay").textContent = parseFloat(global_delta).toExponential(4);
+  global_epsilon = window_global_epsilon;
+  global_delta = window_global_delta;
+  global_fe = window_global_fe;
+  global_fd = window_global_fd;
+  SS_value_past = window_SS_value_past;
+  display_params();
+  // document.getElementById("epsilonDisplay").textContent = parseFloat(global_epsilon).toFixed(4);
+  // document.getElementById("deltaDisplay").textContent = parseFloat(global_delta).toExponential(4);
 }
 
 function reserved_epsilon_check (reserved_epsilon) {
