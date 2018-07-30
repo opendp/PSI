@@ -234,7 +234,8 @@ function initTypes() {
     // Retrieve from dataverse API
   } else {
     // Read from local'
-    var_types_url =  "../../data/preprocess_4_v1-0.json";
+    var_types_url = "getData"
+    // var_types_url =  "../../data/preprocess_4_v1-0.json";
   }
 
   d3.json(var_types_url, function(json_data) {
@@ -400,7 +401,8 @@ if (ddiurl) {
     // neither a full ddi url, nor file id supplied; use one of the sample DDIs that come with
     // the app, in the data directory:
     //metadataurl="../../data/Census_PUMS5_California_Subsample-ddi.xml";  // This is PUMS example metadata file
-    metadataurl="../../data/pumsmetaui.xml"; //For UI/UX
+    //metadataurl="../../data/pumsmetaui.xml"; //For UI/UX
+    metadataurl="getXML"
     console.log("Retrieving Metadata Locally");
 }
 
