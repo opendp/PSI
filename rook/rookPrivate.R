@@ -14,6 +14,7 @@ privateStatistics.app <-function(env){
         sink(file = stderr(), type = "output")
     }
 
+
     print("Entered privateStatistics app")
     
     request <- Request$new(env)
@@ -23,7 +24,9 @@ privateStatistics.app <-function(env){
     warning <- FALSE
     message <- "nothing"
     
+
     valid <- jsonlite::validate(request$POST()$tableJSON)
+
     print(valid)
 
     ## Check the POST sent to the app appears to be valid JSON
@@ -186,6 +189,8 @@ privateAccuracies.app <- function(env){
     message <- "nothing"
     
     valid <- jsonlite::validate(request$POST()$tableJSON)
+
+    print("valid")
     print(valid)
 
     if(!valid) {

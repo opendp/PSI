@@ -4,8 +4,8 @@
 ##  simple restart of the R.server
 ##
 
-R.server$stop()
+print('-- Restarting rook --')
+
 R.server$remove(all=TRUE)
 rm(list=ls())
 source("rookSetup.R")
-
