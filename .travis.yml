@@ -1,0 +1,43 @@
+branches:
+  # all branches
+  only:
+  - gh-pages
+  - /.*/
+
+language: python
+
+python:
+  - "3.6"
+
+services:
+  - docker
+
+install:
+  # Build/test dependencies
+  - pip install --no-cache-dir -r requirements/prod.txt
+  - pip install coveralls
+script:
+  - echo $TRAVIS_BRANCH;
+  # Run django tests.  (Note django settings are a travis env variable)
+  #
+  - python manage.py test
+
+after_success:
+  #
+  # Build images and push to dockerhub
+  #
+  - echo $TRAVIS_BRANCH;
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker build -t tworavens/psi-web:latest -f Dockerfile-django .;
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push tworavens/psi-web:latest;
+    fi
+  - if [ "$TRAVIS_BRANCH" == "develop" ]; then
+    docker build -t tworavens/psi-web:develop -f Dockerfile-django .;
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push tworavens/psi-web:develop;
+    fi
+  #
+  # send report to coveralls
+  #
+  - coveralls
