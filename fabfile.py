@@ -64,14 +64,14 @@ def init_db(context):
     """Initialize the django database--if needed"""
     cmd = ('python manage.py check;'
            'python manage.py migrate')
+    print("about to run init_db")
     run_local_cmd(cmd, init_db.__doc__)
 
 @task
 def run_web(context):
     """Run the django web app"""
-    init_db(context)
-
-    cmd = ('python manage.py createsuperuser;'
-           'python manage.py runserver 8080')
+    # init_db(context)
+    print("about to run server")
+    cmd = ('echo "x" && echo "z" && python manage.py runserver 8080 && echo "y" ')
 
     run_local_cmd(cmd, run_web.__doc__)

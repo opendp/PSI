@@ -11,8 +11,8 @@ LABEL organization="PSI" \
 # Install sqlite + debugging tools
 # -------------------------------------
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-    apt-utils\
+    apt-get install -y apt-utils \
+    apt-utils \
     iputils-ping \
     telnet \
     vim 
@@ -71,7 +71,18 @@ VOLUME /psi_volume
 #   - make_d3m_config - WARNING: for testing. Loads D3M info based on the test data
 #
 # -------------------------------------
-# RUN fab init-db
+RUN fab init-db
+#ENV DJANGO_DB_NAME=default
+#ENV DJANGO_SU_NAME=admin
+#ENV DJANGO_SU_EMAIL=admin@my.company
+#ENV DJANGO_SU_PASSWORD=mypass
+
+# RUN python -c "import django; django.setup(); \
+#   from django.contrib.auth.management.commands.createsuperuser import get_user_model; \
+#   get_user_model()._default_manager.db_manager('$DJANGO_DB_NAME').create_superuser( \
+#   username='$DJANGO_SU_NAME', \
+#   email='$DJANGO_SU_EMAIL', \
+#   password='$DJANGO_SU_PASSWORD')"
 
 # -------------------------------------
 # Expose port for web communication
@@ -79,6 +90,23 @@ VOLUME /psi_volume
 # -------------------------------------
 EXPOSE 8080
 
-RUN cd /var/webapps/PSI && \
-    printf "\nStarting web server.." && \
-    fab run-web
+#RUN cd /var/webapps/PSI && \
+#    printf "\nStarting web server.." && \
+#    fab run-web
+
+CMD ["python3", "manage.py", "migrate"]
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8080"]
+
+#RUN ls
+#RUN python --version
+#RUN python manage.py migrate
+#RUN python manage.py runserver 8080
+#CMD ["python manage.py runserver 8080"]
+
+# COPY startup script into known file location in container
+#COPY start.sh /start.sh
+
+
+# CMD specifcies the command to execute to start the server running.
+# CMD ["/start.sh"]
+# done!
