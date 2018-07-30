@@ -14,6 +14,9 @@ def view_rook_route(request, app_name_in_url):
 	rook_svc_url = '{0}{1}'.format(settings.ROOK_SERVER, app_name_in_url)
 	print("URL FOR ROOK! :::: ", rook_svc_url)
 	decode = request.body.decode('utf-8')
+
+	print("Decoded: ", decode)
+
 	sendtoR = {'tableJSON':decode}
 
 	try:
@@ -38,7 +41,9 @@ def view_rook_route(request, app_name_in_url):
 	#                                      rservice_req.status_code)
 	#     call_entry.save()
 
+	print('REQUEST: ', rservice_req)
+	print('Text: %s', rservice_req.text)
 	print('status code from rook call: %d' % rservice_req.status_code)
-	## print('json from rook cool: %s' % rservice_req.json())
+	print('json from rook call: %s' % rservice_req.json())
 
 	return JsonResponse(rservice_req.json())
