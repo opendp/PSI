@@ -6,9 +6,9 @@ services:
   web:
     build:
       context: ./
-      dockerfile: Dockerfile-django 
+      dockerfile: Dockerfile-django
     environment:
-      - ROOK_SERVER=rook-service:8000
+      - ROOK_SERVER=http://rook-service:8000
     command: python manage.py runserver 0.0.0.0:8080
     volumes:
       - .:/psi_volume
