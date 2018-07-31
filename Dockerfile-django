@@ -90,23 +90,9 @@ RUN fab init-db
 # -------------------------------------
 EXPOSE 8080
 
-#RUN cd /var/webapps/PSI && \
-#    printf "\nStarting web server.." && \
-#    fab run-web
-
 CMD ["python3", "manage.py", "migrate"]
 CMD ["python3", "-u", "manage.py", "runserver", "0.0.0.0:8080"]
 
-#RUN ls
-#RUN python --version
-#RUN python manage.py migrate
-#RUN python manage.py runserver 8080
-#CMD ["python manage.py runserver 8080"]
-
-# COPY startup script into known file location in container
-#COPY start.sh /start.sh
-
-
-# CMD specifcies the command to execute to start the server running.
-# CMD ["/start.sh"]
-# done!
+#RUN cd /var/webapps/PSI && \
+#    printf "\nStarting web server.." && \
+#    fab run-web

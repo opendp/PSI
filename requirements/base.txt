@@ -4,5 +4,3 @@ requests==2.19.1
 
 # fabric
 fabric==2.2.1
-
-gunicorn==19.6.0

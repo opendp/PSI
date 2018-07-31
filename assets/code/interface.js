@@ -910,11 +910,6 @@ function makeCorsRequest(url,callback, warningcallback, json) {
      console.log("sending")
      console.log(json);
 
-     // let body = new FormData();
-     // body.append('data', json)
-     var print_var = "tableJSON=" + encodeURIComponent(json)
-     console.log("table JSON");
-     console.log(print_var)
      //xhr.send("tableJSON="+encodeURIComponent(json));
      xhr.send(json);
 }
