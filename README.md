@@ -13,9 +13,9 @@ To run locally:
 
       In R run: 
 
-            `setwd ("[path to psi project]/rook")`
+            setwd ("[path to psi project]/rook")
 
-            `source ("rookSetup.R")`
+            source ("rookSetup.R")
 
 3. Start Django: `python manage.py runserver 8080`
 
