@@ -10,6 +10,7 @@ To run locally:
 Install dependencies: `pip install -r requirements/base.txt`
 
 Start rook:
+
 In R run: 
 1. `setwd ("[path to psi project]/rook")`
 2. `source ("rookSetup.R")`
