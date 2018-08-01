@@ -7,15 +7,15 @@ Enabling CORS request to local files on Chrome:
 
 To run locally:
 
-Install dependencies: `pip install -r requirements/base.txt`
+1. Install dependencies: `pip install -r requirements/base.txt`
 
-Start rook:
+2. Start rook:
 
 In R run: 
-1. `setwd ("[path to psi project]/rook")`
-2. `source ("rookSetup.R")`
+`setwd ("[path to psi project]/rook")`
+`source ("rookSetup.R")`
 
-Start Django: `python manage.py runserver 8080`
+3. Start Django: `python manage.py runserver 8080`
 
 Any port other than 8000 can be specified because rook runs on 8000. 
 
