@@ -17,7 +17,7 @@ To run locally:
 
 Any port other than 8000 can be specified because rook runs on 8000. 
 
-Before going to localhost, CORS request have to be enabled on the browser:
+To allow communication with rook, CORS request have to be enabled on your browser:
 
 Enabling CORS request to local files on Chrome:
 `google-chrome --disable-web-security --user-data-dir="[path to ..\PrivateZelig\data here]"`
