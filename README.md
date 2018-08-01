@@ -2,7 +2,8 @@
 Private data Sharing Interface
 
 Enabling CORS request to local files on Chrome:
-`chrome --disable-web-security --user-data-dir="[path to ..\PrivateZelig\data here]"`
+`google-chrome --disable-web-security --user-data-dir="[path to ..\PrivateZelig\data here]"`
+
 
 To run locally:
 
@@ -15,3 +16,4 @@ In R run:
 
 Start Django: `python manage.py runserver 8080`
 Any port other than 8000 can be specified because rook runs on 8000. 
+

@@ -218,7 +218,7 @@ var hostname = "";
 var metadataurl = "";
 var ddiurl = "";
 
-var dataverse_available = false;  // When Dataverse repository goes down, or is otherwise unavailable, this is a quick override for searching for metadata by url.
+var dataverse_available = true;  // When Dataverse repository goes down, or is otherwise unavailable, this is a quick override for searching for metadata by url.
 
 // Types of variables according to default/user confirmation
 var types_for_vars = {};
@@ -396,13 +396,15 @@ if (ddiurl) {
     // file id supplied; we're going to cook a standard dataverse
     // metadata url, with the file id provided and the hostname
     // supplied or configured:
-    metadataurl="https://beta.dataverse.org/api/meta/datafile/"+fileid;
+    console.log("Retrieving data from dataverse");
+    //metadataurl="https://beta.dataverse.org/api/meta/datafile/"+fileid;
+    metadataurl="https://psi.hmdc.harvard.edu/"
 } else {
     // neither a full ddi url, nor file id supplied; use one of the sample DDIs that come with
     // the app, in the data directory:
     //metadataurl="../../data/Census_PUMS5_California_Subsample-ddi.xml";  // This is PUMS example metadata file
     //metadataurl="../../data/pumsmetaui.xml"; //For UI/UX
-    metadataurl="getXML"
+    metadataurl="getXML";
     console.log("Retrieving Metadata Locally");
 }
 
@@ -422,6 +424,7 @@ var data = [];
 var VarList =[];
 var dataTitle;
 d3.xml(metadataurl, "application/xml", function(xml) {
+    console.log("XML: ", xml);
     var vars = xml.documentElement.getElementsByTagName("var");
     var Variables = [];
     var type;
