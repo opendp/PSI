@@ -11,7 +11,7 @@ To run locally:
 
 2. Start rook:
 
-In R run: 
+    In R run: 
 
 `setwd ("[path to psi project]/rook")`
 
