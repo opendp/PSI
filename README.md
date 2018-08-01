@@ -1,19 +1,24 @@
 # PSI
 Private data Sharing Interface
 
-Enabling CORS request to local files on Chrome:
-`google-chrome --disable-web-security --user-data-dir="[path to ..\PrivateZelig\data here]"`
-
-
 To run locally:
 
-Install dependencies: `pip install -r requirements/base.txt`
+1. Install dependencies: `pip install -r requirements/base.txt`
 
-Start rook:
-In R run: 
-1. `setwd ("[path to psi project]/rook")`
-2. `source ("rookSetup.R")`
+2. Start rook:
 
-Start Django: `python manage.py runserver 8080`
+      In R run: 
+
+            setwd ("[path to.../PSI/rook")
+
+            source ("rookSetup.R")
+
+3. Start Django: `python manage.py runserver 8080`
+
 Any port other than 8000 can be specified because rook runs on 8000. 
+
+To allow communication with rook, CORS request have to be enabled on your browser:
+
+Enabling CORS request to local files on Chrome:
+`google-chrome --disable-web-security --user-data-dir="[path to ../PSI/data]"`
 
