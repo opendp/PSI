@@ -9,7 +9,7 @@ To run locally:
 
       In R run: 
 
-            setwd ("[path to psi project]/rook")
+            setwd ("[path to.../PSI/rook")
 
             source ("rookSetup.R")
 
@@ -20,5 +20,5 @@ Any port other than 8000 can be specified because rook runs on 8000.
 To allow communication with rook, CORS request have to be enabled on your browser:
 
 Enabling CORS request to local files on Chrome:
-`google-chrome --disable-web-security --user-data-dir="[path to ..\PrivateZelig\data here]"`
+`google-chrome --disable-web-security --user-data-dir="[path to ../PSI/data]"`
 
