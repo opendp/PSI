@@ -119,3 +119,5 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [join(BASE_DIR, 'assets')]
 
 ROOK_SERVER = os.environ.get('ROOK_SERVER', 'http://0.0.0.0:8000/custom/')
+
+#LOGIN_REDIRECT_URL = 'content-pages/interface/'

@@ -361,6 +361,8 @@ if(UI){
 
 // When beta.dataverse.org is down, need to override getting files live from Repository:
 
+console.log("dataverse available: ", dataverse_available);
+
 if(!dataverse_available){
   fileid = "";    // This is overriding the lines above that set fileid by the header/selection bar
 }

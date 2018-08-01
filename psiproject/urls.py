@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-	path ('', include('psi_apps.content_pages.urls')),
+	#path('', include('psi_apps.psi_auth.urls')),
+    path ('', include('psi_apps.content_pages.urls')),
 	path ('rook-custom/', include('psi_apps.rook_services.urls')),
     path('admin/', admin.site.urls),
 ]
