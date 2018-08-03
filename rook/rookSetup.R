@@ -48,12 +48,13 @@ source(paste(modulesPath,"updatedRttpd.R", sep=""))
 
 #source PSIlence
 UsePackage <- TRUE
-   if(!production && UsePackage){
-       library(devtools)
-       install_github("IQSS/PSI-Library")
-       library(PSIlence)
-   }
-   if(!UsePackage){
+if(!production && UsePackage){
+   library(devtools)
+   install_github("IQSS/PSI-Library")
+}
+library(PSIlence)
+
+if(!UsePackage){
      source(file.path(libraryPath, "mechanisms.R"))
      for (file in list.files(libraryPath)) {
 	     source(file.path(libraryPath, file))

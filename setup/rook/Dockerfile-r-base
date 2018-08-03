@@ -1,0 +1,36 @@
+FROM r-base:3.5.1
+MAINTAINER Raman Prasad (raman_prasad@harvard.edu)
+
+LABEL organization="PSI" \
+      2ra.vn.version="0.0.6-beta" \
+      2ra.vn.release-date="2018-08-03" \
+      description="Image for the base of the PSI R service."
+
+# ----------------------------------------------------
+# This contains R and specific packages
+# needed to run the PSI rook application
+#
+# - The Image from this Dockerfile is used as a base
+#   to copy in the Rook files and run the app in /rook
+#
+# ----------------------------------------------------
+
+# -------------------------------------
+# Install tools needed for R packages
+# -------------------------------------
+RUN apt-get update && \
+    apt-get -y install libxml2-dev && \
+    apt-get -y install libssh2-1-dev && \
+    apt-get -y install libssl-dev && \
+    apt-get -y install libcurl4-openssl-dev
+
+# -------------------------------------
+# Install R packages for TwoRavens
+# -------------------------------------
+RUN R -e 'install.packages("Rook", repos="http://cran.rstudio.org")' && \
+    R -e 'install.packages("jsonlite", repos="http://cran.rstudio.org")' && \
+    R -e 'install.packages("openssl", repos="http://cran.rstudio.org")' && \
+    R -e 'install.packages("devtools", repos="http://cran.rstudio.org")' && \
+    R -e 'install.packages("VGAM", repos="http://cran.rstudio.org")'
+
+EXPOSE 8000

@@ -1,4 +1,4 @@
-FROM tworavens/r-service-base:latest
+FROM tworavens/psi-r-service-base:latest
 MAINTAINER Raman Prasad (raman_prasad@harvard.edu)
 
 LABEL organization="PSI" \
@@ -7,18 +7,26 @@ LABEL organization="PSI" \
       description="Image for the PSI R service, which runs on rook."
 
 # -------------------------------------
+# Install R openssl library
+# -------------------------------------
+#RUN R -e 'install.packages("openssl", repos="http://cran.rstudio.org")'
+RUN R -e 'library(devtools);install_github("IQSS/PSI-Library")'
+
+# -------------------------------------
 # Copy the repo over
 #   - future: ignore the tworavens django dirs
 #     and assets, be more selective
 # -------------------------------------
 RUN mkdir -p /var/webapps/PSI && \
     mkdir -p /var/webapps/PSI/assets && \
+    mkdir -p /var/webapps/PSI/data && \
     mkdir -p /psi_volume
 
 # Copy over the repository
 COPY ./rook/ /var/webapps/PSI/rook
 COPY ./LICENSE /var/webapps/PSI
 COPY ./README.md /var/webapps/PSI
+COPY ./data/ /var/webapps/PSI/data
 
 
 # -------------------------------------
