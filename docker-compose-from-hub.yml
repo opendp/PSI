@@ -21,7 +21,10 @@ services:
   rook-service:
     stdin_open: true
     tty: true
-    image: tworavens/psi-r-service
+    #image: tworavens/psi-r-service
+    build:
+      context: ./
+      dockerfile: Dockerfile-r-service
     ports:
       - "8000:8000"
     volumes:
