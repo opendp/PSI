@@ -18,7 +18,7 @@ install:
   - pip install coveralls
 script:
   - echo $TRAVIS_BRANCH;
-  # Run django tests.  (Note django settings are a travis env variable)
+  # Run django tests.  (Note: For django settings, use a travis env variable)
   #
   - python manage.py test
 

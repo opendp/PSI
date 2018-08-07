@@ -21,14 +21,12 @@ def psiOpenPrototype(request):
 	return render(request, 'psiOpenPrototype.html')
 
 def getData(request):
-	print ("getting data")
 	file = open(os.path.join(BASE_DIR, "data/preprocess_4_v1-0.json"))
 	data = json.load(file)
 	##print(data)
 	return JsonResponse(data)
 
 def getXML(request):
-	print ("getting xml")
 	file = open(os.path.join(BASE_DIR, "data/pumsmetaui.xml"))
 	return HttpResponse(file.read())
 

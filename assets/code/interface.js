@@ -418,6 +418,10 @@ var bound_data_stored = {};
 
 var dict_var_bounds = {};
 
+var bins_data_stored = {};
+
+var dict_var_bins = {};
+
 ///////////
 var grid;
 var allResults = [];
@@ -1612,6 +1616,7 @@ function generate_modal5 (variable) {
   $('#myModal5').find('.modal-body ul').append(variable_output);
 }
 
+/* Modal for Lower and Upper Bounds */
 function generate_modal6 () {
   $('#myModal6').find('.modal-body ul').html("");
   var table_output = "";
@@ -1712,6 +1717,85 @@ function deselect_bound_vars () {
   }
 }
 
+/* Modal for Bin Names */
+function generate_modal7 () {
+  $('#myModal7').find('.modal-body ul').html("");
+  var table_output = "";
+  table_output += "<table style='table-layout: fixed;'>";
+  // select/deselect all button
+  table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button_bins' onclick='select_bins_vars()'>Select All</button></td><td></td><td></td></tr>";
+  table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Bin Names</b></td></tr>"; // Header
+  for (var n = 0; n < uni_variable_list.length; n++) {
+    var var_entry = uni_variable_list[n];
+    if (types_for_vars[var_entry] == "Categorical") {
+      table_output += "<tr>";
+      table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "_bins' onclick='select_bins_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
+      table_output += "<td class='bound_buffer'></td>";
+      // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
+      table_output += "<td><input id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Bin Names'/></td>";
+      table_output += "</tr>";
+    }
+  }
+  table_output += "</table>";
+  $('#myModal7').find('.modal-body ul').append(table_output);
+}
+
+function bins_input_group (changed_var, field) {
+  // if changed variable is part of a group
+  var bins_input_value = field.value;
+  if (dict_var_bins[changed_var]) {
+    // loop through all variables
+    for (var n = 0; n < uni_variable_list.length; n++) {
+      if (types_for_vars[uni_variable_list[n]] == "Categorical") {
+        var current_var_name = uni_variable_list[n];
+        // Check if part of selected currently active group
+        if (dict_var_bins[current_var_name]) {
+          document.getElementById("input_Bin_Names_" + current_var_name.replace(/\s/g, '_')).value = bins_input_value;
+          bins_data_stored[current_var_name] = bins_input_value;
+        }
+      }
+    }
+  } else {
+    // for single variable change only
+    document.getElementById("input_Bin_Names_" + changed_var.replace(/\s/g, '_')).value = bins_input_value;
+    bins_data_stored[changed_var] = bins_input_value;
+  }
+}
+
+
+function select_bins_group (variable) {
+  dict_var_bins[variable] = true;
+  document.getElementById("var_selectable_" + variable.replace(/\s/g, '_') + "_bins").setAttribute('class', 'var_selected var_bound_text');
+  document.getElementById("var_selectable_" + variable.replace(/\s/g, '_') + "_bins").setAttribute('onclick', 'unselect_bins_group("' + variable + '")');
+}
+
+function unselect_bins_group (variable) {
+  dict_var_bins[variable] = false;
+  document.getElementById("var_selectable_" + variable.replace(/\s/g, '_') + "_bins").setAttribute('class', 'var_selectable var_bound_text');
+  document.getElementById("var_selectable_" + variable.replace(/\s/g, '_') + "_bins").setAttribute('onclick', 'select_bins_group("' + variable + '")');
+}
+
+function select_bins_vars () {
+  document.getElementById("all_vars_button_bins").innerHTML = 'Deselect All';
+  document.getElementById("all_vars_button_bins").setAttribute('onclick', 'deselect_bins_vars()');
+  for (var i = 0; i < uni_variable_list.length; i++) {
+    if (types_for_vars[uni_variable_list[i]] == "Categorical") {
+      select_bins_group(uni_variable_list[i]);
+    }
+  }
+}
+
+function deselect_bins_vars () {
+  document.getElementById("all_vars_button_bins").innerHTML = 'Select All';
+  document.getElementById("all_vars_button_bins").setAttribute('onclick', 'select_bins_vars()');
+  for (var i = 0; i < uni_variable_list.length; i++) {
+    if (types_for_vars[uni_variable_list[i]] == "Categorical") {
+      unselect_bins_group(uni_variable_list[i]);
+    }
+  }
+}
+
+
 
 // Enables Collapsable Sections for JS Generated HTML
 function accordion (bubble) {
@@ -1759,6 +1843,11 @@ function parameter_fields (variable, type_chosen) {
       if ("Upper" in bound_data_stored[variable]) {
         parameter_memory_flexible("Upper_Bound", bound_data_stored[variable]["Upper"], variable);
       }
+    }
+
+    if (variable in bins_data_stored) {
+      record_table();
+      parameter_memory_flexible("Bin_Names", bins_data_stored[variable], variable);
     }
 		// uses .unique() to get all unique values and iterate through
 		for (var j = 0; j < needed_parameters.length; j++) {
