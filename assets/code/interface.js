@@ -218,7 +218,7 @@ var hostname = "";
 var metadataurl = "";
 var ddiurl = "";
 
-var dataverse_available = true;  // When Dataverse repository goes down, or is otherwise unavailable, this is a quick override for searching for metadata by url.
+var dataverse_available = false;  // When Dataverse repository goes down, or is otherwise unavailable, this is a quick override for searching for metadata by url.
 
 // Types of variables according to default/user confirmation
 var types_for_vars = {};
@@ -839,8 +839,10 @@ function createCORSRequest(method, url, callback) {
      var xhr = new XMLHttpRequest();
      if ("withCredentials" in xhr) {
          // XHR for Chrome/Firefox/Opera/Safari.
+         console.log("XHR request has credentials")
          xhr.open(method, url, true);
      } else if (typeof XDomainRequest != "undefined") {
+
          // XDomainRequest for IE.
          xhr = new XDomainRequest();
          xhr.open(method, url);

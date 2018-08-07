@@ -8,9 +8,6 @@ from psiproject.settings.base import BASE_DIR
 from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
-def login(request):
-	return render(request, 'login.html')
-
 def interface(request):
     return render(request, 'interface.html')
 
@@ -24,12 +21,14 @@ def psiOpenPrototype(request):
 	return render(request, 'psiOpenPrototype.html')
 
 def getData(request):
+	print ("getting data")
 	file = open(os.path.join(BASE_DIR, "data/preprocess_4_v1-0.json"))
 	data = json.load(file)
 	##print(data)
 	return JsonResponse(data)
 
 def getXML(request):
+	print ("getting xml")
 	file = open(os.path.join(BASE_DIR, "data/pumsmetaui.xml"))
 	return HttpResponse(file.read())
 

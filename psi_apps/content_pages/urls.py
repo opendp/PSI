@@ -5,13 +5,12 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    path('', views.interface, name='interface'),
-    path('psiIntroduction', views.psiIntroduction, name='psiIntroduction'),
-    path('psiOpen', views.psiOpen, name='psiOpen'),
-    path('psiOpenPrototype', views.psiOpenPrototype, name='psiOpenPrototype'),
-    path('getData', views.getData, name='getData'),
-    path('getXML', views.getXML, name='getXML'),
-
+    re_path(r'^psiIntroduction$', views.psiIntroduction, name='psiIntroduction'),
+    re_path(r'^psiOpen$', views.psiOpen, name='psiOpen'),
+    re_path(r'^psiOpenPrototype$', views.psiOpenPrototype, name='psiOpenPrototype'),
+    re_path(r'^getData$', views.getData, name='getData'),
+    re_path(r'^getXML$', views.getXML, name='getXML'),
+    re_path(r'^', views.interface, name='interface'),
     # re_path(r'^%s' % views.ROOK_FILES_PATH, # 'rook-files/'
     # 	views.view_rook_file_passthrough,
     # 	name='view_rook_file_passthrough'),

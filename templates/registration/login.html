@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Linking to Javascript/CSS libraries -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" type="text/  css" href="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/css/bootstrap-slider.min.css">
+    <script type="text/javascript" src="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/bootstrap-slider.min.js"></script>
+
+
+    <title>Budgeting Tool</title>
+
+</head>
+
+<body>
+
+  <h2>Login</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
+  </form>
+
+  Why is nothing else showing up
+
+  <a href="{% url 'register' %}">Register</a>
+
+</body>
+
+</html>
