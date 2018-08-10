@@ -491,7 +491,6 @@ d3.xml(metadataurl, "application/xml", function(xml) {
   for (var n = 0; n < uni_variable_list.length; n++) {
     dict_var_bounds[uni_variable_list[n]] = false;
   }
-  generate_modal6();
 
   // var variable_output = "";
   // for (var n = 0; n < uni_variable_list.length; n++) {
@@ -1626,15 +1625,17 @@ function generate_modal6 () {
   table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Lower Bound</b></td><td><b>Upper Bound</b></td></tr>"; // Header
   for (var n = 0; n < uni_variable_list.length; n++) {
     var var_entry = uni_variable_list[n];
-    table_output += "<tr>";
-    table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "' onclick='select_bounds_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
-    table_output += "<td class='bound_buffer'></td>";
-    // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
-    table_output += "<td><input id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Lower Bound'/></td>"; // Lower bound
-    // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Lower Bound' name='Lower_Bound' id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)'></td>"; // Lower bound
-    table_output += "<td><input id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Upper Bound'/></td>"; // Upper bound
-    // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Upper Bound' name='Upper_Bound' id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)'></td>"; // Upper bound
-    table_output += "</tr>";
+    if (types_for_vars[var_entry] == "Numerical") {
+      table_output += "<tr>";
+      table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "' onclick='select_bounds_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
+      table_output += "<td class='bound_buffer'></td>";
+      // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
+      table_output += "<td><input id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Lower Bound'/></td>"; // Lower bound
+      // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Lower Bound' name='Lower_Bound' id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)'></td>"; // Lower bound
+      table_output += "<td><input id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Upper Bound'/></td>"; // Upper bound
+      // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Upper Bound' name='Upper_Bound' id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)'></td>"; // Upper bound
+      table_output += "</tr>";
+    }
   }
   table_output += "</table>";
   $('#myModal6').find('.modal-body ul').append(table_output);
@@ -1705,7 +1706,9 @@ function select_bound_vars () {
   document.getElementById("all_vars_button").innerHTML = 'Deselect All';
   document.getElementById("all_vars_button").setAttribute('onclick', 'deselect_bound_vars()');
   for (var i = 0; i < uni_variable_list.length; i++) {
-    select_bounds_group(uni_variable_list[i]);
+    if (types_for_vars[uni_variable_list[i]] == "Numerical") {
+      select_bounds_group(uni_variable_list[i]);
+    }
   }
 }
 
@@ -1713,7 +1716,9 @@ function deselect_bound_vars () {
   document.getElementById("all_vars_button").innerHTML = 'Select All';
   document.getElementById("all_vars_button").setAttribute('onclick', 'select_bound_vars()');
   for (var i = 0; i < uni_variable_list.length; i++) {
-    unselect_bounds_group(uni_variable_list[i]);
+    if (types_for_vars[uni_variable_list[i]] == "Numerical") {
+      unselect_bounds_group(uni_variable_list[i]);
+    }
   }
 }
 
