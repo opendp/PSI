@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 
-AUTH_USER_MODEL = 'psi_auth.CustomUser'
+AUTH_USER_MODEL = 'psi_auth.User'
 
 # Application definition
 
