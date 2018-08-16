@@ -597,9 +597,9 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 formatted_release <- function(release, nameslist) {
 
 	# process each statistic in release
-	result <- NULL
-
   num_of_stats <- length(release)
+	result <- vector("list", length = num_of_stats)
+
 	for (i in 1:num_of_stats) {
 		# retrieve data for current stat of interest
 		single_stat_release_data <- release[[i]]
@@ -608,12 +608,22 @@ formatted_release <- function(release, nameslist) {
 
 		single_stat_release$release <- list()
 		single_stat_release$release$values <- single_stat_release_data$result$release
-		single_stat_release$post_process <- TRUE
-		single_stat_release$algorithm <- list()
-		single_stat_release$accuracy <- single_stat_release_data$result$accuracy
-		single_stat_release$privacy_loss <- list()
 
-		result <- c(result, single_stat_release)
+		single_stat_release$post_process <- TRUE
+
+		single_stat_release$algorithm <- list()
+		single_stat_release$algorithm$name <- "something"
+		single_stat_release$algorithm$arguments <- list()
+
+		single_stat_release$accuracy <- single_stat_release_data$result$accuracy
+
+		single_stat_release$privacy_loss <- list()
+		single_stat_release$privacy_loss$definition <- ""
+		single_stat_release$privacy_loss$epsilon <- single_stat_release_data$epsilon
+		single_stat_release$privacy_loss$delta <- single_stat_release_data$delta
+		single_stat_release$privacy_loss$rho <- ""
+
+		result[[i]] <- single_stat_release
 	}
 
 	return(jsonlite:::toJSON(result, digits=8))
