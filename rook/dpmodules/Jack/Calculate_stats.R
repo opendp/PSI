@@ -576,6 +576,9 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 
 		# Writing to new JSON schema
 		goodJSON <- formatted_release(dpReleases, releaseNames)
+		print("dpreleases START")
+		print(dpReleases)
+		print("dpreleases END")
 		print("RELEASE (NEW SCHEMA) START")
 		print(goodJSON)
 		print("RELEASE (NEW SCHEMA) END")
@@ -609,10 +612,10 @@ formatted_release <- function(release, nameslist) {
 		single_stat_release$release <- list()
 		single_stat_release$release$values <- single_stat_release_data$result$release
 
-		single_stat_release$post_process <- TRUE
+		single_stat_release$post_process <- FALSE
 
 		single_stat_release$algorithm <- list()
-		single_stat_release$algorithm$name <- "something"
+		single_stat_release$algorithm$name <- paste(single_stat_release_data$name, single_stat_release_data$mechanism, sep=" ")
 		single_stat_release$algorithm$arguments <- list()
 
 		single_stat_release$accuracy <- single_stat_release_data$result$accuracy
