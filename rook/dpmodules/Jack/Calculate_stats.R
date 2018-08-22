@@ -575,13 +575,16 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 		releaseJSON <- release2json(dpReleases, releaseNames)
 
 		# Writing to new JSON schema
-		goodJSON <- formatted_release(dpReleases, releaseNames)
 		print("dpreleases START")
 		print(dpReleases)
 		print("dpreleases END")
+
+		goodJSON <- formatted_release(dpReleases, releaseNames)
 		print("RELEASE (NEW SCHEMA) START")
 		print(goodJSON)
 		print("RELEASE (NEW SCHEMA) END")
+		append_release_to_file("metadata-pums.json", goodJSON)
+
 	}
 	else{
 		releaseJSON <- "Only ATTs were computed."
@@ -630,4 +633,13 @@ formatted_release <- function(release, nameslist) {
 	}
 
 	return(jsonlite:::toJSON(result, digits=8))
+}
+
+append_release_to_file <- function(filename, releaseJSON, variable, statname) {
+	filepath <- paste("../data/", filename, sep="")
+	filedata <- fromJSON(filepath)
+
+	fileconn <- file(filepath)
+	writeLines(toJSON(filedata), fileconn)
+	close(fileconn)
 }
