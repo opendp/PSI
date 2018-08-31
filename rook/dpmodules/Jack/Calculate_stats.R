@@ -584,8 +584,11 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 		print(jsonlite:::toJSON(good_objects, digits=8))
 		print("RELEASE (NEW SCHEMA) END")
 
-		# TODO: loop through each released stat; refer to appropriate variable name and stat name
-		append_release_to_file("metadata-pums.json", good_objects[[1]], "age", "dp_mean")
+		# Loop through each released stat; refer to appropriate variable name and stat name
+		good_objects_length <- length(good_objects)
+		for (i in 1:good_objects_length) {
+			append_release_to_file("metadata-pums.json", good_objects[[i]]$single_stat_release, good_objects[[i]]$variable, good_objects[[i]]$stat)
+		}
 
 	}
 	else{
@@ -631,7 +634,12 @@ formatted_release <- function(release, nameslist) {
 		single_stat_release$privacy_loss$delta <- single_stat_release_data$delta
 		single_stat_release$privacy_loss$rho <- ""
 
-		result[[i]] <- single_stat_release
+		result_single <- list()
+		result_single$single_stat_release <- single_stat_release
+		result_single$variable <- single_stat_release_data$variable
+		result_single$stat <- single_stat_release_data$name
+
+		result[[i]] <- result_single
 	}
 
 	return(result)
@@ -642,17 +650,14 @@ append_release_to_file <- function(filename, release_object, variable, statname)
 	filepath <- paste("../data/", filename, sep="")
 	filedata <- fromJSON(filepath)
 
-	# If this type of stat has been released before for this variable
-	print(filedata$data$variables[[variable]])
+	# Check if this type of stat has been released before for this variable
 	if (statname %in% attributes(filedata$data$variables[[variable]])$names) {
 		# TODO: append to currently existing category
 	} else {
-		# create category
+		# create category if new release stat type
 		filedata$data$variables[[variable]][[statname]] <- list()
 		filedata$data$variables[[variable]][[statname]][[paste(statname, "0", sep="")]] <- release_object
 	}
-
-	print(filedata$data$variables[[variable]])
 
 	# Overwrite to file
 	fileconn <- file(filepath)
