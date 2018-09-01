@@ -652,7 +652,9 @@ append_release_to_file <- function(filename, release_object, variable, statname)
 
 	# Check if this type of stat has been released before for this variable
 	if (statname %in% attributes(filedata$data$variables[[variable]])$names) {
-		# TODO: append to currently existing category
+		# append to currently existing category
+		current_length <- length(filedata$data$variables[[variable]][[statname]])
+		filedata$data$variables[[variable]][[statname]][[paste(statname, as.character(current_length), sep="")]] <- release_object
 	} else {
 		# create category if new release stat type
 		filedata$data$variables[[variable]][[statname]] <- list()
