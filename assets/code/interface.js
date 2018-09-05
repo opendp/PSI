@@ -332,7 +332,7 @@ console.log(fileid)
 if(urlparameters['key']){
   apitoken = urlparameters['key'];
   apitokenavailable = true;
-  writemetadataurl ="https://beta.dataverse.org/api/access/datafile/" + fileid + "/metadata/preprocessed?key=" + apitoken;
+  writemetadataurl ="http://beta.dataverse.org/api/access/datafile/" + fileid + "/metadata/preprocessed?key=" + apitoken;
 
   console.log("apitoken:")
   console.log(apitoken)
@@ -386,7 +386,7 @@ if (!hostname && !production) {
 if (!production) {
     var rappURL = "http://0.0.0.0:8000/custom/";  		// base URL for the R apps:
 } else {
-    var rappURL = "https://beta.dataverse.org/custom/";	//this will change when/if the production host changes
+    var rappURL = "http://beta.dataverse.org/custom/";	//this will change when/if the production host changes
 }
 
 
@@ -399,8 +399,8 @@ if (ddiurl) {
     // metadata url, with the file id provided and the hostname
     // supplied or configured:
     console.log("Retrieving data from dataverse");
-    //metadataurl="https://beta.dataverse.org/api/meta/datafile/"+fileid;
-    metadataurl="https://psi.hmdc.harvard.edu/"
+    metadataurl="http://beta.dataverse.org/api/meta/datafile/"+fileid;
+    //metadataurl="https://psi.hmdc.harvard.edu/"
 } else {
     // neither a full ddi url, nor file id supplied; use one of the sample DDIs that come with
     // the app, in the data directory:
@@ -3898,7 +3898,7 @@ function changedataset(newfileid) {
 }
 
 function overridedataset(newfileid) {
-	var checkmetadataurl="https://beta.dataverse.org/api/meta/datafile/"+newfileid;
+	var checkmetadataurl="http://beta.dataverse.org/api/meta/datafile/"+newfileid;
   	// Need to check if fileid is valid
   	// Need to
 
