@@ -213,7 +213,7 @@ console.log(variable_list);
 //////////////
 // Globals
 
-var production = false;
+var production = true;
 var hostname = "";
 var metadataurl = "";
 var ddiurl = "";
