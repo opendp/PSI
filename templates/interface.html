@@ -14,9 +14,9 @@
     <script type="text/javascript" src="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/bootstrap-slider.min.js"></script>
 
 
-    <link href="{% static "libraries/css/simple-sidebar.css" %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static "libraries/hopscotch/css/hopscotch.css" %}"></link>
-    <script type="text/javascript" src="{% static "libraries/hopscotch/js/hopscotch.js" %}"></script>
+    <link href="libraries/css/simple-sidebar.css" rel="stylesheet">
+    <link rel="stylesheet" href="libraries/hopscotch/css/hopscotch.css"></link>
+    <script type="text/javascript" src="libraries/hopscotch/js/hopscotch.js"></script>
     <!-- Linking to CSS stylesheet -->
     <link rel="stylesheet" type="text/css" href="interface.css">
 
@@ -416,7 +416,7 @@
            <button title="This shows the full underlying table that is being constructed, containing all the metadata information, and budgeting of epsilon and accuracies." onclick='report();' style="color:gray;">Show Underlying Table</button>
             <button id="submit_button" title="This button creates a differentially private release of the statistics presently requested, at their budgeted values of the privacy parameters." onclick='submit();' style="color:red;">Submit Statistics and Generate Differentially Private Release</button>
 
-            <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
+            <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="psiIntroduction.html" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
             <br>
             PSI (&Psi;): a Private data Sharing Interface
         </div>
