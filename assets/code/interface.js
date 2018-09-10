@@ -902,14 +902,28 @@ function makeCorsRequest(url,callback, warningcallback, json) {
        var json = JSON.parse(text);   // should wrap in try / catch
 
        // changed json format: make sure twoRavens has commit [master 460a2f5].
-       if (json.warning) {
-          console.log("calling warning callback")
-          warningcallback(json.warning)
-       }else if (!json.success){
+
+       /* Call routed through django and should return:
+              {success: false,
+               message: "some error"}
+          OR
+              {success: true,
+               data: {your rook response}}
+            -- which may include --
+              {success: true,
+               data: {
+                warning: "your rook warning"}
+              }
+       */
+       if (!json.success){
           console.log(json.message);
           alert(json.message);
        }else{
-          callback(json.data);
+          if (json.data.warning){
+            warningcallback(json.data.warning)
+          }else{
+            callback(json.data);
+          }
        }
      };
      xhr.onerror = function() {
