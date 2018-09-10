@@ -1,16 +1,16 @@
 # This code enforces the metadata constraints given by the user and then calls all of the
-# relevant DP algorithms to actually calculate the stats. 
+# relevant DP algorithms to actually calculate the stats.
 
-# 12/09/14 update: This code has been modified to call stats for the general purpose and 
-# is no longer the version that was tailored for the legal team demo. This will be called 
-# after the user completes the table interface and clicks submit. It will return the values 
+# 12/09/14 update: This code has been modified to call stats for the general purpose and
+# is no longer the version that was tailored for the legal team demo. This will be called
+# after the user completes the table interface and clicks submit. It will return the values
 # that will overwrite the metadata in dataverse.
 
 # This function may throw an error on an ill-formed request,
 # but we make sure it does not do so contingent on the data.
 enforce_constraints <- function(toprocess, df){
 	#get full list of constraints
-	meta <- df[,c("Variable","Type", "Statistic","Lower_Bound","Upper_Bound","Number_of_Bins","Granularity","Treatment_Variable", "Bin_Names")]  
+	meta <- df[,c("Variable","Type", "Statistic","Lower_Bound","Upper_Bound","Number_of_Bins","Granularity","Treatment_Variable", "Bin_Names")]
 	meta <- unique(meta)
 
 	#implement constraints row by row
@@ -39,14 +39,14 @@ enforce_constraints <- function(toprocess, df){
 				toprocess[ , col][toprocess[ , col] < lo] <- lo
 
 				#if granularity is filled in...
-				if(!is.na(gr) & gr != " " & gr != "na" & gr !=""){ 
+				if(!is.na(gr) & gr != " " & gr != "na" & gr !=""){
 					gr <- as.numeric(as.character(gr))
 
-					#... fix lower bound and discretize the data by gr. 
+					#... fix lower bound and discretize the data by gr.
 					# Set every value in variable to nearest discretized value
 					toprocess[ , col] <- gr*round((toprocess[,col]-lo)/gr)+lo
 
-					#Some values may now exceed upper bound so reset the upper bound to be within the discretized set. 
+					#Some values may now exceed upper bound so reset the upper bound to be within the discretized set.
 					newup <- trunc((up-lo)/gr)*gr + lo
 					toprocess[ , col][toprocess[ , col] > newup] <- newup
 				}
@@ -76,10 +76,10 @@ enforce_constraints <- function(toprocess, df){
 
 		# Once we properly support categorical data, uncomment the sanity check below.
 		# if(is.na(coerceTo)) {
-		#         return(list(message=("Coercion of NA's could not be guaranteed. Please report this internal error."))) 
+		#         return(list(message=("Coercion of NA's could not be guaranteed. Please report this internal error.")))
 		# }
 		toprocess[ , col][is.na(toprocess[ , col])] <- coerceTo
-	}	
+	}
 	return(list(data=toprocess))
 }
 
@@ -90,7 +90,7 @@ permissiveAsLogical <- function(vec) {
 
 # This function expects that enforce_constraints has already been called on `toprocess`.
 calculate_stats <- function(toprocess, df, globals, fakebinlist = c()){
-	# Vector to store released dp statistics as strings. 
+	# Vector to store released dp statistics as strings.
 	# This is appended onto df and returned to the front end.
 	# Might get rid of "stats" data structure altogether but keeping it for now in case we find some use for it.
 	Releases <- c()
@@ -150,12 +150,12 @@ calculate_stats <- function(toprocess, df, globals, fakebinlist = c()){
 		else if(stat == "Quantile" && typeNumeric){
 			#call quantile function
 			#what to put as cdfstep? Some values lead to bad output
-			#cdfstep <- round(range/100)		
+			#cdfstep <- round(range/100)
 			cdfstep <- gr
 			if(is.null(stats[[att]])){
 				stats[[att]] <- list("mean"=NA,"cdf"=c(), "histogram"=c())
 			}
-			released_quantile <- Quantile.release(e, cdfstep, toprocess[ , col], c(lo, up), gr)	
+			released_quantile <- Quantile.release(e, cdfstep, toprocess[ , col], c(lo, up), gr)
 			stats[[att]]$cdf <- 	released_quantile
 			Releases <- c(Releases, toString(released_quantile))
 		}
@@ -166,7 +166,7 @@ calculate_stats <- function(toprocess, df, globals, fakebinlist = c()){
 
 			if(df$Type[i] == "Categorical"){
 				binstring <- df$Bin_Names[i]
-				#split by comma and remove leading and trailing whitespace 
+				#split by comma and remove leading and trailing whitespace
 				binvec <- strsplit(binstring,"," )
 				trim <- function(x){
 					return(gsub("^\\s+|\\s+$", "", x))
@@ -182,7 +182,7 @@ calculate_stats <- function(toprocess, df, globals, fakebinlist = c()){
 			}
 			else {
 				#Doesn't use the user-provided number of bins. Will need to correct that with new histogram code
-				bin_names <- sort(as.numeric(unique(toprocess[ , col]))) 
+				bin_names <- sort(as.numeric(unique(toprocess[ , col])))
 			}
 
 			#If using fake bin names
@@ -209,7 +209,7 @@ calculate_stats <- function(toprocess, df, globals, fakebinlist = c()){
 			#call quantile function
 			#what to put as cdfstep? Some values lead to bad output
 			range <- abs(up - lo)
-			#cdfstep <- round(range/100)		
+			#cdfstep <- round(range/100)
 			cdfstep <- gr
 			if(is.null(stats[[att]])){
 				stats[[att]] <- list("mean"=NA,"cdf"=c(), "histogram"=c())
@@ -243,8 +243,8 @@ calculate_stats <- function(toprocess, df, globals, fakebinlist = c()){
 	df$Releases <- Releases
 	return(list(globals=globals, df=df))
 	#Might want to do away with the stats data structure all together.
-	#Keeping it for now and 
-	#used to create xml file below. Now just returning table with new columns for releases and delta. 
+	#Keeping it for now and
+	#used to create xml file below. Now just returning table with new columns for releases and delta.
 	#xml <- create_xml(stats,df,globals)
 	#return(xml)
 }
@@ -254,9 +254,9 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 	# PSIlence syntax for each stat
 	# out <-  :
 	# dpMean$new(mechanism='mechanismLaplace', var.type, n, rng=c(lo,hi), epsilon=NULL, accuracy=NULL, impute.rng=NULL, alpha=0.05, boot.fun=boot.mean, ...)
-	# dpTree$new(mechanism='mechanismLaplace', var.type, n, rng=c(lo,hi), gran, epsilon, impute.rng=NULL, percentiles=NULL, ...) 
+	# dpTree$new(mechanism='mechanismLaplace', var.type, n, rng=c(lo,hi), gran, epsilon, impute.rng=NULL, percentiles=NULL, ...)
 	# dpHistogram$new(mechanism='mechanismLaplace', var.type, n, epsilon=NULL, accuracy=NULL, rng=NULL, bins=NULL, n.bins=NULL, alpha=0.05, delta=2^-30, error=1e-9,impute.rng=NULL, impute=FALSE, ...) #set bins=c(name1, name2,...)?
-	#dpGLM$new('mechanismObjective', 'numeric', n, rng, formula=form, objective='logit', epsilon=eps) 
+	#dpGLM$new('mechanismObjective', 'numeric', n, rng, formula=form, objective='logit', epsilon=eps)
 	# Here, the variable type argument refers to the data frame as a whole, and the code will really only work with numeric types. So we basically require a numeric #matrix. 
 
 #For an NxP input matrix, the range is a Px2 matrix, where each row corresponds to a numeric vector with 2 elements, the lower and upper bounds for the pth column #in the data. The same is true of the impute ranges if they are given.
@@ -264,7 +264,7 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 #For now I am constraining the formula argument to be an R formula. If it's more convenient, we could change this to a string, then just wrap it in "as.formula()" once #we are in R. 
 
 	#
-	# 
+	#
 	# fill in CEM
 	# out$release(data[,col])
 	#finallist <- list(data=data,df=df,globals=globals)
@@ -286,7 +286,7 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 	type_conversion_dict <- list("Numerical"="numeric", "Categorical"="character", "Boolean"="logical")
 	for(i in 1:k){
 		stat <- tolower(df$Statistic[i])
-		eps_i <- as.numeric(df$Epsilon[i])    
+		eps_i <- as.numeric(df$Epsilon[i])
 		del_i <- as.numeric(df$Delta[i])
 		var <- df$Variable[i]
 		#col <-  which(colnames(data) == var)
@@ -294,11 +294,11 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 		type <- df$Type[i]
 		print(stat)
 		if(!(var %in% names(grouped_var_dict))){
-			type <- as.character(type_conversion_dict[as.character(type)])	
+			type <- as.character(type_conversion_dict[as.character(type)])
 			#releaseNames[i] <- as.character(var)
 		}
 		#else{
-	#		releaseNames[i] <- grouped_var_dict[as.character(var)]	
+	#		releaseNames[i] <- grouped_var_dict[as.character(var)]
 	#	}
 		missing_type <- df$Missing_Type[i]
 		missing_input <- df$Missing_Input[i]
@@ -314,7 +314,7 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 				lo <- 0
 			}
 			else{
-				up <- as.numeric(df$Upper_Bound[i]) 
+				up <- as.numeric(df$Upper_Bound[i])
 				lo <- as.numeric(df$Lower_Bound[i])
 			}
 			rng <- c(lo,up)
@@ -346,11 +346,11 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 			col <-  which(colnames(data) == var)
 			input <- data[,col]
 		}
-		
+
 		else if(stat=="quantile"){
 			releaseNames[i] <- as.character(var)
 			gran <- as.numeric(df$Granularity[i])
-			up <- as.numeric(df$Upper_Bound[i]) 
+			up <- as.numeric(df$Upper_Bound[i])
 			lo <- as.numeric(df$Lower_Bound[i])
 			rng <- c(lo,up)
 			impute.rng <- rng
@@ -373,11 +373,11 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 			if(class(var)=="list"){
 				var <- unlist(var)
 			}
-			out <- dpTree$new(mechanism='mechanismLaplace', var.type=type, variable=var, n=n, rng=rng, gran=gran, epsilon=eps_i, impute.rng=impute.rng) 	
+			out <- dpTree$new(mechanism='mechanismLaplace', var.type=type, variable=var, n=n, rng=rng, gran=gran, epsilon=eps_i, impute.rng=impute.rng)
 			col <-  which(colnames(data) == var)
 			input <- data[,col]
 		}
-		
+
 		else if(stat=="histogram"){
 			releaseNames[i] <- as.character(var)
 			rng <- NULL
@@ -386,7 +386,7 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 			stability <- TRUE
 			impute.rng <- NULL
 			if(type == "numeric"){
-				up <- as.numeric(df$Upper_Bound[i]) 
+				up <- as.numeric(df$Upper_Bound[i])
 				lo <- as.numeric(df$Lower_Bound[i])
 				rng <- c(lo,up)
 				stability <- FALSE
@@ -435,7 +435,7 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 				}
 				if(bins_spec){
 					stability <- FALSE
-					#split by comma and remove leading and trailing whitespace 
+					#split by comma and remove leading and trailing whitespace
 					binvec <- strsplit(bins,"," )
 					trim <- function(x){
 						return(gsub("^\\s+|\\s+$", "", x))
@@ -457,13 +457,13 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 				if(class(var)=="list"){
 				var <- unlist(var)
 			}
-				out <- dpHistogram$new(mechanism='mechanismLaplace', var.type=type, variable=var, n=n, epsilon=eps_i, rng=rng, bins=bins, n.bins=n.bins, alpha=Beta, delta=del_i, impute.rng=impute.rng, impute=impute) 
+				out <- dpHistogram$new(mechanism='mechanismLaplace', var.type=type, variable=var, n=n, epsilon=eps_i, rng=rng, bins=bins, n.bins=n.bins, alpha=Beta, delta=del_i, impute.rng=impute.rng, impute=impute)
 				col <-  which(colnames(data) == var)
 				input <- data[,col]
 			}
 		}
-		
-		else if(stat %in% c("ols_regression","logistic_regression","probit_regression") ){	
+
+		else if(stat %in% c("ols_regression","logistic_regression","probit_regression") ){
 				varlist <- grouped_var_dict[[as.character(var)]]
 				outcome <- df$Outcome_Variable[i]$"row"$"General"
 				covariate_list <- varlist[-which(varlist==outcome)]
@@ -474,7 +474,7 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 				}
 				else{
 					outcome_up <- df$Upper_Bound[i]$"row"[[outcome]]
-					outcome_lo <- df$Lower_Bound[i]$"row"[[outcome]]	
+					outcome_lo <- df$Lower_Bound[i]$"row"[[outcome]]
 				}
 				cov_ranges <- c(as.numeric(outcome_lo),as.numeric(outcome_up))
 				for(cov_num in 1:length(covariate_list)){
@@ -506,10 +506,10 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 			}
 			#currently type only takes numeric
 			#currently only support imputing with metadata ranges. So setting impute.rng to null
-			out <- dpGLM$new(mechanism='mechanismObjective', var.type='numeric', n=n, rng=cov_ranges, formula=form, objective=objective, epsilon=eps_i, impute.rng=NULL) 
+			out <- dpGLM$new(mechanism='mechanismObjective', var.type='numeric', n=n, rng=cov_ranges, formula=form, objective=objective, epsilon=eps_i, impute.rng=NULL)
 			input <- data
 		}
-				
+
 		else if(stat =="att_with_matching"){
 			varlist <- grouped_var_dict[[as.character(var)]]
 			outcome <- df$Outcome_Variable[i]$"row"$"General"
@@ -519,7 +519,7 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 				matchType <- "onetoone"
 			}
 			else{
-				matchType <- "onetok"	
+				matchType <- "onetok"
 			}
 			groupList <- NULL #Eventually we might want to build groupList parameter into interface
 			exactMatch <- c()
@@ -537,10 +537,10 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 				}
 			}
 			#note that ATT is not in library so we don't get object back
-			input <- data	
-			dpRelease <- dpATT(data=input, outcome=outcome, treatment=treatment, scaleList=scaleList, groupList=groupList, exactMatch=exactMatch, matchType=matchType, k=mm, epsilon=eps_i,alpha=Beta)			
+			input <- data
+			dpRelease <- dpATT(data=input, outcome=outcome, treatment=treatment, scaleList=scaleList, groupList=groupList, exactMatch=exactMatch, matchType=matchType, k=mm, epsilon=eps_i,alpha=Beta)
 			dpRelease <- toString(dpRelease)
-		}		
+		}
 	    else {
 			error <- TRUE
 		}
@@ -549,7 +549,7 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 			message <- "ERROR: Either a requested statistic does not exist, exists more than once in the dataset, or the statistic is not supported in the system. Please report this error."
 			release_col <- c(release_col, message)
 		}
-		else{ 
+		else{
 			#once att is in library, can treat it the same as other stats here
 			if(stat != "att_with_matching"){
 				#library syntax changed so can feed whole dataset to release functions now:
@@ -558,11 +558,11 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 				#this is what we actually send to get put in JSON
 				dpReleases[i] <- out
 				#this is what we send to front end for splash page.
-				release_col <- c(release_col, toString(dpRelease$release))	
+				release_col <- c(release_col, toString(dpRelease$release))
 			}
 			else{
 				release_col <- c(release_col, toString(dpRelease))
-				#dpReleases[i] <- dpRelease    #only send ATT to splash page. Note to read2JSON since we don't have an object for it. 
+				#dpReleases[i] <- dpRelease    #only send ATT to splash page. Note to read2JSON since we don't have an object for it.
 			}
 		}
 	}
@@ -573,21 +573,96 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 	print(releaseNames)
 	if(length(releaseNames)>0){
 		releaseJSON <- release2json(dpReleases, releaseNames)
+
+		# Writing to new JSON schema
+		print("dpreleases START")
+		print(dpReleases)
+		print("dpreleases END")
+
+		good_objects <- formatted_release(dpReleases, releaseNames)
+		print("RELEASE (NEW SCHEMA) START")
+		print(jsonlite:::toJSON(good_objects, digits=8))
+		print("RELEASE (NEW SCHEMA) END")
+
+		# Loop through each released stat; refer to appropriate variable name and stat name
+		good_objects_length <- length(good_objects)
+		for (i in 1:good_objects_length) {
+			append_release_to_file("metadata-pums.json", good_objects[[i]]$single_stat_release, good_objects[[i]]$variable, good_objects[[i]]$stat)
+		}
+
 	}
 	else{
 		releaseJSON <- "Only ATTs were computed."
 	}
 	return(list(globals=globals, df=df, releaseJSON=releaseJSON))
 	#write json from dpReleases
-	
-	
+
+
 	#Might want to do away with the stats data structure all together.
-	#Keeping it for now and 
-	#used to create xml file below. Now just returning table with new columns for releases and delta. 
+	#Keeping it for now and
+	#used to create xml file below. Now just returning table with new columns for releases and delta.
 	#xml <- create_xml(stats,df,globals)
 	#return(xml)
 }
 
+formatted_release <- function(release, nameslist) {
 
+	# process each statistic in release
+  num_of_stats <- length(release)
+	result <- vector("list", length = num_of_stats)
 
+	for (i in 1:num_of_stats) {
+		# retrieve data for current stat of interest
+		single_stat_release_data <- release[[i]]
 
+		single_stat_release <- list()
+
+		single_stat_release$release <- list()
+		single_stat_release$release$values <- single_stat_release_data$result$release
+
+		single_stat_release$post_process <- FALSE
+
+		single_stat_release$algorithm <- list()
+		single_stat_release$algorithm$name <- paste(single_stat_release_data$name, single_stat_release_data$mechanism, sep=" ")
+		single_stat_release$algorithm$arguments <- list()
+
+		single_stat_release$accuracy <- single_stat_release_data$result$accuracy
+
+		single_stat_release$privacy_loss <- list()
+		single_stat_release$privacy_loss$definition <- ""
+		single_stat_release$privacy_loss$epsilon <- single_stat_release_data$epsilon
+		single_stat_release$privacy_loss$delta <- single_stat_release_data$delta
+		single_stat_release$privacy_loss$rho <- ""
+
+		result_single <- list()
+		result_single$single_stat_release <- single_stat_release
+		result_single$variable <- single_stat_release_data$variable
+		result_single$stat <- single_stat_release_data$name
+
+		result[[i]] <- result_single
+	}
+
+	return(result)
+}
+
+append_release_to_file <- function(filename, release_object, variable, statname) {
+	# Read current JSON file
+	filepath <- paste("../data/", filename, sep="")
+	filedata <- fromJSON(filepath)
+
+	# Check if this type of stat has been released before for this variable
+	if (statname %in% attributes(filedata$data$variables[[variable]])$names) {
+		# append to currently existing category
+		current_length <- length(filedata$data$variables[[variable]][[statname]])
+		filedata$data$variables[[variable]][[statname]][[paste(statname, as.character(current_length), sep="")]] <- release_object
+	} else {
+		# create category if new release stat type
+		filedata$data$variables[[variable]][[statname]] <- list()
+		filedata$data$variables[[variable]][[statname]][[paste(statname, "0", sep="")]] <- release_object
+	}
+
+	# Overwrite to file
+	fileconn <- file(filepath)
+	writeLines(toJSON(filedata), fileconn)
+	close(fileconn)
+}

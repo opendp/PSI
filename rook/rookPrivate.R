@@ -95,7 +95,7 @@ privateStatistics.app <-function(env){
             if(production){
                 data <- read.csv("../data/PUMS5extract10000.csv")  # data has a different relative path on server  
             } else {
-                data <- read.csv("../../data/PUMS5extract10000.csv")
+                data <- read.csv("../data/PUMS5extract10000.csv")
             }
         }
 

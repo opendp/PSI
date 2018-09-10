@@ -23,6 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fil
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 
+AUTH_USER_MODEL = 'psi_auth.User'
 
 # Application definition
 
@@ -33,7 +34,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'psi_apps.rook_services'
+    'psi_apps',
+    'psi_apps.rook_services',
+    'psi_apps.content_pages',
+    'psi_apps.psi_auth',
 ]
 
 MIDDLEWARE = [
@@ -120,4 +124,4 @@ STATICFILES_DIRS = [join(BASE_DIR, 'assets')]
 
 ROOK_SERVER = os.environ.get('ROOK_SERVER', 'http://0.0.0.0:8000/custom/')
 
-#LOGIN_REDIRECT_URL = 'content-pages/interface/'
+LOGIN_REDIRECT_URL = '/'
