@@ -576,22 +576,25 @@ function talktoR(action, variable, stat) {
    var estimated=false;
    var base = rappURL;
    var btn = 0;
+
    function estimateSuccess(json) {
 
         // If all went well, replace inputted_metadata with the returned dictionary
         // and rebuild the epsilon table.
 
-      console.log("json in: ", json);
 	  if(JSON.parse(JSON.stringify(json["error"]))=="T"){
+
 	  	alert(JSON.parse(JSON.stringify(json["message"])));
 	  	inputted_metadata = JSON.parse(JSON.stringify(previous_inputted_metadata));
     	generate_epsilon_table();
-	  }
-	  else{
+	  }else{
+
      	 inputted_metadata = JSON.parse(JSON.stringify(json["prd"]));
      	 generate_epsilon_table();
-	 }
+	  }
+
      estimated=true;
+
    }
 
    function estimateFail(warning) {
@@ -790,11 +793,14 @@ function talktoRtwo(btn) {
       console.log("metadata to dataverse: FAILURE");
    }
 
-
+   /**
+      Process a successful response from the rook "privateStatisticsapp"
+    */
    function statisticsSuccess(json) {
-      console.log("ran statisticsSuccess")
-      console.log("json in: ", json);
-      released_statistics = JSON.stringify(json);
+      console.log("start: statisticsSuccess")
+      console.log("json in stat s: ", json);
+      let released_statistics = JSON.stringify(json);
+
       estimated=true;
 
       var paragraph = "<pre> <code>" + released_statistics + "</code> </pre>";
@@ -810,9 +816,8 @@ function talktoRtwo(btn) {
         makeCorsRequest2(writemetadataurl, storeMetaSuccess, storeMetaFail, testJSON);
       };
 
+   }  // end: statisticsSuccess
 
-
-   }
 
    function estimateFail(warning) {
      estimated=true;
@@ -900,8 +905,11 @@ function makeCorsRequest(url,callback, warningcallback, json) {
        if (json.warning) {
           console.log("calling warning callback")
           warningcallback(json.warning)
+       }else if (!json.success){
+          console.log(json.message);
+          alert(json.message);
        }else{
-          callback(json);
+          callback(json.data);
        }
      };
      xhr.onerror = function() {
