@@ -8,6 +8,9 @@
 
 # This function may throw an error on an ill-formed request,
 # but we make sure it does not do so contingent on the data.
+source("rookconfig.R")
+
+
 enforce_constraints <- function(toprocess, df){
 	#get full list of constraints
 	meta <- df[,c("Variable","Type", "Statistic","Lower_Bound","Upper_Bound","Number_of_Bins","Granularity","Treatment_Variable", "Bin_Names")]
@@ -650,7 +653,8 @@ formatted_release <- function(release, nameslist) {
 
 append_release_to_file <- function(filename, release_object, variable, statname) {
 	# Read current JSON file
-	filepath <- paste("../data/", filename, sep="")
+	#filepath <- paste("../data/", filename, sep="")
+	filepath <- paste(DATA_DIRECTORY_PATH, filename, sep="")
 
 	if(!file.exists(filepath)){
 		fileConn<-file(filepath)

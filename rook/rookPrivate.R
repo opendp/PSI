@@ -95,9 +95,15 @@ privateStatistics.app <-function(env){
         } else{
             #use below when beta.dataverse is down, or for local development, or no fileid provided
             if(IS_PRODUCTION){
-                data <- read.csv("../data/PUMS5extract10000.csv")  # data has a different relative path on server
+                pums5_csv_filepath <- paste(DATA_DIRECTORY_PATH, "PUMS5extract10000.csv", sep="")
+
+                data <- read.csv(pums5_csv_filepath);
+                #data <- read.csv("../data/PUMS5extract10000.csv")  # data has a different relative path on server
             } else {
-                data <- read.csv("../data/PUMS5extract10000.csv")
+              pums5_csv_filepath <- paste(DATA_DIRECTORY_PATH, "PUMS5extract10000.csv", sep="")
+
+              data <- read.csv(pums5_csv_filepath);
+                #data <- read.csv("../data/PUMS5extract10000.csv")
             }
         }
 
