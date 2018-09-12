@@ -39,7 +39,7 @@ Enabling CORS request to local files on Chrome:
 
 ---
 
-## Developers
+## Developer Workflow
 
 Please use the following workflow when updating this repository.
 
