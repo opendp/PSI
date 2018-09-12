@@ -1,5 +1,6 @@
-# PSI
-Private data Sharing Interface
+# PSI - Private data Sharing Interface
+
+- Reference: https://privacytools.seas.harvard.edu/project-description
 
 To run locally:
 
