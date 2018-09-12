@@ -41,9 +41,9 @@ Enabling CORS request to local files on Chrome:
 
 ## Developer Workflow
 
-Please use the following workflow when updating this repository.
+For any changes to his repository, please use the following workflow:
 
-1. Create a [GitHub issue](https://github.com/TwoRavens/PSI/issues) or look up the number of an existing issue.
+1. Create a [GitHub issue](https://github.com/TwoRavens/PSI/issues) describing your update or look up the number of an existing issue.
     - Example: Issue #18 is titled "Add external, static files directly to project"
 2. [Create a new branch](https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/) off of master based on the issue number. 
     - Naming format for branch: `(issue number)-some-text`
