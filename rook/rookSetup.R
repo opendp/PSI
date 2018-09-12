@@ -108,7 +108,7 @@ if(!IS_PRODUCTION_MODE){
     R.server$add(app = privateAccuracies.app, name = "privateAccuraciesapp")
     R.server$add(app = privateStatistics.app, name = "privateStatisticsapp")
     R.server$add(app = verifyTransform.app, name = "verifyTransformapp")
-    R.server$add(app = healthcheck.app, name="healthcheckapp")
+    R.server$add(app = healthcheck.app, name="healthcheck")
     print(R.server)
 }
 
