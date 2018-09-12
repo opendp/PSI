@@ -5,7 +5,7 @@
 ##
 ##  28/10/16 jH
 ##
-source("rookconfig.R") # global variables such as "IS_PRODUCTION"
+source("rookconfig.R") # global variables such as "IS_PRODUCTION_MODE"
 
 
 packageList<-c("Rook","jsonlite","openssl", "devtools")
@@ -48,7 +48,7 @@ source(paste(modulesPath,"updatedRttpd.R", sep=""))
 
 #source PSIlence
 UsePackage <- TRUE
-if(!IS_PRODUCTION && UsePackage){
+if(!IS_PRODUCTION_MODE && UsePackage){
    library(devtools)
    install_github("IQSS/PSI-Library")
 }
@@ -65,7 +65,7 @@ if(!UsePackage){
 
 ## Get the server connection set up
 
-if(!IS_PRODUCTION){
+if(!IS_PRODUCTION_MODE){
     myPort <- "8000"
     myInterface <- "0.0.0.0"
     #myInterface <- "127.0.0.1"
@@ -104,7 +104,7 @@ source("rookPrivate.R")
 source("rookTransform.R")
 
 
-if(!IS_PRODUCTION){
+if(!IS_PRODUCTION_MODE){
     R.server$add(app = privateAccuracies.app, name = "privateAccuraciesapp")
     R.server$add(app = privateStatistics.app, name = "privateStatisticsapp")
     R.server$add(app = verifyTransform.app, name = "verifyTransformapp")

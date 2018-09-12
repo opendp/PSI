@@ -10,9 +10,9 @@
 
 privateStatistics.app <-function(env){
 
-    source("rookconfig.R") # global variables such as "IS_PRODUCTION"
+    source("rookconfig.R") # global variables such as "IS_PRODUCTION_MODE"
 
-    if(IS_PRODUCTION){
+    if(IS_PRODUCTION_MODE){
         sink(file = stderr(), type = "output")
     }
 
@@ -63,7 +63,7 @@ privateStatistics.app <-function(env){
     if(!warning){
 
 
-        if(IS_PRODUCTION & !identical(fileid,"")){
+        if(IS_PRODUCTION_MODE & !identical(fileid,"")){
             ## Get dataset from Dataverse
             ## Compare to data.app in TwoRavens and decide if this could be done more robustly
 
@@ -72,7 +72,11 @@ privateStatistics.app <-function(env){
             # with the fileid supplied and the hostname we have
             # either supplied or configured:
 
-            dataurl <- paste("https://beta.dataverse.org/api/access/datafile/", fileid, sep="")
+            DATAVERSE_FILE_ACCESS_URL
+            dataurl <- paste(DATAVERSE_FILE_ACCESS_URL, fileid, sep="")
+
+            # move this url to rookconfig.R
+            #dataurl <- paste("https://beta.dataverse.org/api/access/datafile/", fileid, sep="")
 
             # add apitoken if provided
             if(!identical(apitoken,"")){
@@ -94,7 +98,7 @@ privateStatistics.app <-function(env){
             #}
         } else{
             #use below when beta.dataverse is down, or for local development, or no fileid provided
-            if(IS_PRODUCTION){
+            if(IS_PRODUCTION_MODE){
                 pums5_csv_filepath <- paste(DATA_DIRECTORY_PATH, "PUMS5extract10000.csv", sep="")
 
                 data <- read.csv(pums5_csv_filepath);
@@ -168,7 +172,7 @@ privateStatistics.app <-function(env){
     print(result)
     cat("\n")
 
-    if(IS_PRODUCTION){
+    if(IS_PRODUCTION_MODE){
         sink()
     }
 
@@ -181,9 +185,9 @@ privateStatistics.app <-function(env){
 
 privateAccuracies.app <- function(env){
 
-    source("rookconfig.R") # global variables such as "IS_PRODUCTION"
+    source("rookconfig.R") # global variables such as "IS_PRODUCTION_MODE"
 
-    if(IS_PRODUCTION){
+    if(IS_PRODUCTION_MODE){
         sink(file = stderr(), type = "output")
     }
 
@@ -409,7 +413,7 @@ privateAccuracies.app <- function(env){
 
     print(result)
     cat("\n")
-    if(IS_PRODUCTION){
+    if(IS_PRODUCTION_MODE){
         sink()
     }
     response$write(result)

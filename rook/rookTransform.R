@@ -12,9 +12,9 @@
 # TODO put a size limit on the formula we accept
 verifyTransform.app <- function(env) {
 
-    source("rookconfig.R") # global variables such as "IS_PRODUCTION"
+    source("rookconfig.R") # global variables such as "IS_PRODUCTION_MODE"
 
-    if(IS_PRODUCTION) {
+    if(IS_PRODUCTION_MODE) {
         sink(file = stderr(), type = "output")
     }
 
@@ -69,7 +69,7 @@ verifyTransform.app <- function(env) {
     # print("transfromAdd: sending JSON:")
     # print(result)
     cat("\n")
-    if(IS_PRODUCTION) {
+    if(IS_PRODUCTION_MODE) {
         sink()
     }
 

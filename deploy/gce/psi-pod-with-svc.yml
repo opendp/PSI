@@ -1,0 +1,129 @@
+---
+# ---------------------------
+# EventData - Service
+# ---------------------------
+apiVersion: v1
+kind: Service
+metadata:
+  name: psiweb
+  labels:
+    app: psi-prototype
+spec:
+  selector:
+    app: psi-prototype
+    tier: web
+  ports:
+  - port: 80
+    targetPort: 80
+  type: LoadBalancer
+  #
+  # IP mapped to psiprivacy.org
+  #
+  #loadBalancerIP: 35.188.4.189
+---
+# ---------------------------
+# EventData - Kubernetes Pod File
+# ---------------------------
+apiVersion: v1
+kind: Pod
+metadata:
+  name: psi-prototype-web
+  labels:
+    app: psi-prototype
+    tier: web
+spec:
+  restartPolicy: Always
+  volumes:
+    - name: psi-volume
+      emptyDir: {}
+    #- name: eventdata-sql-instance-credentials
+    #  secret:
+    #    secretName: eventdata-sql-instance-credentials
+  containers:
+  # --------------------------------
+  # 1 of 3: Ravens nginx
+  # - reverse proxy for psi-main
+  # --------------------------------
+  - name: ravens-nginx
+    image: tworavens/psi-nginx:latest
+    imagePullPolicy: Always
+    ports:
+      - containerPort: 80
+        name: http
+        protocol: TCP
+    volumeMounts:
+    - name: "psi-volume"
+      mountPath: "/psi_volume"
+      readOnly: true
+  # --------------------------------
+  # 2 of 3: web app container (django)
+  # --------------------------------
+  - name: psi-web
+    image: tworavens/psi-web:latest
+    imagePullPolicy: Always
+    #command: ["event_data_start.sh"]
+    ports:
+    # Main web port; nginx makes this available via port 80
+    - containerPort: 8080
+      name: http
+      protocol: TCP
+    #envFrom:
+    #  - configMapRef:
+    #      name: eventdata-django-configmap
+    #env:
+    #- name: SECRET_KEY
+    #  valueFrom:
+    #    secretKeyRef:
+    #      name: gce-eventdata-secrets
+    #      key: SECRET_KEY
+    # ---------------------------
+    # Social auth: github creds
+    # ---------------------------
+    #- name: SOCIAL_AUTH_GITHUB_KEY
+    #  valueFrom:
+    #    secretKeyRef:
+    #      name: gce-eventdata-secrets
+    #      key: SOCIAL_AUTH_GITHUB_KEY
+    #- name: SOCIAL_AUTH_GITHUB_SECRET
+    #  valueFrom:
+    #    secretKeyRef:
+    #      name: gce-eventdata-secrets
+    #      key: SOCIAL_AUTH_GITHUB_SECRET
+    # ---------------------------
+    # SQL db credentials
+    # ---------------------------
+    #- name: DB_USER
+    #  valueFrom:
+    #    secretKeyRef:
+    #      name: eventdata-sql-db-credentials
+    #      key: username
+    #- name: DB_PASSWORD
+    #  valueFrom:
+    #    secretKeyRef:
+    #      name: eventdata-sql-db-credentials
+    #      key: password
+    # ---------------------------
+    volumeMounts:
+      - name: "psi-volume"
+        mountPath: "/psi_volume"
+        readOnly: false
+    #
+    # liveness is for restart
+    #
+    livenessProbe:
+      httpGet:
+        path: /monitoring/alive
+        port: 8080
+      initialDelaySeconds: 15
+      timeoutSeconds: 1
+      periodSeconds: 10
+      failureThreshold: 3
+    #
+    # readiness: ready for traffic
+    #
+    readinessProbe:
+      httpGet:
+        path: /monitoring/alive
+        port: 8080
+      initialDelaySeconds: 15
+      periodSeconds: 10

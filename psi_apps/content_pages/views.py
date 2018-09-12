@@ -1,4 +1,4 @@
-import json 
+import json
 import urllib
 import os
 import mimetypes
@@ -12,23 +12,29 @@ def interface(request):
     return render(request, 'interface.html')
 
 def psiIntroduction(request):
-	return render(request, 'psiIntroduction.html')
+    return render(request, 'psiIntroduction.html')
 
 def psiOpen(request):
-	return render(request, 'psiOpen.html')
+    return render(request, 'psiOpen.html')
 
 def psiOpenPrototype(request):
-	return render(request, 'psiOpenPrototype.html')
+    return render(request, 'psiOpenPrototype.html')
 
 def getData(request):
-	file = open(os.path.join(BASE_DIR, "data/preprocess_4_v1-0.json"))
-	data = json.load(file)
-	##print(data)
-	return JsonResponse(data)
+    file = open(os.path.join(BASE_DIR, "data/preprocess_4_v1-0.json"))
+    data = json.load(file)
+    ##print(data)
+    return JsonResponse(data)
 
 def getXML(request):
-	file = open(os.path.join(BASE_DIR, "data/pumsmetaui.xml"))
-	return HttpResponse(file.read())
+    file = open(os.path.join(BASE_DIR, "data/pumsmetaui.xml"))
+    return HttpResponse(file.read())
+
+def view_monitoring_alive(request):
+    """For kubernetes liveness check"""
+    return JsonResponse(dict(status="ok",
+                             message="TwoRavens python server up"))
+
 
 
 ## LOAD LOCAL DATA
