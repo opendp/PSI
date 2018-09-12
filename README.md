@@ -48,7 +48,7 @@ Please use the following workflow when updating this repository.
     - Naming format for branch: `(issue number)-some-text`
     - example: `18-external-files`
 3. Make your updates on the new branch, `18-external-files`
-4. After* your changes are made, update your branch (e.g. `18-external-files`) with any updates from master.  Example:
+4. After* your changes are made, update your branch (e.g. `18-external-files`) with any new updates on master.  Example:
     ```
     git checkout master            # switch to the master branch
     git pull                       # retrieve updates
@@ -57,5 +57,6 @@ Please use the following workflow when updating this repository.
     git merge origin               # bring any changes from master into your branch; resolve any conflicts
     # test your code
     ```
+    - *If you are making a change that takes days/weeks, update your branch more frequently.
 5. [Create a pull request](https://help.github.com/articles/creating-a-pull-request/#creating-the-pull-request)
 6. Notify @tercer or @jackmurtagh of the pull request
