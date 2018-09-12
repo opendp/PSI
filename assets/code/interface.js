@@ -1535,7 +1535,7 @@ function make_bubble (variable) {
                 	// blank_bubble += "Enter variable types:";
                   blank_bubble += "Variable Types";
 
-                  blank_bubble += "&nbsp;&nbsp;<a href='#myModal5' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal5(\"" + variable + "\")' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
+                  blank_bubble += "&nbsp;&nbsp;<a href='#myModal5' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal5(\"" + variable + "\")' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
 
                 	blank_bubble += "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 	blank_bubble += "<table>";
@@ -1561,7 +1561,7 @@ function make_bubble (variable) {
                     // Display confirmed type
                     blank_bubble += "Variable Type: <span id='type-" + variable + "'>" + types_for_vars[variable] + "</span>";
                     // Option to return to modal window to change
-                    blank_bubble += "&nbsp;&nbsp;<a href='#myModal4' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal4()' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
+                    blank_bubble += "&nbsp;&nbsp;<a href='#myModal4' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal4()' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
                     blank_bubble += "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 }
                  blank_bubble += "</div>" +
