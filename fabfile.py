@@ -70,8 +70,8 @@ def init_db(context):
 @task
 def run_web(context):
     """Run the django web app"""
-    # init_db(context)
-    print("about to run server")
-    cmd = ('echo "x" && echo "z" && python manage.py runserver 8080 && echo "y" ')
+    init_db(context)
+    print("Run web server")
+    cmd = ('python manage.py runserver 8080')
 
     run_local_cmd(cmd, run_web.__doc__)

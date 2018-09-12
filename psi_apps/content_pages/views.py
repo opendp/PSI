@@ -1,39 +1,73 @@
 import json
 import urllib
+from os.path import isfile, join
 import os
 import mimetypes
 
 # from django.conf import settings
-from psiproject.settings.base import BASE_DIR
+from django.conf import settings
 from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from psi_apps.utils.file_helper import load_file_as_json, load_file_contents
+from psi_apps.utils.view_helper import \
+    (get_json_error, get_json_success)
 
 def interface(request):
+    """Return the interface.html template"""
     return render(request, 'interface.html')
 
 def psiIntroduction(request):
+    """Return the psiIntroduction.html template"""
     return render(request, 'psiIntroduction.html')
 
 def psiOpen(request):
+    """Return the psiOpen.html template"""
     return render(request, 'psiOpen.html')
 
 def psiOpenPrototype(request):
+    """Return the psiOpenPrototype.html template"""
     return render(request, 'psiOpenPrototype.html')
 
 def getData(request):
-    file = open(os.path.join(BASE_DIR, "data/preprocess_4_v1-0.json"))
-    data = json.load(file)
-    ##print(data)
-    return JsonResponse(data)
+    """Return a default/test preprocess file: preprocess_4_v1-0.json"""
+    fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
+                 'preprocess_4_v1-0.json')
+
+    json_info = load_file_as_json(fpath)
+    if not json_info.success:
+        return JsonResponse(get_json_error(json_info.err_msg))
+
+    return JsonResponse(json_info.result_obj)
+
+    #
+    #return JsonResponse(\
+    #            get_json_success('success',
+    #                             data=json_info.result_obj))
+
 
 def getXML(request):
-    file = open(os.path.join(BASE_DIR, "data/pumsmetaui.xml"))
-    return HttpResponse(file.read())
+    """Return the default/test xml data: pumsmetaui.xml"""
+    #file = open(os.path.join(settings.BASE_DIR, "data/pumsmetaui.xml"))
+    #return HttpResponse(file.read())
+    fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
+                 'pumsmetaui.xml')
+
+    file_info = load_file_contents(fpath)
+    if not file_info.success:
+        return JsonResponse(get_json_error(file_info.err_msg))
+
+    return HttpResponse(file_info.result_obj,
+                        content_type="application/xml")
+
+    #return JsonResponse(\
+    #            get_json_success('success',
+    #                             data=json_info.result_obj))
+
 
 def view_monitoring_alive(request):
     """For kubernetes liveness check"""
     return JsonResponse(dict(status="ok",
-                             message="TwoRavens python server up"))
+                             message="PSI python server up"))
 
 
 

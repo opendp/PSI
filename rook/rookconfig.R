@@ -20,12 +20,12 @@ IS_PRODUCTION_MODE <- identical(Sys.getenv(x='IS_PRODUCTION_MODE', unset="no"), 
 #print(paste("IS_PRODUCTION_MODE: ", IS_PRODUCTION_MODE, sep=""))
 
 # ------------------------------------------------
-# Set: DATA_DIRECTORY_PATH
+# Set: PSI_DATA_DIRECTORY_PATH
 #  The data directory path--make sure it ends with "/"
 # ------------------------------------------------
 default_data_directory_path <- paste(dirname(getwd()), "/data/", sep="")
-DATA_DIRECTORY_PATH <- Sys.getenv(x='DATA_DIRECTORY_PATH', unset=default_data_directory_path)
-DATA_DIRECTORY_PATH <- add_backslash(DATA_DIRECTORY_PATH)
+PSI_DATA_DIRECTORY_PATH <- Sys.getenv(x='PSI_DATA_DIRECTORY_PATH', unset=default_data_directory_path)
+PSI_DATA_DIRECTORY_PATH <- add_backslash(PSI_DATA_DIRECTORY_PATH)
 
 # ------------------------------------------------
 # Set: DATAVERSE_FILE_ACCESS_URL

@@ -654,7 +654,7 @@ formatted_release <- function(release, nameslist) {
 append_release_to_file <- function(filename, release_object, variable, statname) {
 	# Read current JSON file
 	#filepath <- paste("../data/", filename, sep="")
-	filepath <- paste(DATA_DIRECTORY_PATH, filename, sep="")
+	filepath <- paste(PSI_DATA_DIRECTORY_PATH, filename, sep="")
 
 	if(!file.exists(filepath)){
 		fileConn<-file(filepath)
