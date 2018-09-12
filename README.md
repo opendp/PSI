@@ -42,7 +42,7 @@ Enabling CORS request to local files on Chrome:
 
 Please use the following workflow when updating this repository.
 
-1. Create a GitHub issue: https://github.com/TwoRavens/PSI/issues or look up the number of an existing issue.
+1. Create a [GitHub issue](https://github.com/TwoRavens/PSI/issues) or look up the number of an existing issue.
     - Example: issue #18 is titled "Add external, static files directly to project"
 2. [Create a new branch](https://help.github.com/articles/creating-and-deleting-branches-within-your-repository/) off of master based on the issue number. 
     - Naming format for branch: `(issue number)-some-text`
