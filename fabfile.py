@@ -56,7 +56,7 @@ def run_rook(context):
 @task
 def collect_static(context):
     """Run the Django collectstatic command"""
-    local('python manage.py collectstatic --noinput')
+    fab_local('python manage.py collectstatic --noinput')
 
 
 @task

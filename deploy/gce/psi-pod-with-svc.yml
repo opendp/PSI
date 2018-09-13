@@ -61,7 +61,7 @@ spec:
   - name: psi-web
     image: tworavens/psi-web:latest
     imagePullPolicy: Always
-    #command: ["event_data_start.sh"]
+    command: ["psi_start.sh"]
     ports:
      # Main web port; nginx makes this available via port 80
      - containerPort: 8080
@@ -74,6 +74,8 @@ spec:
     env:
       - name: PSI_DATA_DIRECTORY_PATH
         value: "/psi_volume/data"
+      - name: DJANGO_SETTINGS_MODULE
+        value: psiproject.settings.psi_gce_settings
     #envFrom:
     #  - configMapRef:
     #      name: eventdata-django-configmap
