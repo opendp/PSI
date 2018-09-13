@@ -4,3 +4,6 @@ requests==2.19.1
 
 # fabric
 fabric==2.2.1
+
+# web service
+gunicorn==19.9.0
