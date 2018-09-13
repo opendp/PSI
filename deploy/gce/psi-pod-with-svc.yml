@@ -170,5 +170,5 @@ spec:
       httpGet:
         path: /custom/healthcheck
         port: 8080
-      initialDelaySeconds: 25
+      initialDelaySeconds: 45
       periodSeconds: 10
