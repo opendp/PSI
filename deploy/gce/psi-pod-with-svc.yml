@@ -1,6 +1,6 @@
 ---
 # ---------------------------
-# EventData - Service
+# PSI app - Service
 # ---------------------------
 apiVersion: v1
 kind: Service
@@ -76,6 +76,8 @@ spec:
         value: "/psi_volume/data"
       - name: DJANGO_SETTINGS_MODULE
         value: psiproject.settings.psi_gce_settings
+      - name: ROOK_SERVER
+        value: http://0.0.0.0:8000/custom/
     #envFrom:
     #  - configMapRef:
     #      name: eventdata-django-configmap

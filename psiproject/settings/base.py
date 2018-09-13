@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     'psi_apps',
     'psi_apps.rook_services',
     'psi_apps.content_pages',

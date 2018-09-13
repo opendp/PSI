@@ -11,24 +11,27 @@ To run locally:
 
 2. Start rook:
 
-      In R run:
+      In the Terminal, run:
 
-            setwd ("[path to.../PSI/rook")
-            source ("rookSetup.R")
+          fab run-rook
 
-      Alternatively:
+      Alternatively, in R, run:
 
-            fab run-rook
+          setwd ("[path to.../PSI/rook")
+          source ("rookSetup.R")
+
 
 3. In a separate Terminal, invoke the virtualenv and start Django:
 
           workon psi
-          python manage.py runserver 8080
+          fab run-web
 
       Alternatively:
 
           workon psi
-          fab run-web
+          python manage.py check
+          python manage.py migrate
+          python manage.py runserver 8080
 
 Any port other than 8000 can be specified because rook runs on 8000.
 
