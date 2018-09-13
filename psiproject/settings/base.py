@@ -11,13 +11,17 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-from os.path import join
-
-Temp_Path = os.path.realpath('.')
+from os.path import abspath, dirname, join
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = dirname(dirname(dirname(abspath(__file__))))
 
+SECRET_KEY = os.environ.get('SECRET_KEY',
+                            'please-set-a-secret-secret-key')
+
+PSI_DATA_DIRECTORY_PATH = os.environ.get(\
+                                'PSI_DATA_DIRECTORY_PATH',
+                                join(BASE_DIR, 'data'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/

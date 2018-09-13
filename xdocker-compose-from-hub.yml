@@ -1,32 +1,30 @@
 version: '3'
 
 services:
-  #db:
-  #  image: django
+  db:
+    image: django
   web:
     stdin_open: true
     tty: true
     build:
       context: ./
-      dockerfile: Dockerfile-web
+      dockerfile: Dockerfile-django
     environment:
       - ROOK_SERVER=http://rook-service:8000/custom/
     command: python manage.py runserver 0.0.0.0:8080
-    #command: psi_start.sh
     volumes:
       - .:/psi_volume
     ports:
       - "8080:8080"
     depends_on:
-      - rook-service
+      - db
   rook-service:
     stdin_open: true
     tty: true
+    #image: tworavens/psi-r-service
     build:
       context: ./
       dockerfile: Dockerfile-r-service
-    environment:
-      - IS_PRODUCTION_MODE=no
     ports:
       - "8000:8000"
     volumes:

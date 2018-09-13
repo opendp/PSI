@@ -454,18 +454,18 @@
 
     </script>
 
-    <script type="text/javascript" src="{% static "code/interface.js" %}"></script>
+    <script type="text/javascript" src="{% static "code/interface.js" %}?t={% now "u" %}"></script>
     <script type="text/javascript">
         console.log(UI);  // UI set from url in interface.js
         // open the modal window on page load
         $(window).load(function(){
-        $('#myModal').modal('show');
-        if(UI){
-            $('#myModal').find('.modal-body').load("{% url "psiOpen" %}"); //JM for UI/UX
-        }else{
-           $('#myModal').find('.modal-body').load("{% url "psiOpenPrototype" %}");
-            //$('#myModal').find('.modal-body').load("psiOpen.html");
-        };
+          $('#myModal').modal('show');
+          if(UI){
+              $('#myModal').find('.modal-body').load("{% url "psiOpen" %}"); //JM for UI/UX
+          }else{
+             $('#myModal').find('.modal-body').load("{% url "psiOpenPrototype" %}");
+              //$('#myModal').find('.modal-body').load("psiOpen.html");
+          };
         });
 
 
@@ -476,4 +476,3 @@
 </body>
 
 </html>
-    

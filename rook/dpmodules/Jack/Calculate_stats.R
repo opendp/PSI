@@ -8,6 +8,9 @@
 
 # This function may throw an error on an ill-formed request,
 # but we make sure it does not do so contingent on the data.
+source("rookconfig.R")
+
+
 enforce_constraints <- function(toprocess, df){
 	#get full list of constraints
 	meta <- df[,c("Variable","Type", "Statistic","Lower_Bound","Upper_Bound","Number_of_Bins","Granularity","Treatment_Variable", "Bin_Names")]
@@ -586,6 +589,9 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 
 		# Loop through each released stat; refer to appropriate variable name and stat name
 		good_objects_length <- length(good_objects)
+
+		print(paste("good_objects_length: ", good_objects_length, sep=""))
+
 		for (i in 1:good_objects_length) {
 			append_release_to_file("metadata-pums.json", good_objects[[i]]$single_stat_release, good_objects[[i]]$variable, good_objects[[i]]$stat)
 		}
@@ -647,7 +653,16 @@ formatted_release <- function(release, nameslist) {
 
 append_release_to_file <- function(filename, release_object, variable, statname) {
 	# Read current JSON file
-	filepath <- paste("../data/", filename, sep="")
+	#filepath <- paste("../data/", filename, sep="")
+	filepath <- paste(PSI_DATA_DIRECTORY_PATH, filename, sep="")
+
+	if(!file.exists(filepath)){
+		fileConn<-file(filepath)
+		writeLines(c("{}"), fileConn)	# create json file with only {}
+		close(fileConn)
+		#print(paste("ERROR in 'Calculate_stats.R -> append_release_to_file'!  File not found! ", filepath, sep=""))
+	}
+
 	filedata <- fromJSON(filepath)
 
 	# Check if this type of stat has been released before for this variable

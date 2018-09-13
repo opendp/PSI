@@ -4,14 +4,14 @@
 
 To run locally:
 
-1. Using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/), create a virtualenv and install Install dependencies: 
+1. Using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/), create a virtualenv and install Install dependencies:
 
           mkvirtualenv psi
           pip install -r requirements/base.txt
 
 2. Start rook:
-  
-      In R run: 
+
+      In R run:
 
             setwd ("[path to.../PSI/rook")
             source ("rookSetup.R")
@@ -19,8 +19,8 @@ To run locally:
       Alternatively:
 
             fab run-rook
-            
-3. In a separate Terminal, invoke the virtualenv and start Django: 
+
+3. In a separate Terminal, invoke the virtualenv and start Django:
 
           workon psi
           python manage.py runserver 8080
@@ -30,7 +30,7 @@ To run locally:
           workon psi
           fab run-web
 
-Any port other than 8000 can be specified because rook runs on 8000. 
+Any port other than 8000 can be specified because rook runs on 8000.
 
 To allow communication with rook, CORS request have to be enabled on your browser:
 
