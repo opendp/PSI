@@ -14,6 +14,9 @@ ALLOWED_HOSTS = ('*',) #('.psiprivacy.org', )
 #
 USE_X_FORWARDED_HOST = True
 
+# directed through nginx
+#
+ROOK_SVC_URL = os.environ.get(ROOK_SVC_URL, '/rook-custom/')
 
 # -----------------------------------
 # initial setup before external sql db

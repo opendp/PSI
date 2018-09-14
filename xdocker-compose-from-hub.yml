@@ -10,7 +10,7 @@ services:
       context: ./
       dockerfile: Dockerfile-django
     environment:
-      - ROOK_SERVER=http://rook-service:8000/custom/
+      - ROOK_SVC_URL=http://rook-service:8000/custom/
     command: python manage.py runserver 0.0.0.0:8080
     volumes:
       - .:/psi_volume

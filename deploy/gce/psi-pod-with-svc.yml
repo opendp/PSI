@@ -76,7 +76,7 @@ spec:
         value: "/psi_volume/data"
       - name: DJANGO_SETTINGS_MODULE
         value: psiproject.settings.psi_gce_settings
-      - name: ROOK_SERVER
+      - name: ROOK_SVC_URL
         value: http://0.0.0.0:8000/custom/
     #envFrom:
     #  - configMapRef:
@@ -151,7 +151,7 @@ spec:
         mountPath: "/psi_volume"
         readOnly: false
     env:
-      - name: ROOK_USE_PRODUCTION_MODE
+      - name: IS_PRODUCTION_MODE
         value: "no"
         #value: "yes"
       - name: PSI_DATA_DIRECTORY_PATH

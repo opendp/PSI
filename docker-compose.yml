@@ -1,24 +1,30 @@
 version: '3'
 
 services:
-  #db:
-  #  image: django
-  web:
+  #-------------------------------
+  # PSI web service
+  #-------------------------------
+  psi-web:
     stdin_open: true
     tty: true
     build:
       context: ./
       dockerfile: Dockerfile-web
     environment:
-      - ROOK_SERVER=http://rook-service:8000/custom/
+      - ROOK_SERVER_BASE=http://rook-service:8000/custom/
+      - ROOK_SVC_URL=/rook-custom/
+      - DJANGO_SETTINGS_MODULE=psiproject.settings.local
+      - PSI_DATA_DIRECTORY_PATH=/psi_volume/data
     command: python manage.py runserver 0.0.0.0:8080
-    #command: psi_start.sh
     volumes:
       - .:/psi_volume
     ports:
       - "8080:8080"
     depends_on:
       - rook-service
+  #-------------------------------
+  # Rook service
+  #-------------------------------
   rook-service:
     stdin_open: true
     tty: true
@@ -27,6 +33,7 @@ services:
       dockerfile: Dockerfile-r-service
     environment:
       - IS_PRODUCTION_MODE=no
+      - PSI_DATA_DIRECTORY_PATH=/psi_volume/data
     ports:
       - "8000:8000"
     volumes:

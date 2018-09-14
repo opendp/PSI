@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     'psi_apps',
     'psi_apps.rook_services',
     'psi_apps.content_pages',
@@ -127,6 +127,28 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [join(BASE_DIR, 'assets')]
 
-ROOK_SERVER = os.environ.get('ROOK_SERVER', 'http://0.0.0.0:8000/custom/')
+
+def add_backslash(name, val):
+    assert val, 'val for %s must be set' % name
+    if val[-1] != '/':
+        val += '/'
+    return val.strip()
+
+# --------------------------------------------------
+# Url for the actual rook server
+# --------------------------------------------------
+ROOK_SERVER_BASE = os.environ.get('ROOK_SERVER_BASE',
+                                  'http://0.0.0.0:8000/custom/')
+add_backslash('ROOK_SERVER_BASE', ROOK_SERVER_BASE)
+
+# --------------------------------------------------
+# Used by the UI, routes through django or nginx->django
+#
+#  Example values: "/custom/", "http://psiproject.org/rook-custom/
+# --------------------------------------------------
+ROOK_SVC_URL = os.environ.get('ROOK_SVC_URL',
+                              '/rook-custom/')
+add_backslash('ROOK_SVC_URL', ROOK_SVC_URL)
+
 
 LOGIN_REDIRECT_URL = '/'

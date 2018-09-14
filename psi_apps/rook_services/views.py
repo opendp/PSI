@@ -3,7 +3,7 @@ import requests
 import urllib.parse
 
 from django.http import JsonResponse, HttpResponse, Http404
-#from psiproject.settings.local import ROOK_SERVER
+#from psiproject.settings.local import ROOK_SVC_URL
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 
@@ -14,7 +14,7 @@ from psi_apps.utils.view_helper import \
 def view_rook_route(request, app_name_in_url):
     """Route the call to Rook and back"""
 
-    rook_svc_url = '{0}{1}'.format(settings.ROOK_SERVER, app_name_in_url)
+    rook_svc_url = '{0}{1}'.format(settings.ROOK_SERVER_BASE, app_name_in_url)
 
     decode = request.body.decode('utf-8')
 

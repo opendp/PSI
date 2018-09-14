@@ -614,7 +614,7 @@ function talktoR(action, variable, stat) {
 
    console.log(jsonout)
    // urlcall = base+"privateAccuraciesapp";
-   urlcall = "rook-custom/privateAccuraciesapp"
+   urlcall = ROOK_SVC_URL + "privateAccuraciesapp"
    console.log("urlcall out: ", urlcall);
    makeCorsRequest(urlcall, estimateSuccess, estimateFail, jsonout);
 }
@@ -834,7 +834,7 @@ function talktoRtwo(btn) {
 
 	console.log(jsonout)
     // urlcall = base+"privateStatisticsapp";
-    urlcall = "rook-custom/privateStatisticsapp"
+    urlcall = ROOK_SVC_URL + "privateStatisticsapp"
     console.log("urlcall out: ", urlcall);
 
     makeCorsRequest(urlcall, statisticsSuccess, estimateFail, jsonout);
@@ -886,7 +886,8 @@ function createCORSRequest2(method, url, callback) {
 
 
 // Make the actual CORS request.
-function makeCorsRequest(url,callback, warningcallback, json) {
+function makeCorsRequest(url, callback, warningcallback, json) {
+     console.log('makeCorsRequest: ' + url);
      var xhr = createCORSRequest('POST', url);
      if (!xhr) {
          alert('CORS not supported');
@@ -2249,7 +2250,7 @@ function newtransform(x) {
 
     console.log(jsonout)
     // urlcall = rappURL+"verifyTransformapp";
-    urlcall = "rook-custom/verifyTransformapp";
+    urlcall = ROOK_SVC_URL + "verifyTransformapp";
     console.log("urlcall out: ", urlcall);
     makeCorsRequest(urlcall, newtransSuccess, newtransFailure, jsonout);
     }

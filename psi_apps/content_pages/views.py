@@ -14,7 +14,10 @@ from psi_apps.utils.view_helper import \
 
 def interface(request):
     """Return the interface.html template"""
-    return render(request, 'interface.html')
+    info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL)
+    return render(request,
+                  'interface.html',
+                  info_dict)
 
 def psiIntroduction(request):
     """Return the psiIntroduction.html template"""
