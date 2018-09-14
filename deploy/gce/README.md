@@ -7,9 +7,10 @@ The commands for this section are for deploying the PSI docker containers on goo
 ## Docker images
 
 The docker images are being pulled from [hub.docker](https://hub.docker.com/r/tworavens).  
-  - In general, dockedr images are rebuilt (via [Travis](https://www.travis-ci.com/TwoRavens/PSI)), whenever code is checked into the `develop` or `master` branches.
-  - The docker images deployed on gce are from the master branch and tagged as `master`, as in `tworavens/psi-web:master`, etc.
+- In general, docker images are rebuilt (via [Travis](https://www.travis-ci.com/TwoRavens/PSI)), whenever code is checked into the `develop` or `master` branches.
+- The docker images deployed on gce are from the master branch and tagged as `master`, as in `tworavens/psi-web:master`, etc.
 
+Docker Image list:
 
 - [tworavens/psi-web](https://hub.docker.com/r/tworavens/psi-web/tags/)
   - Contains the main web service which routes calls to rook.
