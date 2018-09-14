@@ -32,10 +32,11 @@ after_success:
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
     docker push tworavens/psi-web:latest;
     fi
-  - if [ "$TRAVIS_BRANCH" == "develop" ]; then
+  #- if [ "$TRAVIS_BRANCH" == "develop" ]; then
+  - if [ "$TRAVIS_BRANCH" == "15-k8s-prep" ]; then
     docker build -t tworavens/psi-web:develop -f Dockerfile-web .;
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push tworavens/psi-web:develop;
+    docker push tworavens/psi-web:latest;
     fi
   #
   # send report to coveralls
