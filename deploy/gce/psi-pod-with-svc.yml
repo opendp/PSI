@@ -79,6 +79,11 @@ spec:
         value: psiproject.settings.psi_gce_settings
       - name: ROOK_SVC_URL
         value: http://0.0.0.0:8000/custom/
+      - name: SECRET_KEY
+        valueFrom:
+          secretKeyRef:
+            name: psi-web-secrets
+            key: SECRET_KEY
     #envFrom:
     #  - configMapRef:
     #      name: eventdata-django-configmap

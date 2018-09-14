@@ -6,7 +6,9 @@ from .base import *
 
 DEBUG = strtobool(os.environ.get('DEBUG', 'False'))
 
-SECRET_KEY = 'psix(*d87_-#a-na-change-th!s-for-prod_j6n@d&xi395h!6dwah'
+SECRET_KEY = os.environ.get(\
+                'SECRET_KEY',
+                'overwrite-this-with-a-secret-from-the-env')
 
 ALLOWED_HOSTS = ('*',) #('.psiprivacy.org', )
 
