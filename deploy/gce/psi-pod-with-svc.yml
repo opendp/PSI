@@ -140,7 +140,6 @@ spec:
   - name: rook-service
     image: tworavens/psi-r-service:latest
     imagePullPolicy: Always
-    #command: ["event_data_start.sh"]
     ports:
     # Main web port; nginx makes this available via port 80
     - containerPort: 8080

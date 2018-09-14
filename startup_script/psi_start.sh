@@ -1,3 +1,4 @@
+#!/bin/bash
 
 # -----------------------------------
 # (10) Copy test data to /psi_volume
