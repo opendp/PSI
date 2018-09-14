@@ -46,7 +46,7 @@ spec:
   # - reverse proxy for psi-main
   # --------------------------------
   - name: psi-nginx
-    image: tworavens/psi-nginx:latest
+    image: tworavens/psi-nginx:master
     imagePullPolicy: Always
     ports:
       - containerPort: 80
@@ -60,7 +60,7 @@ spec:
   # 2 of 3: web app container (django)
   # --------------------------------
   - name: psi-web
-    image: tworavens/psi-web:latest
+    image: tworavens/psi-web:master
     imagePullPolicy: Always
     command: ["psi_start.sh"]
     ports:
@@ -84,42 +84,6 @@ spec:
           secretKeyRef:
             name: psi-web-secrets
             key: SECRET_KEY
-    #envFrom:
-    #  - configMapRef:
-    #      name: eventdata-django-configmap
-    #env:
-    #- name: SECRET_KEY
-    #  valueFrom:
-    #    secretKeyRef:
-    #      name: gce-eventdata-secrets
-    #      key: SECRET_KEY
-    # ---------------------------
-    # Social auth: github creds
-    # ---------------------------
-    #- name: SOCIAL_AUTH_GITHUB_KEY
-    #  valueFrom:
-    #    secretKeyRef:
-    #      name: gce-eventdata-secrets
-    #      key: SOCIAL_AUTH_GITHUB_KEY
-    #- name: SOCIAL_AUTH_GITHUB_SECRET
-    #  valueFrom:
-    #    secretKeyRef:
-    #      name: gce-eventdata-secrets
-    #      key: SOCIAL_AUTH_GITHUB_SECRET
-    # ---------------------------
-    # SQL db credentials
-    # ---------------------------
-    #- name: DB_USER
-    #  valueFrom:
-    #    secretKeyRef:
-    #      name: eventdata-sql-db-credentials
-    #      key: username
-    #- name: DB_PASSWORD
-    #  valueFrom:
-    #    secretKeyRef:
-    #      name: eventdata-sql-db-credentials
-    #      key: password
-    # ---------------------------
     # ---------------------------
     # liveness is for restart
     # ---------------------------
@@ -144,7 +108,7 @@ spec:
   # 3 of 3: rook service (psi happening here!)
   # --------------------------------
   - name: psi-rook-service
-    image: tworavens/psi-r-service:latest
+    image: tworavens/psi-r-service:master
     imagePullPolicy: Always
     ports:
     # Main web port; nginx makes this available via port 80
