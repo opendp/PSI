@@ -27,15 +27,25 @@ after_success:
   # Build images and push to dockerhub
   #
   - echo $TRAVIS_BRANCH;
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+  #- if [ "$TRAVIS_BRANCH" == "master" ]; then
+  - if [ "$TRAVIS_BRANCH" == "26-tags" ]; then
+    # Build psi-web image
+    docker build -t tworavens/psi-web:master -f Dockerfile-web .;
+    #
+    # Build nginx image
+    cd setup/nginx/;
+    docker build -t tworavens/psi-nginx:master -f ./Dockerfile-nginx .;
+    cd ../../;
+    #
+    # Push images
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push tworavens/psi-web:master;
+    docker push tworavens/psi-nginx:master;
+    fi
+  - if [ "$TRAVIS_BRANCH" == "develop" ]; then
     docker build -t tworavens/psi-web:latest -f Dockerfile-web .;
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
     docker push tworavens/psi-web:latest;
-    fi
-  - if [ "$TRAVIS_BRANCH" == "develop" ]; then
-    docker build -t tworavens/psi-web:develop -f Dockerfile-web .;
-    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
-    docker push tworavens/psi-web:develop;
     fi
   #
   # send report to coveralls
