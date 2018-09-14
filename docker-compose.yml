@@ -11,7 +11,7 @@ services:
       context: ./
       dockerfile: Dockerfile-web
     environment:
-      - ROOK_SERVER_BASE=http://rook-service:8000/custom/
+      - ROOK_SERVER_BASE=http://psi-rook-service:8000/custom/
       - ROOK_SVC_URL=/rook-custom/
       - DJANGO_SETTINGS_MODULE=psiproject.settings.local
       - PSI_DATA_DIRECTORY_PATH=/psi_volume/data
@@ -21,11 +21,11 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - rook-service
+      - psi-rook-service
   #-------------------------------
   # Rook service
   #-------------------------------
-  rook-service:
+  psi-rook-service:
     stdin_open: true
     tty: true
     build:
