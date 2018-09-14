@@ -41,11 +41,12 @@ COPY . .
 #   (This can be overridden in docker compose/kubernetes)
 #
 # - DJANGO_SETTINGS_MODULE: Django settings
-# - ROOK_SERVER - rook-service docker container
+# - ROOK_SVC_URL - rook-service docker container
 # - CODE_REPOSITORY - repository where code will be copied
 # -------------------------------------
 ENV DJANGO_SETTINGS_MODULE=psiproject.settings.local \
-    ROOK_SERVER='http://0.0.0.0:8000/custom/' \
+    ROOK_SERVER_BASE=http://0.0.0.0:8000/custom/ \
+    ROOK_SVC_URL=/rook-custom/ \
     CODE_REPOSITORY=/var/webapps/PSI \
     LC_ALL=C.UTF-8
 
@@ -60,15 +61,9 @@ VOLUME /psi_volume
 #
 #   - create_django_superuser - Admin user created for testing
 #
-#   - create_test_user - Non-admin user created for testing
-#
-#   - load_docker_ui_config - sets JS variables for UI d3m_mode to true
+#   X- create_test_user - Non-admin user created for testing
 #
 #   - collect_static - django collect static files
-#
-#   - make_d3m_config_files - makes test config files accessible via env variables
-#                             (not used for eval)
-#   - make_d3m_config - WARNING: for testing. Loads D3M info based on the test data
 #
 # -------------------------------------
 RUN fab init-db
@@ -86,7 +81,13 @@ RUN chmod u+x /usr/bin/psi_start.sh
 # -------------------------------------
 EXPOSE 8080
 
-CMD ["python3", "manage.py", "migrate"]
+# -------------------------------------
+# Idle the container on startup so it
+# can receive subsequent commands
+# -------------------------------------
+#ENTRYPOINT tail -f /dev/null
+
+#CMD ["python3", "manage.py", "migrate"]
 CMD ["python3", "-u", "manage.py", "runserver", "0.0.0.0:8080"]
 
 #RUN cd /var/webapps/PSI && \

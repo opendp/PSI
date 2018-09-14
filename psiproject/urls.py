@@ -15,10 +15,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import re_path, path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
-urlpatterns = [
-    re_path(r'^admin/', admin.site.urls),
-	re_path (r'^rook-custom/', include('psi_apps.rook_services.urls')),
-    re_path(r'^auth/', include('psi_apps.psi_auth.urls')),
-    re_path (r'^', include('psi_apps.content_pages.urls')),
-]
+urlpatterns = [\
+    re_path(r'^admin/',
+            admin.site.urls),
+
+    re_path(r'^rook-custom/',
+            include('psi_apps.rook_services.urls')),
+
+    re_path(r'^auth/',
+            include('psi_apps.psi_auth.urls')),
+
+    re_path(r'^',
+            include('psi_apps.content_pages.urls')),]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,
+                          document_root=settings.TEST_DIRECT_STATIC)

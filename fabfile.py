@@ -75,3 +75,32 @@ def run_web(context):
     cmd = ('python manage.py runserver 8080')
 
     run_local_cmd(cmd, run_web.__doc__)
+
+@task
+def create_django_superuser(context):
+    """(Test only) Create superuser with username: dev_admin. Password is printed to the console."""
+    from psi_apps.psi_auth.models import User
+    import random
+
+    dev_admin_username = 'dev_admin'
+
+    #User.objects.filter(username=dev_admin_username).delete()
+    if User.objects.filter(username=dev_admin_username).count() > 0:
+        print('A "%s" superuser already exists' % dev_admin_username)
+        return
+
+    admin_pw = 'admin'
+    #''.join(random.choice(string.ascii_lowercase + string.digits)
+    #                   for _ in range(7))
+
+    new_user = User(username=dev_admin_username,
+                    first_name='Dev',
+                    last_name='Administrator',
+                    is_staff=True,
+                    is_active=True,
+                    is_superuser=True)
+    new_user.set_password(admin_pw)
+    new_user.save()
+
+    print('superuser created: "%s"' % dev_admin_username)
+    print('password: "%s"' % admin_pw)

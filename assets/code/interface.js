@@ -614,7 +614,7 @@ function talktoR(action, variable, stat) {
 
    console.log(jsonout)
    // urlcall = base+"privateAccuraciesapp";
-   urlcall = "rook-custom/privateAccuraciesapp"
+   urlcall = ROOK_SVC_URL + "privateAccuraciesapp"
    console.log("urlcall out: ", urlcall);
    makeCorsRequest(urlcall, estimateSuccess, estimateFail, jsonout);
 }
@@ -834,7 +834,7 @@ function talktoRtwo(btn) {
 
 	console.log(jsonout)
     // urlcall = base+"privateStatisticsapp";
-    urlcall = "rook-custom/privateStatisticsapp"
+    urlcall = ROOK_SVC_URL + "privateStatisticsapp"
     console.log("urlcall out: ", urlcall);
 
     makeCorsRequest(urlcall, statisticsSuccess, estimateFail, jsonout);
@@ -886,7 +886,8 @@ function createCORSRequest2(method, url, callback) {
 
 
 // Make the actual CORS request.
-function makeCorsRequest(url,callback, warningcallback, json) {
+function makeCorsRequest(url, callback, warningcallback, json) {
+     console.log('makeCorsRequest: ' + url);
      var xhr = createCORSRequest('POST', url);
      if (!xhr) {
          alert('CORS not supported');
@@ -917,7 +918,7 @@ function makeCorsRequest(url,callback, warningcallback, json) {
        */
        if (!json.success){
           console.log(json.message);
-          alert(json.message);
+          alert(json.message + "\nurl: " + url);
        }else{
           if (json.data.warning){
             warningcallback(json.data.warning)
@@ -1069,6 +1070,15 @@ function activate_variable (variable) {
     check_group_types(variable);
 	} else {
     // Trigger selection of type
+    if (!(variable in types_for_vars)){
+      // Object.keys(types_for_vars).sort().map(t => `"${t}"`).join(',');
+
+      let user_msg = 'Error in "activate_variable".  Type not found for variable "' + variable + '"\nVariables with known types: ' + Object.keys(types_for_vars).sort().map(t => `"${t}"`).join(', ');
+      show_debug_error(user_msg);
+      return;
+    }
+
+
     type_selected(types_for_vars[variable], variable);
   }
     //Default to open accordion
@@ -1262,9 +1272,15 @@ function list_of_types_selected (variable, selected) {
 
 // Produces checkboxes on selected type
 // this function will change when we change the way we collect types
-function type_selected (type_chosen, variable, bool_multi) {
+function type_selected(type_chosen, variable, bool_multi) {
+
+  if (typeof type_chosen == 'undefined'){
+    let user_err_msg = 'Error: type_selected; "type_chosen" is undefined. variable was: ' + variable;
+    show_debug_error(user_err_msg);
+    return;
+  }
     // Update type for variable when selected in dropdown
-    console.log('selected ' + type_chosen + ' for ' + variable);
+    console.log('selected "' + type_chosen + '" for "' + variable + '"');
     // if (type_chosen.length == 1) {
       console.log(type_chosen);
       types_for_vars[variable] = type_chosen;
@@ -1281,18 +1297,18 @@ function type_selected (type_chosen, variable, bool_multi) {
 
 
     if (!areAllHeld1()) {
-		inputted_metadata[variable][0] = type_chosen;
+		  inputted_metadata[variable][0] = type_chosen;
   		generate_epsilon_table();
-		if (type_chosen != "default") {
-			document.getElementById("released_statistics_" + variable).innerHTML = list_of_statistics(type_chosen, variable);
-			document.getElementById('necessary_parameters_' + variable).innerHTML = "";
-			document.getElementById('missing_data_' + variable).innerHTML = "";
-		}
-		else {
-			document.getElementById("released_statistics_" + variable).innerHTML = "";
-			document.getElementById('necessary_parameters_' + variable).innerHTML = "";
-			document.getElementById('missing_data_' + variable).innerHTML = "";
-		}
+
+      if (type_chosen != "default") {
+  			document.getElementById("released_statistics_" + variable).innerHTML = list_of_statistics(type_chosen, variable);
+  			document.getElementById('necessary_parameters_' + variable).innerHTML = "";
+  			document.getElementById('missing_data_' + variable).innerHTML = "";
+  		}else {
+  			document.getElementById("released_statistics_" + variable).innerHTML = "";
+  			document.getElementById('necessary_parameters_' + variable).innerHTML = "";
+  			document.getElementById('missing_data_' + variable).innerHTML = "";
+  		}
 
 
 		if (previous_inputted_metadata[variable][0] != "default") {
@@ -1370,8 +1386,17 @@ function display_help_id(id) {
   $("#datasetHelp").load('psiIntroduction.html #' + id);
 }
 
+/*
+    try to handle errors that reach here in other ways
+ */
+function show_debug_error(user_err_msg){
+  console.log(user_err_msg);
+  alert(user_err_msg)
+}
+
 // Makes the checkboxes
 function list_of_statistics (type_chosen, variable) {
+
 	if(variable in grouped_var_dict){
 		return list_of_multivar_statistics (type_chosen, variable)
 	}
@@ -2249,7 +2274,7 @@ function newtransform(x) {
 
     console.log(jsonout)
     // urlcall = rappURL+"verifyTransformapp";
-    urlcall = "rook-custom/verifyTransformapp";
+    urlcall = ROOK_SVC_URL + "verifyTransformapp";
     console.log("urlcall out: ", urlcall);
     makeCorsRequest(urlcall, newtransSuccess, newtransFailure, jsonout);
     }

@@ -28,7 +28,7 @@ def load_file_as_json(fpath):
 
     fcontents = None
     try:
-        with open(fpath, 'rb') as fh:
+        with open(fpath, 'r') as fh:
             fcontents = fh.read()
     except IOError as ex_obj:
         user_msg = 'Could not read file: %s\nError: %s' % (fpath, ex_obj)
