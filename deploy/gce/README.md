@@ -10,6 +10,7 @@
 # Go to the PSI directory
 #
 cd PSI/deploy/gce
+git pull
 
 # Start the service
 #
