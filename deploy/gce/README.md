@@ -25,10 +25,19 @@ The docker images are being pulled from [hub.docker](https://hub.docker.com/r/tw
   - Note: if the service is already running, use the "Stop the service" commands first
 
 ```
-# Go to the PSI directory
+# Make sure you have access to the secrets file
 #
-cd PSI/deploy/gce
-git pull
+# Output will be similar to:
+#     NAME              TYPE      DATA      AGE
+#     psi-web-secrets   Opaque    1         2h
+#
+kubectl get secret psi-web-secrets
+
+# Retrieve the latest pod + service configuration file
+#    
+mkdir psi-deploy
+cd psi-deploy
+wget https://raw.githubusercontent.com/TwoRavens/PSI/master/deploy/gce/psi-pod-with-svc.yml
 
 # Start the service
 #
