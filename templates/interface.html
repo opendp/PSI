@@ -1,71 +1,8 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
 
-<head>
-    <!-- Linking to Javascript/CSS libraries -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="{% static "lib/d3.v3.min.js" %}"></script>
-
-    <link rel="stylesheet" type="text/css" href="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/css/bootstrap-slider.min.css">
-    <script type="text/javascript" src="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/bootstrap-slider.min.js"></script>
-
-
-    <link href="{% static "libraries/css/simple-sidebar.css" %}" rel="stylesheet">
-    <link rel="stylesheet" href="{% static "libraries/hopscotch/css/hopscotch.css" %}"></link>
-    <script type="text/javascript" src="{% static "libraries/hopscotch/js/hopscotch.js" %}"></script>
-    <!-- Linking to CSS stylesheet -->
-    <link rel="stylesheet" type="text/css" href="{% static "code/interface.css" %}">
-
-    <title>Budgeting Tool</title>
-
-    <script>
-      // ----------------------------
-      // global js settings from server
-      // ----------------------------
-      const ROOK_SVC_URL = '{{ ROOK_SVC_URL }}';
-    </script>
-
-</head>
-
-<body onload="generate_epsilon_table(); ">
-<body>
-
-<div id="setdataset" style="padding:10px 10px 10px 50px;background:#f2f2e6;">
-<table>
-    <tr>
-        <td title="This demonstration is linked to a test instance of Dataverse at https://beta.dataverse.org &#13;  You can select one of the example datasets by name, or any other dataset (including your own) by entering the file ID number below." align="right">
-            Select Dataverse dataset for demonstration:
-        </td>
-        <td title="This demonstration is linked to a test instance of Dataverse at https://beta.dataverse.org &#13;  You can select one of the example datasets by name, or any other dataset (including your own) by entering the file ID number below." style="padding:0 0 0 8px;">
-            <select name="dataselect" id="dataselect" onchange="changedataset(this.value)">
-            <option value="0">- Select -</option>
-            <option value="20" selected="selected" >Census PUMS</option>
-            <option value="5126">Science Teachers and Climate Change</option>
-            <option value="5127">Voter Validation CCES</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td title="You can select any dataset on the test Dataverse instance at https://beta.dataverse.org by entering its unique file ID number, or use one of the datasets provided in the selection box above." align="right">
-            or enter Dataverse fileid number:
-        </td>
-        <td title="You can select any dataset on the test Dataverse instance at https://beta.dataverse.org by entering its unique file ID number, or use one of the datasets provided in the selection box above." style="padding:0 0 0 8px;">
-            <input type="text" name="altfileid" onchange="overridedataset(this.value)" maxlength="5" style="width: 50px;" >
-            <button type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}" data-toggle="modal" data-target="#myModal" data-id="data"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: 12px;"></span></button>
-        </td>
-    </tr>
-    <button title="Show a video describing the features and use of this budgeting tool." onclick="location.href='http://beta.dataverse.org/custom/DifferentialPrivacyPrototype/video/BudgetInterfaceDemo.mp4';" style="color:#108db7;float:right; margin-right: 10%; margin-top:0.5em; padding-right:0.5em; padding-top:0.5em;">
-        <span class="glyphicon glyphicon-play-circle" style="color:#108db7; font-size: 22px; vertical-align: middle; margin-bottom: 0.125em; margin-top: -0.125em;" aria-hidden="true"></span>
-        Watch a Video Overview of this Tool</button>
-</table>
-</div>
-
-
-
+{% block main_content %}
+  {% include 'content/div-setdataset.html' %}
 
     <div class="flex-container">
         <header>
@@ -85,7 +22,7 @@
 
                 <td style=''>
                                 <h4 title="These are adjustable parameters that define the level of privacy protection guaranteed by the differentially private released statistics." style="display: inline-block; padding-right:5px;"> Privacy Loss Parameters</h4>
-                                <button id="edit_button" style='color:#108db7;' onclick="edit_parameters_window()">Edit Parameters</button>
+                                <button id="edit_button" class="btn btn-default" style='color:#108db7;' onclick="edit_parameters_window()">Edit Parameters</button>
                                 <button type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}"data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
 
 
@@ -135,15 +72,17 @@
             <input id='live-search-box' style="display:none" type="text" class="live-search-box" placeholder="Search variable names">
             <!-- Variable List -->
             <ul id="variable_sidebar" class="live-search-list"></ul>
-            <button id="group_vars" class="group-vars-button" onclick="group_vars_window()">Multivariate Statistics</button>
-            <input id="new-transform-box" size=16 style="display:none" type="text" class="transformation-box" placeholder="Name <- Formula" onfocusout="newtransform(this)"> <button type='button' class='manualinfo' data-load-url="{% url "psiIntroduction" %}" data-toggle='modal' data-target='#myModal' data-id='transformer'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
-        </nav>
 
+            <div class="text-center">
+            <button id="group_vars" class="btn btn-default" class="group-vars-button" onclick="group_vars_window()">Multivariate Statistics</button>
+            <br /><br />
+            <input id="new-transform-box" size=16 style="display:none" type="text" class="transformation-box" placeholder="Name <- Formula" onfocusout="newtransform(this)"> <button type='button' class='manualinfo' data-load-url="{% url "psiIntroduction" %}" data-toggle='modal' data-target='#myModal' data-id='transformer'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
+          </div>
+        </nav>
 
         <article class="main middle_column_compress">
             <!-- Page Content: Bubbles -->
             <div id="bubble_form" style=""></div>
-
         </article>
 
         <!-- Epsilon Sidebar Table -->
@@ -408,8 +347,8 @@
                 <div id="modal-body-group-vars" class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="group_vars_window_closed()">Submit</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                   <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="group_vars_window_closed()">Submit</button>
                 </div>
             </div>
         </div>
@@ -420,8 +359,8 @@
 
     <footer>
         <div>
-           <button title="This shows the full underlying table that is being constructed, containing all the metadata information, and budgeting of epsilon and accuracies." onclick='report();' style="color:gray;">Show Underlying Table</button>
-            <button id="submit_button" title="This button creates a differentially private release of the statistics presently requested, at their budgeted values of the privacy parameters." onclick='submit();' style="color:red;">Submit Statistics and Generate Differentially Private Release</button>
+           <button class="btn btn-default" title="This shows the full underlying table that is being constructed, containing all the metadata information, and budgeting of epsilon and accuracies." onclick='report();'>Show Underlying Table</button>
+            <button id="submit_button" class="btn btn-default" title="This button creates a differentially private release of the statistics presently requested, at their budgeted values of the privacy parameters." onclick='submit();' style="color:red;">Submit Statistics and Generate Differentially Private Release</button>
 
             <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
             <br>
@@ -478,8 +417,4 @@
 
     </script>
 
-    <!--  <a href="{% url 'logout' %}">Logout</a> -->
-
-</body>
-
-</html>
+{% endblock %}
