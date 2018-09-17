@@ -21,15 +21,18 @@ def interface(request):
 
 def psiIntroduction(request):
     """Return the psiIntroduction.html template"""
-    return render(request, 'psiIntroduction.html')
+    return render(request,
+                  'content/psiIntroduction.html')
 
 def psiOpen(request):
     """Return the psiOpen.html template"""
-    return render(request, 'psiOpen.html')
+    return render(request,
+                  'content/psiOpen.html')
 
 def psiOpenPrototype(request):
     """Return the psiOpenPrototype.html template"""
-    return render(request, 'psiOpenPrototype.html')
+    return render(request,
+                  'content/psiOpenPrototype.html')
 
 def getData(request):
     """Return a default/test preprocess file: preprocess_4_v1-0.json"""
