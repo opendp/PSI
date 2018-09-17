@@ -305,6 +305,7 @@ function mintomedpdf() {
 // Find fields and values from URL
 var fileid = "";
 var apitoken = "";
+let apitokenavailable = false;
 var writemetadataurl = "";
 
 function getJsonFromUrl() {
@@ -1090,57 +1091,6 @@ function activate_variable (variable) {
 };
 
 
-// // Remove variable
-// function delete_variable (variable) {
-//     // if deleting variable would result in all held statistics, don't delete.
-//     if(areAllHeld2(variable)){
-//         alert("Deletion would result in all held statistics. Try removing some holds before deleting");
-//     }
-//     else{
-//         previous_inputted_metadata = JSON.parse(JSON.stringify(inputted_metadata));
-//         document.getElementById("selection_sidebar_" + variable.replace(/\s/g, '_')).style.cssText = variable_unselected_class;
-//         var variable_index = varlist_active.indexOf(variable);
-//         varlist_active.splice(variable_index, 1);
-//         varlist_inactive.push(variable);
-//         delete inputted_metadata[variable.replace(/\s/g, '_')];
-//         document.getElementById(variable.replace(/\s/g, '_')).remove();
-
-
-//         var active_stat = 0;
-//         for (j = 0; j < statistic_list.length; j++) {
-//             stat_index = 4 * j + 1;
-//             if (previous_inputted_metadata[variable][stat_index] == 2) {
-//                 active_stat++;
-//             }
-//         };
-//         //JM make sure at least one statistic is still being computed
-//         if(varlist_active.length == 0){
-//             active_stat=0;
-//         }
-//         if(active_stat != 0){
-//             var noStats = true;
-//             for(i = 0; i < varlist_active.length; i++){
-//                 for (j = 0; j < statistic_list.length; j++) {
-//                     stat_index = 4 * j + 1;
-//                     if (inputted_metadata[varlist_active[i]][stat_index] == 2){
-//                         noStats = false;
-//                     }
-//                 }
-//             }
-//             if(noStats){
-//                 active_stat=0;
-//             }
-//         }
-//         // done JM
-//         if (active_stat > 0) {
-//             console.log("talk to r bc variable deleted and it had valid stats")
-//             talktoR();
-//         }
-
-//         generate_epsilon_table();
-//         console.log(previous_inputted_metadata);
-//     }
-// };
 
 // Remove variable from bubble list; if it's a transform, delete it entirely
 function delete_variable (variable) {
@@ -1405,7 +1355,6 @@ function list_of_statistics (type_chosen, variable) {
 		var options = "";
 		eval("var type_chosen_list = " + type_chosen + "_stat_list;");
 		for (var n = 0; n < type_chosen_list.length; n++) {
-			// options += "<input type='checkbox' name='" + type_chosen_list[n].replace(/\s/g, '_') + "' onclick='Parameter_Populate(this," + n + ",\"" + variable + "\",\"" + type_chosen + "\"); generate_epsilon_table();' id='" + type_chosen_list[n].replace(/\s/g, '_') + "_" + variable + "'> <span title='" + rfunctions.rfunctions[(column_index[type_chosen_list[n].replace(/\s/g, '_')] - 1) / 4].stat_info + "'>" + type_chosen_list[n] + "</span><br>";
       console.log(type_chosen_list[n].replace(/\s/g, '_') + '_help');
       options += "<input type='checkbox' name='" + type_chosen_list[n].replace(/\s/g, '_') + "' onclick='Parameter_Populate(this," + n + ",\"" + variable + "\",\"" + type_chosen + "\"); generate_epsilon_table();' id='" + type_chosen_list[n].replace(/\s/g, '_') + "_" + variable + "'> <span onclick='display_help_id(\"" + type_chosen_list[n].replace(/\s/g, '_') + '_help' + "\")' style='cursor:help;'>" + type_chosen_list[n] + "</span><br>";
 		};
@@ -1502,45 +1451,6 @@ function jamestoggle(button) {
     }
   };
 
-//OLD MAKE BUBBLE FUNCITON. BEFORE MULTIVARIATE STATS.
-// Makes bubbles and takes in variable name as unique identifier
-// Forces each variable to have an unique name
-// function make_bubble (variable) {
-//     var variable_raw = variable;
-//     variable = variable.replace(/\s/g, '_');
-//     var blank_bubble =
-//     "<div id='" + variable + "'>" +
-//         "<div class='bubble' id='bubble_" + variable + "'>" +
-//             "<button class='accordion' id='accordion_" + variable + "' onclick=jamestoggle(this);>" +
-//                 variable_raw +
-//             "<i class='glyphicon glyphicon-menu-up' style='color:#A0A0A0;font-size:16px;float:right;'></i>" +
-//             "</button>" +
-//             "<div id='panel_" + variable + "' class='panel'>" +
-//                 "<div id='variable_types_" + variable + "' class='variable_types'>" +
-//                     "Variable Type: " +
-//                     "<select id='variable_type_" + variable + "' onchange='type_selected(value,\"" + variable + "\")'>" +
-//                         "<option id='default_" + variable + "' value='default'>Please select a type</option>" +
-//                         list_of_types(variable) +
-//                     "</select>" +
-//                     "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
-//                 "</div>" +
-//                 "<hr style='margin-top: -0.25em'>" +
-//                 "<div id='released_statistics_" + variable + "' class='released_statistics'>" +
-//                 "</div>" +
-//                 "<hr style='margin-top: -0.25em'>" +
-//                 "<div id='necessary_parameters_" + variable + "' class='necessary_parameters'></div>" +
-//                 "<hr style='margin-top: -0.25em'>" +
-//                 "<div id='missing_data_" + variable + "' class='missing_data'></div>" +
-//                 //"<div id='missing_data_input_" + variable + "' class='missing_data'></div>" +
-//                 "<br><div><button onclick='delete_variable(\"" + variable_raw + "\")' style='float:right;'>Delete variable</button></div>" +
-//             "<br>"+
-//             "</div>" +
-//         "</div>" +
-//         "<br>" +
-//     "</div>";
-//     return blank_bubble;
-// };
-
 function make_bubble (variable) {
     var variable_raw = variable;
     variable = variable.replace(/\s/g, '_');
@@ -1586,7 +1496,7 @@ function make_bubble (variable) {
                     // Display confirmed type
                     blank_bubble += "Variable Type: <span id='type-" + variable + "'>" + types_for_vars[variable] + "</span>";
                     // Option to return to modal window to change
-                    blank_bubble += "&nbsp;&nbsp;<a href='#myModal4' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal4()' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
+                    blank_bubble += "&nbsp;&nbsp;<a href='#myModal4' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button class='btn btn-default' onclick='generate_modal4()' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
                     blank_bubble += "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 }
                  blank_bubble += "</div>" +
@@ -1598,7 +1508,7 @@ function make_bubble (variable) {
                 "<hr style='margin-top: -0.25em'>" +
                 "<div id='missing_data_" + variable + "' class='missing_data'></div>" +
                 //"<div id='missing_data_input_" + variable + "' class='missing_data'></div>" +
-                "<br><div><button onclick='delete_variable(\"" + variable_raw + "\")' style='float:right;'>Delete variable</button></div>" +
+                "<br><div><button class='btn btn-default' onclick='delete_variable(\"" + variable_raw + "\")' style='float:right;'>Delete variable</button><br /></div>" +
             "<br>"+
             "</div>" +
         "</div>" +
@@ -2852,10 +2762,10 @@ function generate_epsilon_table () {
     var epsilon_toggle_button_text = display_epsilon_bool ? 'Hide Epsilon' : 'Show Epsilon';
     var reserved_epsilon_toggle_button_text = reserved_epsilon_bool ? "Hide Slider" : "Reserve budget for future users";
 
-    epsilon_table += "<br><div style='text-align:center; float:left; margin:0 0 0 30px'><input onclick='toggle_epsilon_display()' type='button' value='" + epsilon_toggle_button_text + "' id='epsilon_toggle_button' style='width:125px'> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Confidence Level (&alpha;) <input name='beta' id='global_beta_edit' onfocusout='global_parameters_beta(this)' title='Confidence level for error estimates' value='" + global_beta + "' style='color: black;' size='4' type='text' placeholder='Beta'>"; //<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
+    epsilon_table += "<br><div style='text-align:center; float:left; margin:0 0 0 30px'><input onclick='toggle_epsilon_display()' type='button' class='btn btn-default' value='" + epsilon_toggle_button_text + "' id='epsilon_toggle_button' style='width:125px'> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Confidence Level (&alpha;) <input name='beta' id='global_beta_edit' onfocusout='global_parameters_beta(this)' title='Confidence level for error estimates' value='" + global_beta + "' style='color: black;' size='4' type='text' placeholder='Beta'>"; //<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
      $("#reserve_epsilon_toggle_button").remove();
      if(!interactive){
-    	epsilon_table += "<br><div style='text-align:center; float:left; margin:20px 0 0 50px'><input onclick='toggle_reserved_epsilon_tool()' type='button' value='" + reserved_epsilon_toggle_button_text + "' id='reserve_epsilon_toggle_button' style='width:225px'> </button>";
+    	epsilon_table += "<br><div style='text-align:center; float:left; margin:20px 0 0 50px'><input onclick='toggle_reserved_epsilon_tool()' type='button' class='btn btn-default' value='" + reserved_epsilon_toggle_button_text + "' id='reserve_epsilon_toggle_button' style='width:225px'> </button>";
    	 }
    // epsilon_table += "<br><input  style='text-align:center; float:left; margin:20px 0 0 0' onclick='toggle_reserved_epsilon_tool()' type='button' value='" + reserved_epsilon_toggle_button_text + "' id='reserve_epsilon_toggle_button' style='width:225px'> </button></div>";
 

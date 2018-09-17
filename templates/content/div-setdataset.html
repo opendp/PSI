@@ -1,0 +1,29 @@
+<div id="setdataset" style="padding:10px 10px 10px 50px;background:#f2f2e6;">
+<table>
+    <tr>
+        <td title="This demonstration is linked to a test instance of Dataverse at https://beta.dataverse.org &#13;  You can select one of the example datasets by name, or any other dataset (including your own) by entering the file ID number below." align="right">
+            Select Dataverse dataset for demonstration:
+        </td>
+        <td title="This demonstration is linked to a test instance of Dataverse at https://beta.dataverse.org &#13;  You can select one of the example datasets by name, or any other dataset (including your own) by entering the file ID number below." style="padding:0 0 0 8px;">
+            <select name="dataselect" id="dataselect" onchange="changedataset(this.value)">
+            <option value="0">- Select -</option>
+            <option value="20" selected="selected" >Census PUMS</option>
+            <option value="5126">Science Teachers and Climate Change</option>
+            <option value="5127">Voter Validation CCES</option>
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td title="You can select any dataset on the test Dataverse instance at https://beta.dataverse.org by entering its unique file ID number, or use one of the datasets provided in the selection box above." align="right">
+            or enter Dataverse fileid number:
+        </td>
+        <td title="You can select any dataset on the test Dataverse instance at https://beta.dataverse.org by entering its unique file ID number, or use one of the datasets provided in the selection box above." style="padding:0 0 0 8px;">
+            <input type="text" name="altfileid" onchange="overridedataset(this.value)" maxlength="5" style="width: 50px;" >
+            <button type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}" data-toggle="modal" data-target="#myModal" data-id="data"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: 12px;"></span></button>
+        </td>
+    </tr>
+    <button title="Show a video describing the features and use of this budgeting tool." onclick="location.href='http://beta.dataverse.org/custom/DifferentialPrivacyPrototype/video/BudgetInterfaceDemo.mp4';" style="color:#108db7;float:right; margin-right: 10%; margin-top:0.5em; padding-right:0.5em; padding-top:0.5em;">
+        <span class="glyphicon glyphicon-play-circle" style="color:#108db7; font-size: 22px; vertical-align: middle; margin-bottom: 0.125em; margin-top: -0.125em;" aria-hidden="true"></span>
+        Watch a Video Overview of this Tool</button>
+</table>
+</div>
