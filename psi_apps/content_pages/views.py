@@ -34,25 +34,6 @@ def view_content_page(request, page_name='psiIntroduction.html'):
     return render(request,
                   template_name)
 
-
-
-
-
-def psiIntroduction(request):
-    """Return the psiIntroduction.html template"""
-    return render(request,
-                  'content/psiIntroduction.html')
-
-def psiOpen(request):
-    """Return the psiOpen.html template"""
-    return render(request,
-                  'content/psiOpen.html')
-
-def psiOpenPrototype(request):
-    """Return the psiOpenPrototype.html template"""
-    return render(request,
-                  'content/psiOpenPrototype.html')
-
 def getData(request):
     """Return a default/test preprocess file: preprocess_4_v1-0.json"""
     fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
