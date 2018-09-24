@@ -1613,7 +1613,9 @@ function bound_input_group (changed_var, lower_upper_type, field) {
       // Check if part of selected currently active group
       if (dict_var_bounds[current_var_name]) {
         document.getElementById("input_" + lower_upper_type + "_Bound_" + current_var_name.replace(/\s/g, '_')).value = bound_input_value;
-        bound_data_stored[current_var_name] = {};
+        if (!(current_var_name in bound_data_stored)) {
+          bound_data_stored[current_var_name] = {};
+        }
         bound_data_stored[current_var_name][lower_upper_type] = bound_input_value;
         // parameter_memory_flexible(lower_upper_type + "_Bound", bound_input_value, current_var_name);
       }
@@ -1621,10 +1623,13 @@ function bound_input_group (changed_var, lower_upper_type, field) {
   } else {
     // for single variable change only
     document.getElementById("input_" + lower_upper_type + "_Bound_" + changed_var.replace(/\s/g, '_')).value = bound_input_value;
-    bound_data_stored[changed_var] = {};
+    if (!(changed_var in bound_data_stored)) {
+      bound_data_stored[changed_var] = {};
+    }
     bound_data_stored[changed_var][lower_upper_type] = bound_input_value;
     // parameter_memory_flexible(lower_upper_type + "_Bound", bound_input_value, changed_var);
   }
+  console.log(bound_data_stored);
 }
 
 function select_bounds_group (variable) {
