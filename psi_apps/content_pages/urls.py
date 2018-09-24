@@ -23,6 +23,10 @@ urlpatterns = [
             views.view_content_page,
             name='viewContentPage'),
 
+    re_path(r'^content/$',
+            views.view_content_page,
+            name='viewContentPageBase'),
+
     # Serve the home page
     #
     re_path(r'^', views.interface, name='interface'),
