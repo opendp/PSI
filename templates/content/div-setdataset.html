@@ -19,7 +19,7 @@
         </td>
         <td title="You can select any dataset on the test Dataverse instance at https://beta.dataverse.org by entering its unique file ID number, or use one of the datasets provided in the selection box above." style="padding:0 0 0 8px;">
             <input type="text" name="altfileid" onchange="overridedataset(this.value)" maxlength="5" style="width: 50px;" >
-            <button type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}" data-toggle="modal" data-target="#myModal" data-id="data"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: 12px;"></span></button>
+            <button type="button" class="manualinfo" data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}" data-toggle="modal" data-target="#myModal" data-id="data"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: 12px;"></span></button>
         </td>
     </tr>
     <button title="Show a video describing the features and use of this budgeting tool." onclick="location.href='http://beta.dataverse.org/custom/DifferentialPrivacyPrototype/video/BudgetInterfaceDemo.mp4';" style="color:#108db7;float:right; margin-right: 10%; margin-top:0.5em; padding-right:0.5em; padding-top:0.5em;">

@@ -45,4 +45,7 @@ if not os.path.isdir(STATIC_ROOT):
 
 SESSION_COOKIE_NAME = os.environ.get('PSI_SESSION_COOKIE_NAME',
                                      'psiprivacy_gce')
+
 CSRF_COOKIE_NAME = 'psiprivacy_gce_csrf'
+
+PAGE_CACHE_TIME = 60 * 60 * 2 # 2 hours 

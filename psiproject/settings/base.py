@@ -150,5 +150,6 @@ ROOK_SVC_URL = os.environ.get('ROOK_SVC_URL',
                               '/rook-custom/')
 add_backslash('ROOK_SVC_URL', ROOK_SVC_URL)
 
+PAGE_CACHE_TIME = 0 # dev time
 
 LOGIN_REDIRECT_URL = '/'

@@ -23,7 +23,7 @@
                 <td style=''>
                                 <h4 title="These are adjustable parameters that define the level of privacy protection guaranteed by the differentially private released statistics." style="display: inline-block; padding-right:5px;"> Privacy Loss Parameters</h4>
                                 <button id="edit_button" class="btn btn-default" style='color:#108db7;' onclick="edit_parameters_window()">Edit Parameters</button>
-                                <button type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}"data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
+                                <button type="button" class="manualinfo" data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}"data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
 
 
                         <div id='display_parameters'>
@@ -76,7 +76,7 @@
             <div class="text-center">
             <button id="group_vars" class="btn btn-default" class="group-vars-button" onclick="group_vars_window()">Multivariate Statistics</button>
             <br /><br />
-            <input id="new-transform-box" size=16 style="display:none" type="text" class="transformation-box" placeholder="Name <- Formula" onfocusout="newtransform(this)"> <button type='button' class='manualinfo' data-load-url="{% url "psiIntroduction" %}" data-toggle='modal' data-target='#myModal' data-id='transformer'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
+            <input id="new-transform-box" size=16 style="display:none" type="text" class="transformation-box" placeholder="Name <- Formula" onfocusout="newtransform(this)"> <button type='button' class='manualinfo' data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}" data-toggle='modal' data-target='#myModal' data-id='transformer'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
           </div>
         </nav>
 
@@ -93,7 +93,7 @@
                   <input style="width:90%;" id="re_slider" data-slider-tooltip="hide" data-slider-id="RES" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />
                   <br>
                   <span id="re_label">Reserved Budget: <span id="re_value">0</span>%</span>
-                  <button type='button' class='manualinfo' data-load-url="{% url "psiIntroduction" %}" data-toggle='modal' data-target='#myModal' data-id='reserve'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
+                  <button type='button' class='manualinfo' data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}" data-toggle='modal' data-target='#myModal' data-id='reserve'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
                </div>
             </div>
         </nav>
@@ -362,7 +362,7 @@
            <button class="btn btn-default" title="This shows the full underlying table that is being constructed, containing all the metadata information, and budgeting of epsilon and accuracies." onclick='report();'>Show Underlying Table</button>
             <button id="submit_button" class="btn btn-default" title="This button creates a differentially private release of the statistics presently requested, at their budgeted values of the privacy parameters." onclick='submit();' style="color:red;">Submit Statistics and Generate Differentially Private Release</button>
 
-            <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="{% url "psiIntroduction" %}" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
+            <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
             <br>
             PSI (&Psi;): a Private data Sharing Interface
         </div>
@@ -396,7 +396,7 @@
     </script>
 
     <script type="text/javascript">
-        var PSI_INTRO_URL = "{% url "psiIntroduction" %}";
+        var PSI_INTRO_URL = "{% url 'viewContentPage' 'psiIntroduction.html' %}";
 
     </script>
 
@@ -407,9 +407,9 @@
         $(window).load(function(){
           $('#myModal').modal('show');
           if(UI){
-              $('#myModal').find('.modal-body').load("{% url "psiOpen" %}"); //JM for UI/UX
+              $('#myModal').find('.modal-body').load("{% url 'viewContentPage' 'psiOpen.html' %}"); //JM for UI/UX
           }else{
-             $('#myModal').find('.modal-body').load("{% url "psiOpenPrototype" %}");
+             $('#myModal').find('.modal-body').load("{% url 'viewContentPage' 'psiOpenPrototype.html' %}");
               //$('#myModal').find('.modal-body').load("psiOpen.html");
           };
         });
