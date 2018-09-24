@@ -1333,7 +1333,7 @@ function display_help(text) {
 function display_help_id(id) {
   d3.select("#datasetName").selectAll("h2").html('');
   d3.select("#datasetSmallName").html('<h4 style="display:inline;">' + dataTitle + '</h4>');
-  $("#datasetHelp").load('psiIntroduction.html #' + id);
+  $("#datasetHelp").load(CONTENT_PAGES_BASE_URL + 'psiIntroduction.html #' + id);
 }
 
 /*
@@ -1472,7 +1472,7 @@ function make_bubble (variable) {
 
                   blank_bubble += "&nbsp;&nbsp;<a href='#myModal5' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal5(\"" + variable + "\")' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
 
-                	blank_bubble += "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
+                	blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 	blank_bubble += "<table>";
                 	for(var i=0; i< varlist.length; i++){
                 		v = varlist[i];
@@ -1497,7 +1497,7 @@ function make_bubble (variable) {
                     blank_bubble += "Variable Type: <span id='type-" + variable + "'>" + types_for_vars[variable] + "</span>";
                     // Option to return to modal window to change
                     blank_bubble += "&nbsp;&nbsp;<a href='#myModal4' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button class='btn btn-default' onclick='generate_modal4()' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
-                    blank_bubble += "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
+                    blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 }
                  blank_bubble += "</div>" +
                 "<hr style='margin-top: -0.25em'>" +
@@ -1792,10 +1792,8 @@ function parameter_fields (variable, type_chosen) {
 		// makes blank html text
 		var parameter_field = "<table>";
 		if(needed_parameters.length > 0){
-			parameter_field+="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='metadata'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
+			parameter_field+="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='metadata'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
 		}
-
-		//    "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
 
     if (variable in bound_data_stored) {
       record_table();
@@ -1920,7 +1918,7 @@ function make_mult_with_reqs(variable, param, reqlist){
 	}
 
 function multivar_parameter_fields(variable){
-	var parameter_field ="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
+	var parameter_field ="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
 	var varlist = grouped_var_dict[variable];
 	var typedict = inputted_metadata[variable][column_index["Variable_Type"]];
 	var statlist = [];
@@ -2678,7 +2676,7 @@ function toggle_reserved_epsilon_tool () {
 function generate_epsilon_table () {
     var completed_statistic = false;
     var epsilon_table =
-    "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
+    "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL  + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
     "<table id='epsilon_table' style='width: calc(100% - 30px);'>" +
         "<tr>" +
             "<td style='font-weight: bold;'>" +
@@ -2762,36 +2760,12 @@ function generate_epsilon_table () {
     var epsilon_toggle_button_text = display_epsilon_bool ? 'Hide Epsilon' : 'Show Epsilon';
     var reserved_epsilon_toggle_button_text = reserved_epsilon_bool ? "Hide Slider" : "Reserve budget for future users";
 
-    epsilon_table += "<br><div style='text-align:center; float:left; margin:0 0 0 30px'><input onclick='toggle_epsilon_display()' type='button' class='btn btn-default' value='" + epsilon_toggle_button_text + "' id='epsilon_toggle_button' style='width:125px'> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Confidence Level (&alpha;) <input name='beta' id='global_beta_edit' onfocusout='global_parameters_beta(this)' title='Confidence level for error estimates' value='" + global_beta + "' style='color: black;' size='4' type='text' placeholder='Beta'>"; //<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
+    epsilon_table += "<br><div style='text-align:center; float:left; margin:0 0 0 30px'><input onclick='toggle_epsilon_display()' type='button' class='btn btn-default' value='" + epsilon_toggle_button_text + "' id='epsilon_toggle_button' style='width:125px'> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Confidence Level (&alpha;) <input name='beta' id='global_beta_edit' onfocusout='global_parameters_beta(this)' title='Confidence level for error estimates' value='" + global_beta + "' style='color: black;' size='4' type='text' placeholder='Beta'>";
+
      $("#reserve_epsilon_toggle_button").remove();
      if(!interactive){
     	epsilon_table += "<br><div style='text-align:center; float:left; margin:20px 0 0 50px'><input onclick='toggle_reserved_epsilon_tool()' type='button' class='btn btn-default' value='" + reserved_epsilon_toggle_button_text + "' id='reserve_epsilon_toggle_button' style='width:225px'> </button>";
    	 }
-   // epsilon_table += "<br><input  style='text-align:center; float:left; margin:20px 0 0 0' onclick='toggle_reserved_epsilon_tool()' type='button' value='" + reserved_epsilon_toggle_button_text + "' id='reserve_epsilon_toggle_button' style='width:225px'> </button></div>";
-
-    // <br><br><input onclick='toggle_reserved_epsilon_tool();' value='" + reserved_epsilon_toggle_button_text + "' id='reserved_epsilon_toggle_button' type='button'></div>"
-
-//     if (reserved_epsilon_bool) {
-//     epsilon_table += '' + '<div style="text-align:center">' +
-//                   'Slider reserves a percentage of your budget for future users (optional) </br> (This will reduce the spendable budget in the current session)' +
-//                  '<br>'+
-//                 '<input style="width:90%;" id="re_slider" data-slider-id="RES" type="text" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />' +
-//                  '<br>'+
-//                   '<span id="re_label">Reserved Budget: <span id="re_value">0</span>%</span>'+
-//                   "<button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='reserve'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
-//                 '</div>';
-//       // epsilon_table += '' +
-// //         '<table id="reserved_epsilon_table">' +
-// //             '<tr id="reserved_epsilon_row">' +
-// //               '<td id="reserved_epsilon_slide">' +
-// //                 '<input id="reserved_epsilon_slider" data-slider-id="reserved_epsilon_slider" data-slider-min="0" data-slider-max="100" data-slider-step="1" data-slider-value="0" />' +
-// //               '</td>' +
-// //               '<td id="reserved_epsilon_type">' +
-// //                 '<input id="reserved_epsilon_input" type="number" onchange="reserved_epsilon_input_change(this)" value="0" style="width:45px;">' +
-// //               '</td>' +
-// //             '</tr>' +
-// //         '</table>';
-//     }
 
     /////
     document.getElementById('epsilon_sidebar_top').innerHTML = epsilon_table;
