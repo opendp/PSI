@@ -2,6 +2,7 @@ from os.path import join, normpath, split
 
 # from django.conf import settings
 from django.conf import settings
+from django.urls import reverse
 from django.views.decorators.cache import cache_page
 from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -12,7 +13,10 @@ from psi_apps.utils.view_helper import \
 
 def interface(request):
     """Return the interface.html template"""
-    info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL)
+    info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
+                     CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
+
+
     return render(request,
                   'interface.html',
                   info_dict)
