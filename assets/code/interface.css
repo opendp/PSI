@@ -319,3 +319,11 @@ footer {
   width: 100px;
   margin-bottom: 10px;
 }
+
+.progress_modal_visible {
+  z-index: 1100;
+  position: absolute;
+  width: 40%;
+  left: 30%;
+  top: 30px;
+}
