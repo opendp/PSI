@@ -29,7 +29,7 @@ button.manualinfo {
 }
 
 .modal-body {
-  height: calc(100vh - 180px);
+  height: calc(80vh - 180px);
   overflow-y: auto;
 }
 
@@ -326,4 +326,12 @@ footer {
   width: 40%;
   left: 30%;
   top: 30px;
+}
+
+.modal {
+  top: 70px;
+}
+
+.opening_modal {
+  width: 70%;
 }
