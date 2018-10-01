@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import re_path, path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from psi_apps.content_pages.views import view_about_page
 
 urlpatterns = [\
     re_path(r'^admin/',
@@ -27,6 +28,10 @@ urlpatterns = [\
 
     re_path(r'^auth/',
             include('psi_apps.psi_auth.urls')),
+
+    re_path(r'^about$',
+            view_about_page,
+            name='view_about_page'),
 
     re_path(r'^',
             include('psi_apps.content_pages.urls')),]

@@ -104,3 +104,4 @@ venv.bak/
 .DS_Store
 test_setup_local/
 !assets/libraries/bootstrap-3.3.7/dist
+!assets/about/video/BudgetInterfaceDemo.mov

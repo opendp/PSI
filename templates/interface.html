@@ -375,8 +375,11 @@
             <button id="submit_button" class="btn btn-default" title="This button creates a differentially private release of the statistics presently requested, at their budgeted values of the privacy parameters." onclick='submit();' style="color:red;">Submit Statistics and Generate Differentially Private Release</button>
 
             <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
-            <br>
-            PSI (&Psi;): a Private data Sharing Interface
+
+        </div>
+        <div style="padding:20px;">
+        PSI (&Psi;): a Private data Sharing Interface &nbsp; | &nbsp;
+        <a href="{% url 'view_about_page' %}">About PSI (&Psi;)</a>
         </div>
     </footer>
 
