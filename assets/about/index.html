@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>PSI &Psi;</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <script src="./js/jquery.min.js"></script>
+  <script src="./js/bootstrap.min.js"></script>
+
+<style>
+.jumbotron {
+    min-height: 290px;  /* suddenly not getting height correct automatically*/
+    margin-bottom: 0px;
+    background-image: url(./UI/images/dpe.png);
+    background-position: 0% 25%;
+    color: #3A5FCD;
+    background-size: 25% 100%;
+    height: 25%;
+    text-shadow: #4D4D4D 0.3em 0.3em 0.3em;
+}
+
+.img-hover img {
+    -webkit-transition: all .3s ease; /* Safari and Chrome */
+    -moz-transition: all .3s ease; /* Firefox */
+    -o-transition: all .3s ease; /* IE 9 */
+    -ms-transition: all .3s ease; /* Opera */
+    transition: all .3s ease;
+}
+.img-hover img:hover {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform:translateZ(0) scale(2.50); /* Safari and Chrome */
+    -moz-transform:scale(2.50); /* Firefox */
+    -ms-transform:scale(2.50); /* IE 9 */
+    -o-transform:translatZ(0) scale(2.50); /* Opera */
+    transform:translatZ(0) scale(2.50);
+}
+
+footer {
+  padding-top: 30px;
+  padding-bottom: 15px;
+}
+
+td {
+  font-size: 19px;
+  color: #6CA6CD;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+  <div class="jumbotron">
+    <h1>PSI (&Psi;)</h1>
+    <h2 style="text-shadow:#707070 0.3em 0.3em 0.3em;">a Private data Sharing Interface</h2>
+    <p  style="color:black;">A National Science Foundation Secure and Trustworthy Cyberspace Project</p>
+  </div>
+
+  <p style="margin: 10px 10%;">
+	This prototype system will allow researchers with sensitive datasets to make <a href="http://privacytools.seas.harvard.edu/differential-privacy">differentially private</a> statistics about their data available through data repositories using the Dataverse platform.
+  </p>
+
+<table>
+<col width="16%">
+<col width="4%">
+<col width="16%">
+<col width="4%">
+<col width="16%">
+<col width="4%">
+<col width="16%">
+<col width="4%">
+<col width="16%">
+<tr>
+  <td class="col-md-2 img-hover"><img src="./UI/images/flowupload.png" style="width:100%;"></td>
+  <td><img src="./UI/images/flowarrow.png" style="width:100%;"></td>
+  <td class="col-md-2 img-hover"><img src="./UI/images/flowbudget.png" style="width:100%;"></td>
+  <td><img src="./UI/images/flowarrow.png" style="width:100%;"></td>
+  <td class="col-md-2 img-hover"><img src="./UI/images/flowdownload.png" style="width:100%;"></td>
+  <td><img src="./UI/images/flowarrow.png" style="width:100%;"></td>
+  <td class="col-md-2 img-hover"><img src="./UI/images/flowtworavens.png" style="width:100%;"></td>
+  <td><img src="./UI/images/flowarrow.png" style="width:100%;"></td>
+  <td class="col-md-2 img-hover"><img src="./UI/images/flowbudget.png" style="width:100%;"></td>
+</tr>
+<tr>
+  <td align="center">Upload</td>
+  <td></td>
+  <td align="center">Budget</td>
+  <td></td>
+  <td align="center">Release</td>
+  <td></td>
+  <td align="center">Explore</td>
+  <td></td>
+  <td align="center">Query</td>
+</tr>
+</table>
+
+  <p style="margin: 10px 10%;">
+  Our prototype system will allow researchers to: [1] upload private data to a secured Dataverse archive, [2] decide what statistics they would like to release about that data, and [3] release privacy preserving versions of those statistics to the repository, [4] that can be explored through a curator interface without releasing the raw data, including [5] interactive queries.
+  </p>
+
+  <p style="margin: 10px 10%;">
+  A paper <a href="https://arxiv.org/abs/1609.04340">describing our system can be found here</a>.  This system was created by the <a href="http://privacytools.seas.harvard.edu/">Privacy Tools for Sharing Research Data project</a>.  Differential privacy is a mathematical framework for enabling statistical analysis of sensitive datasets while ensuring that individual-level information cannot be leaked.  The project website contains resources for <a href="http://privacytools.seas.harvard.edu/courses-educational-materials">learning more about differential privacy</a>.
+  </p>
+
+
+      <h3 style="margin: 12px 12%;" >Budget Tool</h3>
+        <p style="margin: 10px 10%;">
+The first part of this system is a tool that helps both data depositors and data analysts distribute a global privacy budget across many statistics. Users select which statistics they would like to calculate and are given estimates of how accurately each statistic can be computed. They can also redistribute their privacy budget according to which statistics they think are most valuable in their dataset. This work has motivated new theoretical results from our group that maximize the utility achievable when using differential privacy to share many statistics about a research dataset.</p>
+      <p class="text-center">
+		<a href="/" class="btn btn-info" role="button">Explore Budget Tool Demo</a>
+    <a href="./video/BudgetInterfaceDemo.mp4" class="btn btn-default" role="button">Watch Video of Tool</a>
+	  </p>
+
+<!--    <div class="col-sm-4">
+      <h3>Curator Interface</h3>
+      <p>When the data depositor has distributed their privacy budget, the second portion of our tool system draws differentially private versions of those statistical summaries selected by the data depositor from a library of differentially private routines (which we created in the R statistical language, and also make available for use by the R community) and stores them in metadata associated with that file on Dataverse.  Future researchers who wish to explore restricted social science data can then access these privacy-preserving summary statistics either from the metadata, or through the TwoRavens graphical data exploration tool built for Dataverse, which we have adapted for differentially private statistics.</p>
+      <p class="text-center">
+		<a href="https://beta.dataverse.org/custom/DifferentialPrivacyPrototype/UI/code/privatetworavens.html" class="btn btn-info" role="button">Explore TwoRavens Interface Demo</a>
+	  </p>
+    </div>
+    <div class="col-sm-4">
+      <h3>Interactive Queries</h3>
+      <p>Our system will allow some of the privacy budget to be reserved for future data analysts to choose their own differentially private statistics to calculate (selected from the library of differentially private algorithms provided by the system).   Differential privacy will ensure that even if these queries are chosen adversarially, individual-level information will not be leaked.  This currently works through a command-line interactive system, and we are developing a future user interface.</p>
+      <p class="text-center">
+		<a href="https://beta.dataverse.org/custom/DifferentialPrivacyPrototype/UI/code/interactive.html" class="btn btn-info" role="button">Watch Video Tour of Interactive Queries Demo</a>
+	  </p>
+    </div> -->
+
+
+</body>
+
+<footer>
+<p style="margin: 10px 10%;">
+This system was created by the <a href="http://privacytools.seas.harvard.edu/">Privacy Tools for Sharing Research Data project</a>.  Here are ways you can <a href="http://privacytools.seas.harvard.edu/participate">follow or contribute</a> to this project.
+</p>
+
+                <div class="row">
+
+                    <div style="float: right;">
+                        <a href="https://www.iq.harvard.edu"><img src="./UI/images/iqss-logo.png" alt="In Partnership with IQSS" height="50" style="PADDING-RIGHT: 15px"></a>
+                    </div>
+                    <div style="float: right;">
+                        <a href="http://dataverse.org"><img src="./UI/images/dataverse_project_logo.png" alt="Data Archived by Dataverse" height="50" style="PADDING-RIGHT: 15px"></a>
+                    </div>
+                    <div style="float: right;">
+                        <a href="http://2ra.vn"><img src="./UI/images/TwoRavens.png" alt="Analysis with TwoRavens" height="40" style="PADDING-RIGHT: 15px"></a>
+                    </div>
+                    <div style="float: right;">
+                        <a href="http://crcs.seas.harvard.edu"><img src="./UI/images/crcslogo_full_redname_03.png" alt="Built by CRCS" height="40" style="PADDING-RIGHT: 15px"></a>
+                    </div>
+
+                </div>
+ </footer>
+
+</html>

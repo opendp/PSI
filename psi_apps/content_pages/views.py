@@ -11,6 +11,14 @@ from psi_apps.utils.view_helper import \
     (get_json_error, get_json_success)
 
 
+@cache_page(settings.PAGE_CACHE_TIME)
+def view_about_page(request):
+    """This view redirects to 'assets/about/index.html' """
+
+    static_about_page = join(settings.STATIC_URL, 'about', 'index.html')
+
+    return HttpResponseRedirect(static_about_page)
+
 def interface(request):
     """Return the interface.html template"""
     info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
