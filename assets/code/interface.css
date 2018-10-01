@@ -328,6 +328,10 @@ footer {
   top: 30px;
 }
 
+.progress_modal_hidden {
+  display: none;
+}
+
 .modal {
   top: 70px;
 }
