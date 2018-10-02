@@ -223,6 +223,8 @@ var dataverse_available = false;  // When Dataverse repository goes down, or is 
 // Types of variables according to default/user confirmation
 var types_for_vars = {};
 
+// Total number of modals for calculating percentage of modal progress bar
+var number_of_modals = 5;
 
 // Set default variables types according to metadata
 function initTypes() {
@@ -1762,7 +1764,13 @@ function deselect_bins_vars () {
   }
 }
 
+function update_modal_progress(current_modal) {
+  document.getElementById("progress-modal-bar").style.width = 100 * (current_modal / number_of_modals) + "%";
+}
 
+function hide_modal_progress() {
+  document.getElementById("progress-modal").setAttribute("class", "progress_modal_hidden");
+}
 
 // Enables Collapsable Sections for JS Generated HTML
 function accordion (bubble) {

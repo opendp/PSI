@@ -29,7 +29,7 @@ button.manualinfo {
 }
 
 .modal-body {
-  height: calc(100vh - 180px);
+  height: calc(80vh - 180px);
   overflow-y: auto;
 }
 
@@ -318,4 +318,24 @@ footer {
 .bounds_all_button {
   width: 100px;
   margin-bottom: 10px;
+}
+
+.progress_modal_visible {
+  z-index: 1100;
+  position: absolute;
+  width: 40%;
+  left: 30%;
+  top: 30px;
+}
+
+.progress_modal_hidden {
+  display: none;
+}
+
+.modal {
+  top: 70px;
+}
+
+.opening_modal {
+  width: 70%;
 }
