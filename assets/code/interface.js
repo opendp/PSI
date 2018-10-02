@@ -1772,7 +1772,6 @@ function hide_modal_progress() {
   document.getElementById("progress-modal").setAttribute("class", "progress_modal_hidden");
 }
 
-
 // Enables Collapsable Sections for JS Generated HTML
 function accordion (bubble) {
     var variable = bubble.id.slice(10, bubble.id.length);
