@@ -41,7 +41,7 @@ Enabling CORS request to local files on Chrome:
 `google-chrome --disable-web-security --user-data-dir="[path to ../PSI/data]"`
 
 Then PSI page can be brought up as:
-`http://localhost:8080`
+http://localhost:8080
 
 ---
 
