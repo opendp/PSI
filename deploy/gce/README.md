@@ -21,7 +21,7 @@ git checkout master; git pull   # get latest master on your machine
 
 git branch # make sure you're on master
 
-git merge origin develop  # If this pushes you into the vim editor, do keystrokes: ":wq"
+git merge origin develop  # If this pushes you into the vim editor, do keystrokes: ":wq" + Return button
 
 git push # push it to github
 ```
