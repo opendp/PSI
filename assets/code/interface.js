@@ -1812,9 +1812,11 @@ function parameter_fields (variable, type_chosen) {
       record_table();
       if ("Lower" in bound_data_stored[variable]) {
         parameter_memory_flexible("Lower_Bound", bound_data_stored[variable]["Lower"], variable);
+        ValidateInput(document.getElementById("input_Lower_Bound_" + variable), null, variable);
       }
       if ("Upper" in bound_data_stored[variable]) {
         parameter_memory_flexible("Upper_Bound", bound_data_stored[variable]["Upper"], variable);
+        ValidateInput(document.getElementById("input_Upper_Bound_" + variable), null, variable);
       }
     }
 
