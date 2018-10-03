@@ -101,17 +101,17 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="myModal" data-backdrop="static" data-keyboard="false">
+        <div class="opening_modal modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">&times;</button>
                     <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
                 </div>
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
@@ -153,16 +153,24 @@
     </div>
 
 -->
+
+<!-- Progress bar of modals -->
+  <div class="progress_modal_visible" id="progress-modal">
+    <div class="progress" style="margin-bottom: 5px">
+      <div class="progress-bar" id="progress-modal-bar" role="progressbar" aria-valuemin="0" aria-valuenow="10" aria-valuemax="100" style="width:20%"/>
+    </div>
+  </div>
+
  <!-- JM Revised text below: -->
-    <div class="modal fade" id="myModal3">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="myModal3" data-backdrop="static" data-keyboard="false">
+        <div class="opening_modal modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed();  hide_modal_progress();">&times;</button>
                     <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
                 </div>
-
-                <div style="margin:15px; overflow:auto; height:600px;">
+                <div class="modal-body">
+                <!--<div style="margin:15px; overflow:auto; height:600px;">-->
                 <!-- blocked for UI/UX
                 <div>
                Please affirm the following characteristics of your dataset:
@@ -201,20 +209,24 @@
 				</p>
                 </div>
                     <div style="border: 1px solid green; margin:15px; padding-top:20px;padding-bottom:20px;">
-                        <table align="center" style=""><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input name="epsilon" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Epsilon" onchange="epsilon_check(this)"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row_modal"><input id="delta_value_modal" name="delta" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Delta" onchange="delta_check(this)"> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray;width:100px" onclick="change_to_exponential_form('D', '_modal')" value="Exponential"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input name="SS" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder="" onchange="global_parameters_SS(this)"> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray;width: 100px;" value="Clear"></td></tr></table><div style="text-align:center; padding-top: 10px;"><a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed()" class="btn btn-info" role="button">Submit</a></div>
+                        <table align="center" style=""><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input name="epsilon" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Epsilon" onchange="epsilon_check(this)"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row_modal"><input id="delta_value_modal" name="delta" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Delta" onchange="delta_check(this)"> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray;width:100px" onclick="change_to_exponential_form('D', '_modal')" value="Exponential"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input name="SS" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder="" onchange="global_parameters_SS(this)"> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray;width: 100px;" value="Clear"></td></tr></table><div style="text-align:center; padding-top: 10px;"><a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(3)" class="btn btn-info" role="button">Submit</a></div>
                     </div>
+                <!--</div>-->
                 </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();  hide_modal_progress();">Close</button>
                 </div>
+              </div>
 
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="myModal4">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="myModal4" data-backdrop="static" data-keyboard="false">
+        <div class="opening_modal modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed();  hide_modal_progress();">&times;</button>
                     <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
                 </div>
                 <div class="modal-body">
@@ -227,11 +239,11 @@
                     <ul id="variable-modal"></ul>
                     </div>
                     <p class="text-center">
-                    <a href="#myModal6" onclick="generate_modal7(); generate_modal6();" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a>
+                    <a href="#myModal6" onclick="generate_modal7(); generate_modal6(); update_modal_progress(4);" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a>
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
@@ -239,10 +251,10 @@
 
     <!-- Selecting variable types for multivariate statistics -->
     <div class="modal fade" id="myModal5">
-        <div class="modal-dialog" role="document">
+        <div class="opening_modal modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">&times;</button>
                     <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
                 </div>
                 <div class="modal-body">
@@ -259,17 +271,17 @@
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="myModal6">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="myModal6" data-backdrop="static" data-keyboard="false">
+        <div class="opening_modal modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">&times;</button>
                     <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
                 </div>
                 <div class="modal-body">
@@ -283,21 +295,21 @@
                     <ul></ul>
                     </div>
                     <p class="text-center">
-                    <a href="#myModal7" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a>
+                    <a href="#myModal7" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="update_modal_progress(5);" role="button">Submit</a>
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="myModal7">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="myModal7" data-backdrop="static" data-keyboard="false">
+        <div class="opening_modal modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">&times;</button>
                     <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
                 </div>
                 <div class="modal-body">
@@ -311,11 +323,11 @@
                     <ul></ul>
                     </div>
                     <p class="text-center">
-                    <a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a>
+                    <a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="hide_modal_progress()" role="button">Submit</a>
                     </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>

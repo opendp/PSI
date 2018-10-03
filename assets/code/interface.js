@@ -223,6 +223,8 @@ var dataverse_available = false;  // When Dataverse repository goes down, or is 
 // Types of variables according to default/user confirmation
 var types_for_vars = {};
 
+// Total number of modals for calculating percentage of modal progress bar
+var number_of_modals = 5;
 
 // Set default variables types according to metadata
 function initTypes() {
@@ -1762,7 +1764,13 @@ function deselect_bins_vars () {
   }
 }
 
+function update_modal_progress(current_modal) {
+  document.getElementById("progress-modal-bar").style.width = 100 * (current_modal / number_of_modals) + "%";
+}
 
+function hide_modal_progress() {
+  document.getElementById("progress-modal").setAttribute("class", "progress_modal_hidden");
+}
 
 // Enables Collapsable Sections for JS Generated HTML
 function accordion (bubble) {
@@ -1804,9 +1812,11 @@ function parameter_fields (variable, type_chosen) {
       record_table();
       if ("Lower" in bound_data_stored[variable]) {
         parameter_memory_flexible("Lower_Bound", bound_data_stored[variable]["Lower"], variable);
+        ValidateInput(document.getElementById("input_Lower_Bound_" + variable), null, variable);
       }
       if ("Upper" in bound_data_stored[variable]) {
         parameter_memory_flexible("Upper_Bound", bound_data_stored[variable]["Upper"], variable);
+        ValidateInput(document.getElementById("input_Upper_Bound_" + variable), null, variable);
       }
     }
 
