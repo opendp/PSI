@@ -3,6 +3,41 @@
 The commands for this section are for deploying the PSI docker containers on google cloud (GCE), accessible through the url:
   - http://psiprivacy.org
 
+## Updating the `master branch` for deployment
+
+The `master branch` of PSI is the one used to build images for deployment.
+
+The 2 steps below update the `master branch` by merging the latest from the `develop branch`.
+
+
+#### Step 1
+
+To update the master branch via the command line, run:
+
+```
+git checkout develop; git pull  # get latest develop on your machine
+
+git checkout master; git pull   # get latest master on your machine
+
+git branch # make sure you're on master
+
+git merge origin develop  # If this pushes you into the vim editor, do keystrokes: ":wq"
+
+git push # push it to github
+```
+
+#### Step 2
+
+- Go to Travis.  
+  - https://www.travis-ci.com/TwoRavens/PSI/builds
+  
+- When Travis finishes, the master image should be updated here:
+  - https://hub.docker.com/r/tworavens/psi-web/tags/
+
+- If you've updated the Rook section, also look for this image to be complete:
+  - https://hub.docker.com/r/tworavens/psi-r-service/tags/
+  - Note: This build starts on Docker -- _after_ the (previous build)[https://hub.docker.com/r/tworavens/psi-web/tags/] is completed
+
 
 ## Docker images
 
