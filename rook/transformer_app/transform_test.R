@@ -1,9 +1,12 @@
 ##
 ## rookTransform.R
 ##
-## 6/27/15
+## - 6/27/15 - Michael LoPiccolo
 ##
-## Michael LoPiccolo
+## - 10/10/18: rook test
+##
+##
+##
 ##
 
 verifyTransform <- function(formula, names) {
@@ -14,7 +17,7 @@ verifyTransform <- function(formula, names) {
         ret$message = "Please strip newlines from your transformation - to separate assignments, just use semicolons"
     }
     else {
-        result <- transformExec(formula, names)
+        result <- transformerExec(formula, names)
         if(!succeeded(result)) {
             ret$success = FALSE
             ret$message = result
@@ -25,7 +28,7 @@ verifyTransform <- function(formula, names) {
 }
 
 applyTransform <- function(formula, df) {
-    ans <- stringToFrame(transformExec(formula, names(df), frameToString(df)))
+    ans <- stringToFrame(exec(formula, names(df), frameToString(df)))
     if(dim(ans)[1] != dim(df)[1]) {
         # This might be because system2 decided to split input lines - they threaten to do it in the help file?
         # I've read the code (src/unix/sys-unix.c) and it LOOKS like, on any system with getline(), it won't split the input... Tested on my system and it doesn't split every 8095 characters like it threatened...
@@ -56,8 +59,7 @@ stringToFrame <- function(str) {
 
 
 # TODO We might want to put this under a timeout constraint.
-transformExec <- function (formula, names, rows=NA) {
-    
+transformerExec <- function (formula, names, rows=NA) {
     inp = paste(formula, "\n", paste(names, collapse=' '))
     if(!is.na(rows)) {
         inp = paste(inp, rows, sep="\n")
@@ -66,8 +68,8 @@ transformExec <- function (formula, names, rows=NA) {
     # TODO Change this once we have a system and a location to install transformeR!
     # I won't be adding the actual executable to the git repo. On my system I just set up a quick symbolic link but will need to change that
     # TODO If there ever is an exception thrown from this, we should probably log it and maybe throw a kill switch until we can diagnose the problem.
-    return(system2(TRANSFORM_HASKELL_APP_PATH, input=inp, stdout=TRUE))
-    #return(system2("../../transformer/transformer-exe", input=inp, stdout=TRUE))
+    return(system2("/var/webapps/PSI/rook/transformer_app/transformer-exe", input=inp, stdout=TRUE))
+    #return(system2("/Users/ramanprasad/Documents/github-rp/PrivateZelig/transformer/transformer-exe", input=inp, stdout=TRUE))
 }
 
 succeeded <- function (execResult) {
