@@ -20,6 +20,14 @@ IS_PRODUCTION_MODE <- identical(Sys.getenv(x='IS_PRODUCTION_MODE', unset="no"), 
 #print(paste("IS_PRODUCTION_MODE: ", IS_PRODUCTION_MODE, sep=""))
 
 # ------------------------------------------------
+# Set: TRANSFORM_HASKELL_APP_PATH
+#  Optional: Path to the Haskell transform executable--including the executable
+#	 e.g. /var/webapps/PSI/rook/transformer_app/transformer-exe
+# ------------------------------------------------
+default_transform_app_path <- paste(getwd(), "/transformer_app/transformer-exe", sep="")
+TRANSFORM_HASKELL_APP_PATH <- Sys.getenv(x='TRANSFORM_HASKELL_APP_PATH', unset=default_transform_app_path)
+
+# ------------------------------------------------
 # Set: PSI_DATA_DIRECTORY_PATH
 #  The data directory path--make sure it ends with "/"
 # ------------------------------------------------
