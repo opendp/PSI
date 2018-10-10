@@ -17,7 +17,7 @@ verifyTransform <- function(formula, names) {
         ret$message = "Please strip newlines from your transformation - to separate assignments, just use semicolons"
     }
     else {
-        result <- exec(formula, names)
+        result <- transformerExec(formula, names)
         if(!succeeded(result)) {
             ret$success = FALSE
             ret$message = result
@@ -59,7 +59,7 @@ stringToFrame <- function(str) {
 
 
 # TODO We might want to put this under a timeout constraint.
-exec <- function (formula, names, rows=NA) {
+transformerExec <- function (formula, names, rows=NA) {
     inp = paste(formula, "\n", paste(names, collapse=' '))
     if(!is.na(rows)) {
         inp = paste(inp, rows, sep="\n")

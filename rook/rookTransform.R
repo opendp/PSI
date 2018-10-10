@@ -27,7 +27,13 @@ verifyTransform.app <- function(env) {
     warning <- FALSE
     message <- "nothing"
 
+    print(paste("request$POST: ", request$POST(), sep=""))
+    print("Check 1")
+
+    #valid <- jsonlite::validate(request$POST())
+
     # print(request)
+    print("Check 2")
 
     valid <- jsonlite::validate(request$POST()$tableJSON)
 
@@ -56,6 +62,8 @@ verifyTransform.app <- function(env) {
             message <- paste("Parser error:", paste(answer$message, collapse='\n'))
         }
     }
+
+
 
     if(!warning) {
         toSend <- list()

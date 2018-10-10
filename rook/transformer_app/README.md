@@ -23,7 +23,18 @@ docker build -t transformer_test -f Dockerfile-r-service .
 ```
 # Run the container and go to its terminal
 #
+
+- command line
+
+```
 docker run --rm -it --name tapp transformer_test /bin/bash
+```
+
+- rook app
+
+```
+docker run --rm -p 8000:8000 --name tapp transformer_test /
+```
 
 # Open R
 #
@@ -43,4 +54,14 @@ df = read.csv("/var/webapps/PSI/rook/transformer_app/test_input/test_data.csv")
 # transform method
 #
 applyTransform(f2, df)
+```
+
+
+- Postman
+
+```
+http://0.0.0.0:8000/custom/verifyTransformapp
+
+{"formula":"a2 <- age*age","names":["age","sex","educ","race","income","married"]}
+
 ```
