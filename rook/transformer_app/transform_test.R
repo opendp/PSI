@@ -69,7 +69,7 @@ exec <- function (formula, names, rows=NA) {
     # I won't be adding the actual executable to the git repo. On my system I just set up a quick symbolic link but will need to change that
     # TODO If there ever is an exception thrown from this, we should probably log it and maybe throw a kill switch until we can diagnose the problem.
     return(system2("/var/webapps/PSI/rook/transformer_app/transformer-exe", input=inp, stdout=TRUE))
-    eturn(system2("/Users/ramanprasad/Documents/github-rp/PrivateZelig/transformer/transformer-exe", input=inp, stdout=TRUE))
+    #return(system2("/Users/ramanprasad/Documents/github-rp/PrivateZelig/transformer/transformer-exe", input=inp, stdout=TRUE))
 }
 
 succeeded <- function (execResult) {
