@@ -28,12 +28,6 @@ verifyTransform.app <- function(env) {
     message <- "nothing"
 
     print(paste("request$POST: ", request$POST(), sep=""))
-    print("Check 1")
-
-    #valid <- jsonlite::validate(request$POST())
-
-    # print(request)
-    print("Check 2")
 
     valid <- jsonlite::validate(request$POST()$tableJSON)
 

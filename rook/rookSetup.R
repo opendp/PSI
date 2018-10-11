@@ -103,13 +103,18 @@ if(!IS_PRODUCTION_MODE){
 source("rookPrivate.R")
 source("rookTransform.R")
 
+print("-----------------------------------------")
+print(paste("TRANSFORM_HASKELL_APP_PATH: ", TRANSFORM_HASKELL_APP_PATH, sep=""))
+print("Start the server...")
 
 if(!IS_PRODUCTION_MODE){
     R.server$add(app = privateAccuracies.app, name = "privateAccuraciesapp")
     R.server$add(app = privateStatistics.app, name = "privateStatisticsapp")
     R.server$add(app = verifyTransform.app, name = "verifyTransformapp")
     R.server$add(app = healthcheck.app, name="healthcheck")
+    print("-----------------------------------------")
     print(R.server)
+    print("-----------------------------------------")
 }
 
 

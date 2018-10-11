@@ -6,15 +6,54 @@
 ## Michael LoPiccolo
 ##
 
+# Check if the haskell transform executable exists
+#
+doesTransformExecutableExist <- function() {
+    return (file.exists(TRANSFORM_HASKELL_APP_PATH))
+}
+
+getTransformAppNotFoundErrorMessage <- function(){
+  if (doesTransformExecutableExist()){
+    errMsg <- "Do call this method without first checking 'doesTransformExecutableExist()' (transform.R)"
+    return (errMsg);
+  }
+  errMsg <- paste("The tranformer app was not found at location: ", TRANSFORM_HASKELL_APP_PATH, sep="")
+  return (errMsg)
+}
+
+getPossibleIncompatibleExecutableError <- function(){
+
+  errMsg = paste("Could not run the executable.  Was it compiled on the same system where its being run?  (Default executable built on debian, doesn't run on OS X).  Executable location: ", TRANSFORM_HASKELL_APP_PATH, sep="")
+
+  return (list("success"=TRUE, "message"=errMsg));
+
+}
+
+
 verifyTransform <- function(formula, names) {
     ret <- list("success"=TRUE, "message"="msg")
 
     if(grepl("\n", formula) || grepl("\r", formula)) {
         ret$success = FALSE
         ret$message = "Please strip newlines from your transformation - to separate assignments, just use semicolons"
-    }
-    else {
+    } else if (!doesTransformExecutableExist()){
+        ret$success = FALSE
+        ret$message = getTransformAppNotFoundErrorMessage()
+
+    }else {
         result <- transformExec(formula, names)
+
+        if (is.character(result) && length(result) && (!is.na(result))){
+          print('check 1 ...')
+          phraseToCheck <- "cannot execute binary file"
+          if (grepl(phraseToCheck, result)){
+            print('check 2 ...')
+            return (getPossibleIncompatibleExecutableError());
+          }
+        }else{
+          return (getPossibleIncompatibleExecutableError());
+        }
+
         if(!succeeded(result)) {
             ret$success = FALSE
             ret$message = result
@@ -25,7 +64,20 @@ verifyTransform <- function(formula, names) {
 }
 
 applyTransform <- function(formula, df) {
-    ans <- stringToFrame(transformExec(formula, names(df), frameToString(df)))
+
+  if (!doesTransformExecutableExist()){
+      ret <- list("success"=FALSE, "message"=getTransformAppNotFoundErrorMessage())
+      return (ret);
+  }
+
+  transformInterimResult = transformExec(formula, names(df), frameToString(df))
+  if (grepl("cannot execute binary file", transformInterimResult)){
+    ret$success = FALSE
+    ret$message = paste("Could not run the executable.  Was it compiled on the same system where its being run?  (Default executable built on debian, doesn't run on OS X).  Executable location: ", TRANSFORM_HASKELL_APP_PATH, sep="")
+    return (ret);
+  }
+
+    ans <- stringToFrame(transformInterimResult)
     if(dim(ans)[1] != dim(df)[1]) {
         # This might be because system2 decided to split input lines - they threaten to do it in the help file?
         # I've read the code (src/unix/sys-unix.c) and it LOOKS like, on any system with getline(), it won't split the input... Tested on my system and it doesn't split every 8095 characters like it threatened...
@@ -57,16 +109,17 @@ stringToFrame <- function(str) {
 
 # TODO We might want to put this under a timeout constraint.
 transformExec <- function (formula, names, rows=NA) {
-    
+
     inp = paste(formula, "\n", paste(names, collapse=' '))
     if(!is.na(rows)) {
         inp = paste(inp, rows, sep="\n")
     }
 
+
     # TODO Change this once we have a system and a location to install transformeR!
     # I won't be adding the actual executable to the git repo. On my system I just set up a quick symbolic link but will need to change that
     # TODO If there ever is an exception thrown from this, we should probably log it and maybe throw a kill switch until we can diagnose the problem.
-    return(system2(TRANSFORM_HASKELL_APP_PATH, input=inp, stdout=TRUE))
+    return(system2(TRANSFORM_HASKELL_APP_PATH, input=inp, stdout=TRUE, stderr=TRUE))
     #return(system2("../../transformer/transformer-exe", input=inp, stdout=TRUE))
 }
 
