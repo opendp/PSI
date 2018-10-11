@@ -64,7 +64,7 @@ Docker Image list:
 - To deploy, run the following commands.  
   - Note: if the service is already running, use the "Stop the service" commands first
 
-#### Subsquent Deploys
+### Subsquent Deploys
 
 ```
 cd psi-deploy
@@ -79,7 +79,7 @@ kubectl apply -f psi-pod-with-svc.yml
 
 
 
-#### Initial Deploy
+### Initial Deploy
 
 ```
 # Make sure you have access to the secrets file
