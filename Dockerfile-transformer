@@ -1,0 +1,30 @@
+# Use the existing Haskell image as our base
+#
+FROM haskell:8
+
+# Copy code into Docker container
+#
+WORKDIR /app
+COPY /transformer/. /app
+
+# Run stack setup
+#
+RUN stack setup
+
+# Build the executable
+#
+RUN chmod u+x /app/install.sh && \
+    ./install.sh
+
+# Change executable permissions
+#
+RUN chmod u+x /app/transformer-exe
+
+# Run the executable
+#
+CMD echo 'Run the executable...' && \
+    ./transformer-exe
+
+
+# docker build -t transformer -f Dockerfile-transformer .
+# docker run --rm --name tapp -it transformer /bin/bash

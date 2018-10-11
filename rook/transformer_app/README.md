@@ -65,3 +65,15 @@ http://0.0.0.0:8000/custom/verifyTransformapp
 {"formula":"a2 <- age*age","names":["age","sex","educ","race","income","married"]}
 
 ```
+
+```
+import json
+import requests
+import urllib.parse
+v = '{"formula":"sq_income <- income*income","names":["age","income"]}'
+data_payload = {'tableJSON':v}
+rook_svc_url = 'http://0.0.0.0:8000/custom/verifyTransformapp'
+r = requests.post(rook_svc_url, data=data_payload)
+r.status_code
+r.text
+```
