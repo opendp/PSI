@@ -482,10 +482,6 @@ d3.xml(metadataurl, "application/xml", function(xml) {
 	varlist_inactive = variable_list.slice();
 	populate_variable_selection_sidebar();
 
-
-  console.log(variable_list);
-
-
   // $('#myModal4').find('.modal-body').load("psiVariables.html");
 
   uni_variable_list = variable_list.slice();
@@ -2177,6 +2173,7 @@ function newtransform(x) {
             variable_list.push(name)
             transforms_data[name] = {formula: formula, ok: true}
             add_variable_to_sidebar(name)
+            uni_variable_list.push(name);        // add variable to list of variables for which metadata can be stored
             // TODO look into what this replace is
             document.getElementById("selection_sidebar_" + name.replace(/\s/g, '_')).style.cssText = variable_selected_class;
             activate_variable(name)
