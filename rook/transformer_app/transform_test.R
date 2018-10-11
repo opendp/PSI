@@ -28,7 +28,7 @@ verifyTransform <- function(formula, names) {
 }
 
 applyTransform <- function(formula, df) {
-    ans <- stringToFrame(exec(formula, names(df), frameToString(df)))
+    ans <- stringToFrame(transformerExec(formula, names(df), frameToString(df)))
     if(dim(ans)[1] != dim(df)[1]) {
         # This might be because system2 decided to split input lines - they threaten to do it in the help file?
         # I've read the code (src/unix/sys-unix.c) and it LOOKS like, on any system with getline(), it won't split the input... Tested on my system and it doesn't split every 8095 characters like it threatened...

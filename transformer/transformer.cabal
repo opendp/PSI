@@ -1,0 +1,27 @@
+name:                transformer
+version:             0.1.0.0
+-- synopsis:
+-- description:
+license:             MIT
+license-file:        MIT-LICENSE
+author:              Michael LoPiccolo
+maintainer:          m.lopiccolo3@gmail.com
+copyright:           (c) 2017 Michael LoPiccolo
+category:            Testing
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+-- library
+--   hs-source-dirs:      src
+--   exposed-modules:     R
+--   build-depends:       base >= 4.7 && < 5, parsec
+--   default-language:    Haskell2010
+
+executable transformer-exe
+  hs-source-dirs:      app, src
+  main-is:             Main.hs
+  ghc-options:         -threaded -rtsopts -with-rtsopts=-N -fwarn-incomplete-patterns
+  build-depends:       base, parsec, containers, split, text
+  default-language:    Haskell2010
+  other-modules:       Eval, Parse
