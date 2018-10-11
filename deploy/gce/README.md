@@ -97,6 +97,13 @@ kubectl delete -f psi-pod-with-svc.yml --grace-period=0 --force
 
 The following commands below may be run in the GCE k8s console.
 
+- Checking status
+
+```
+kubectl get pods
+kubectl describe pod psi-pod
+```
+
 - Viewing logs
 
 ```
