@@ -1,60 +1,79 @@
 # Transform App
 
 This directory contains a Haskell executable copied out of a Docker container
-and used within the rook docker container.
+and is used within the rook docker container.
 
 
 ## How the binary was built
 
+This binary was built through the following commands:
+
+```
+# (1) Using this repository, build a Docker image containing the Haskell executable
+#
+cd PSI # top of repository
+docker build -t transformer_image -f Dockerfile-transformer .
+
+# (2) Run the docker image
+#
+#  Note: within the container, an "ls" should show the file "transformer-exe"
+#
+docker run --rm --name transformer_run -it transformer_image /bin/bash
+
+
+# (3) In a NEW Terminal, copy the executable out of the running docker image
+#
+#   This example copies "transformer-exe" to /tmp/transformer-exe
+#   on the local machine
+#
+docker cp transformer_run:/app/transformer-exe /tmp/transformer-exe
+
+# (4) Copy the update image into this repository
+#
+# Example:  > cp /tmp/transformer-exe PSI/rook/transformer_app
+
+```
 
 
 
 ## Test the binary within the rook container
 
-- build the container
+- Build the rook container
+    ```
+    # build it
+    docker build -t rook_image -f Dockerfile-r-service .
+    ```
 
-```
-# build it
-docker build -t transformer_test -f Dockerfile-r-service .
-```
+- Run a test in R
 
-- Test the container
+    ```
+    # Run the container
+    #
+    docker run --rm -it --name tapp rook_image /bin/bash
 
-```
-# Run the container and go to its terminal
-#
+    #
+    # Open R
+    #
+    cd /var/webapps/PSI/rook/transformer_app
+    R
 
-- command line
+    # Test it out
+    #
+    source("transform_test.R")
 
-```
-docker run --rm -it --name tapp transformer_test /bin/bash
-```
+    # formula
+    #
+    f2 <- "dbl_income = income * 2"
 
-- rook app
+    # dataframe
+    df = read.csv("test_input/test_data.csv")
 
-```
-docker run --rm -p 8000:8000 --name tapp transformer_test /
-```
+    # transform method
+    #
+    applyTransform(f2, df)
 
-# Open R
-#
-cd transformer_app
-R
-
-# Test it out
-#
-source("transform_test.R")
-
-# formula
-f2 <- "dbl_income = income * 2"
-
-# dataframe
-df = read.csv("/var/webapps/PSI/rook/transformer_app/test_input/test_data.csv")
-
-# transform method
-#
-applyTransform(f2, df)
-```
+    #
+    ```
 
 
 - Postman
