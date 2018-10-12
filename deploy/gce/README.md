@@ -64,6 +64,23 @@ Docker Image list:
 - To deploy, run the following commands.  
   - Note: if the service is already running, use the "Stop the service" commands first
 
+### Subsquent Deploys
+
+```
+cd psi-deploy
+
+# Stop the pod
+kubectl delete -f psi-pod-with-svc.yml --grace-period=0 --force
+
+# Start the pod
+kubectl apply -f psi-pod-with-svc.yml
+
+```
+
+
+
+### Initial Deploy
+
 ```
 # Make sure you have access to the secrets file
 #
@@ -96,6 +113,13 @@ kubectl delete -f psi-pod-with-svc.yml --grace-period=0 --force
 ## Viewing logs and accessing running containers
 
 The following commands below may be run in the GCE k8s console.
+
+- Checking status
+
+```
+kubectl get pods
+kubectl describe pod psi-pod
+```
 
 - Viewing logs
 
