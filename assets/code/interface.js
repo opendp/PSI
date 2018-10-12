@@ -1068,18 +1068,17 @@ function activate_variable (variable) {
 		// }
     check_group_types(variable);
 	} else {
-    // Trigger selection of type
-    if (!(variable in types_for_vars)){
-      // Object.keys(types_for_vars).sort().map(t => `"${t}"`).join(',');
+    	// // Trigger selection of type
+    	// if (!(variable in types_for_vars)){
+    	//   	// Object.keys(types_for_vars).sort().map(t => `"${t}"`).join(',');
+     	//  		let user_msg = 'Error in "activate_variable".  Type not found for variable "' + variable + '"\nVariables with known types: ' + Object.keys(types_for_vars).sort().map(t => `"${t}"`).join(', ');
+     	//  		show_debug_error(user_msg);
+     	//  		return;
+    	// }
 
-      let user_msg = 'Error in "activate_variable".  Type not found for variable "' + variable + '"\nVariables with known types: ' + Object.keys(types_for_vars).sort().map(t => `"${t}"`).join(', ');
-      show_debug_error(user_msg);
-      return;
-    }
-
-
-    type_selected(types_for_vars[variable], variable);
-  }
+    	types_for_vars[variable] = "Categorical";
+    	type_selected(types_for_vars[variable], variable);
+  	}
     //Default to open accordion
     open_acc = "accordion_"+variable;
     jamestoggle(document.getElementById(open_acc));
