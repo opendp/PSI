@@ -36,6 +36,7 @@ git push # push it to github
 
 - If you've updated the Rook section, also look for this image to be complete:
   - https://hub.docker.com/r/tworavens/psi-r-service/tags/
+  or check build status here: https://hub.docker.com/r/tworavens/psi-r-service/builds/
   - Note: This build starts on Docker -- _after_ the (previous build)[https://hub.docker.com/r/tworavens/psi-web/tags/] is completed
 
 
