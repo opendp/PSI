@@ -226,6 +226,9 @@ var types_for_vars = {};
 // Total number of modals for calculating percentage of modal progress bar
 var number_of_modals = 5;
 
+// determine whether in initial sequence of modals
+var initial_sequence = true;
+
 // Set default variables types according to metadata
 function initTypes() {
   // Boolean for production/file supplied/online or not
@@ -1548,6 +1551,9 @@ function generate_modal4 () {
   }
   variable_output += "</table>";
   $('#myModal4').find('.modal-body ul').append(variable_output);
+  if (!initial_sequence) {
+    $('#myModal4').find('.modal-footer').html('<a href="#" data-toggle="modal" data-dismiss="modal" onclick=" update_ed();" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
 }
 
 function generate_modal5 (variable) {
@@ -1569,6 +1575,9 @@ function generate_modal5 (variable) {
   }
   variable_output += "</table>";
   $('#myModal5').find('.modal-body ul').append(variable_output);
+  if (!initial_sequence) {
+    $('#myModal4').find('.modal-footer').html('<a href="#" data-toggle="modal" data-dismiss="modal" onclick=" update_ed();" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
 }
 
 // // After types have been implemented, generate and add logic for bounds/bin names modals
@@ -1627,6 +1636,9 @@ function generate_modal6 () {
     }
     table_output += "</table>";
     $('#myModal6').find('.modal-body ul').append(table_output);
+  }
+  if (!initial_sequence) {
+    $('#myModal6').find('.modal-footer').html('<a href="#" data-toggle="modal" data-dismiss="modal" onclick=" update_ed();" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
   }
 }
 
@@ -1750,6 +1762,9 @@ function generate_modal7 () {
     table_output += "</table>";
     $('#myModal7').find('.modal-body ul').append(table_output);
   }
+  if (!initial_sequence) {
+    $('#myModal7').find('.modal-footer').html('<a href="#" data-toggle="modal" data-dismiss="modal" onclick=" update_ed();" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
 }
 
 function bins_input_group (changed_var, field) {
@@ -1813,6 +1828,7 @@ function update_modal_progress(current_modal) {
 
 function hide_modal_progress() {
   document.getElementById("progress-modal").setAttribute("class", "progress_modal_hidden");
+  initial_sequence = false;
 }
 
 // Enables Collapsable Sections for JS Generated HTML
