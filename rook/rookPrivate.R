@@ -117,7 +117,7 @@ privateStatistics.app <-function(env){
     ## Generate differentially private values and return released statistics as JSON
     if(!warning){
         cat("data successfully downloaded from Dataverse \n")
-        print(data[1:5,])
+        print(head(data))
         cat("---------------- \n")
 
 
@@ -133,6 +133,22 @@ privateStatistics.app <-function(env){
                 dataOrMessage <- applyTransform(transforms, data)
                 if("data" %in% names(dataOrMessage)) {
                     data <- dataOrMessage$data
+                    allvarnames <- names(dict)
+                    for(i in 1:length(dict)){
+                        varname <- allvarnames[i]
+                        vartype <- dict[[varname]][1]
+                        cat(paste(varname,"\n"))
+                        cat(paste(vartype,"\n"))
+                        if(identical(vartype,"Numerical")){
+                            cat(paste("Converting", varname, "to numeric \n"))
+                            data[,varname] <- as.numeric(data[,varname])
+                        }
+                        if(identical(vartype,"Boolean")){
+                            cat(paste("Converting", varname, "to boolean \n"))
+                            data[,varname] <- as.numeric(data[,varname])      # seems to be expected 0,1
+                        }
+
+                    }
                 }
                 else {
                     warning <- TRUE

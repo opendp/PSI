@@ -102,7 +102,7 @@ frameToString <- function(df) {
 }
 
 stringToFrame <- function(str) {
-    writeLines(paste("stringToFrame got:", str, collapse="\n"))
+    #writeLines(paste("stringToFrame got:", str, collapse="\n"))
     return(read.table(textConnection(str), sep="\t", header=TRUE, colClasses="character"))
 }
 
