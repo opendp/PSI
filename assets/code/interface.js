@@ -1762,8 +1762,12 @@ function generate_modal7 () {
         table_output += "<tr>";
         table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "_bins' onclick='select_bins_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
         table_output += "<td class='bound_buffer'></td>";
+        var stored_bins = "";
+        if (var_entry in bins_data_stored) {
+          stored_bins = bins_data_stored[var_entry];
+        }
         // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
-        table_output += "<td><input id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Bin Names'/></td>";
+        table_output += "<td><input id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' value='" + stored_bins + "' type='text' placeholder='Bin Names'/></td>";
         table_output += "</tr>";
       }
     }
@@ -2237,6 +2241,10 @@ function Parameter_Memory (parameter, variable, specific_var) {
        bound_data_stored[variable]["Upper"] = parameter.value;
      }
    	}
+    // add to other copy for bin names storage
+    if (parameter.name == "Bin_Names") {
+      bins_data_stored[variable] = parameter.value;
+    }
 };
 
 function newtransform(x) {
