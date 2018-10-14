@@ -1626,10 +1626,18 @@ function generate_modal6 () {
         table_output += "<tr>";
         table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "' onclick='select_bounds_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
         table_output += "<td class='bound_buffer'></td>";
+        var lower_value = '';
+        if (var_entry in bound_data_stored && "Lower" in bound_data_stored[var_entry]) {
+          lower_value = bound_data_stored[var_entry]["Lower"];
+        }
+        var upper_value = '';
+        if (var_entry in bound_data_stored && "Upper" in bound_data_stored[var_entry]) {
+          upper_value = bound_data_stored[var_entry]["Upper"];
+        }
         // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
-        table_output += "<td><input id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Lower Bound'/></td>"; // Lower bound
+        table_output += "<td><input id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' value='" + lower_value + "' placeholder='Lower Bound'/></td>"; // Lower bound
         // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Lower Bound' name='Lower_Bound' id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)'></td>"; // Lower bound
-        table_output += "<td><input id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Upper Bound'/></td>"; // Upper bound
+        table_output += "<td><input id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' value='" + upper_value + "' placeholder='Upper Bound'/></td>"; // Upper bound
         // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Upper Bound' name='Upper_Bound' id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)'></td>"; // Upper bound
         table_output += "</tr>";
       }
@@ -2216,6 +2224,18 @@ function Parameter_Memory (parameter, variable, specific_var) {
 	}
 	else{
    	 inputted_metadata[variable][column_index[parameter.name]] = parameter.value;
+     // add to the other copy for bound data storage specifically
+     if (parameter.name == "Lower_Bound") {
+       if (!(variable in bound_data_stored)) {
+         bound_data_stored[variable] = {};
+       }
+       bound_data_stored[variable]["Lower"] = parameter.value;
+     } else if (parameter.name == "Upper_Bound") {
+       if (!(variable in bound_data_stored)) {
+         bound_data_stored[variable] = {};
+       }
+       bound_data_stored[variable]["Upper"] = parameter.value;
+     }
    	}
 };
 
