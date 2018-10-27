@@ -12,7 +12,9 @@ To run locally:
 2. Start rook:
 
       In the Terminal, run:
-
+        
+          # Note: To point to a local Haskell transform executable, use a line similar to
+          # export TRANSFORM_HASKELL_APP_PATH=/Users/Documents/Github/PrivateZelig/transformer/transformer-exe 
           fab run-rook
 
       Alternatively, in R, run:
