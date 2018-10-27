@@ -1580,27 +1580,43 @@ function generate_modal5 (variable) {
   }
 }
 
-// // After types have been implemented, generate and add logic for bounds/bin names modals
-// function generate_modals_with_types () {
-//   var current_modal_counter = 4;
-//   if (generate_modal6()) {
-//     $('#myModal6').modal('show');
-//     update_modal_progress(current_modal_counter);
-//   } else {
-//     number_of_modals--;
-//     $("#myModal4").find('.modal-footer a').setAttribute("href", "#myModal7");
-//     $("#myModal4").find('.modal-footer a').setAttribute("onclick", "update_modal_progress(" + current_modal_counter+ ");");
-//   }
-//   if (generate_modal7()) {
-//     $("#myModal6").find('.modal-footer a').setAttribute("href", "#myModal7");
-//     current_modal_counter++;
-//     $("#myModal4").find('.modal-footer a').setAttribute("onclick", "update_modal_progress(" + current_modal_counter+ ");");
-//   } else {
-//     number_of_modals--;
-//     $("#myModal4").find('.modal-footer a').setAttribute("href", "#myModal7");
-//     $("#myModal4").find('.modal-footer a').setAttribute("onclick", "update_modal_progress(" + current_modal_counter+ ");");
-//   }
-// }
+// After types have been implemented, generate and add logic for bounds/bin names modals
+function generate_modals_with_types () {
+  var current_modal_counter = 3;
+  var modal6_exists = generate_modal6();
+  var modal7_exists = generate_modal7();
+  if (modal6_exists) {
+    number_of_modals = current_modal_counter + 2;
+    if (!modal7_exists) {
+        number_of_modals = current_modal_counter + 1;
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("href", "#");
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("onclick", "hide_modal_progress();");
+    } else {
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("href", "#myModal7");
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("onclick", "update_modal_progress(5);");
+    }
+    $('#myModal6').modal('show');
+    update_modal_progress(current_modal_counter + 1);
+  } else {
+    number_of_modals = current_modal_counter;
+    if (modal7_exists) {
+      number_of_modals = current_modal_counter + 1;
+      $('#myModal7').modal('show');
+      update_modal_progress(current_modal_counter + 1);
+      $("#myModal7").find('.modal-footer #modal6back')[0].setAttribute("href", "#myModal4");
+      $("#myModal7").find('.modal-footer #modal6back')[0].setAttribute("onclick", "update_modal_progress(3);");
+    } else {
+      hide_modal_progress();
+    }
+    // $("#myModal4").find('.modal-footer a').setAttribute("href", "#myModal7");
+    // $("#myModal4").find('.modal-footer a').setAttribute("onclick", "update_modal_progress(" + current_modal_counter+ ");");
+  }
+  // if (generate_modal7()) {
+  //   $("#myModal6").find('.modal-footer a').setAttribute("href", "#myModal7");
+  //   current_modal_counter++;
+  //   $("#myModal4").find('.modal-footer a').setAttribute("onclick", "update_modal_progress(" + current_modal_counter+ ");");
+  // }
+}
 
 /* Modal for Lower and Upper Bounds */
 function generate_modal6 () {
@@ -1648,6 +1664,7 @@ function generate_modal6 () {
   if (!initial_sequence) {
     $('#myModal6').find('.modal-footer').html('<a href="#" data-toggle="modal" data-dismiss="modal" onclick=" update_ed();" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
   }
+  return is_table_not_empty;
 }
 
 // Stores metadata in memory
@@ -1777,6 +1794,7 @@ function generate_modal7 () {
   if (!initial_sequence) {
     $('#myModal7').find('.modal-footer').html('<a href="#" data-toggle="modal" data-dismiss="modal" onclick=" update_ed();" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
   }
+  return is_table_not_empty;
 }
 
 function bins_input_group (changed_var, field) {
