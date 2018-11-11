@@ -1552,7 +1552,7 @@ function generate_modal4 () {
   variable_output += "</table>";
   $('#myModal4').find('.modal-body ul').append(variable_output);
   if (!initial_sequence) {
-    $('#myModal4').find('.modal-footer').html('<a href="#" data-toggle="modal" data-dismiss="modal" onclick=" update_ed();" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+    $('#myModal4').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
   }
 }
 
@@ -1576,7 +1576,7 @@ function generate_modal5 (variable) {
   variable_output += "</table>";
   $('#myModal5').find('.modal-body ul').append(variable_output);
   if (!initial_sequence) {
-    $('#myModal4').find('.modal-footer').html('<a href="#" data-toggle="modal" data-dismiss="modal" onclick=" update_ed();" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+    $('#myModal4').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
   }
 }
 
@@ -1662,7 +1662,7 @@ function generate_modal6 () {
     $('#myModal6').find('.modal-body ul').append(table_output);
   }
   if (!initial_sequence) {
-    $('#myModal6').find('.modal-footer').html('<a href="#" data-toggle="modal" data-dismiss="modal" onclick=" update_ed();" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+    $('#myModal6').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
   }
   return is_table_not_empty;
 }
@@ -1792,7 +1792,7 @@ function generate_modal7 () {
     $('#myModal7').find('.modal-body ul').append(table_output);
   }
   if (!initial_sequence) {
-    $('#myModal7').find('.modal-footer').html('<a href="#" data-toggle="modal" data-dismiss="modal" onclick=" update_ed();" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+    $('#myModal7').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
   }
   return is_table_not_empty;
 }

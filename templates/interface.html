@@ -190,6 +190,13 @@
                     </div>
                 </div>
                -->
+
+       <p>
+               Set the privacy loss parameters for your dataset below and if secrecy of the sample applies to your data, estimate the size of the population from which it was drawn:
+       </p>
+                   <div style="border: 1px solid green; margin:15px; padding-top:20px;padding-bottom:20px;">
+                       <table align="center" style=""><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input name="epsilon" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Epsilon" onchange="epsilon_check(this)"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row_modal"><input id="delta_value_modal" name="delta" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Delta" onchange="delta_check(this)"> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray;width:100px" onclick="change_to_exponential_form('D', '_modal')" value="Exponential"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input name="SS" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder="" onchange="global_parameters_SS(this)"> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray;width: 100px;" value="Clear"></td></tr></table>
+                   </div>
                 <div id="privacy-loss-params-info">
                 <h4>Privacy Loss Parameters</h4>
                The level of privacy protection for individuals in the dataset is governed by two <q>privacy loss parameters</q>, &epsilon; and &delta;. You can think of &delta; as the probability of a blatant privacy violation. As such,  &delta; should be kept quite small. &epsilon; should be set to a small constant. Larger &epsilon; corresponds to less privacy and more accurate statistics. We do not recommend &epsilon; exceeding 1. Below is Harvard's list of varying levels of sensitivity for datasets and reasonable privacy loss parameters for each level. The recommendations below are just a guideline. See <a href="http://files.vpr.harvard.edu/files/vpr-documents/files/data_classification_table_abridged_7.23.13_0.pdf" target="_blank">Harvard's secure data classifications</a> for more information.
@@ -210,17 +217,11 @@
 				<p>
 				This boost requires an estimate of the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay to underestimate but could violate privacy if you overestimate.
 				</p>
-				<p>
-                Set the privacy loss parameters for your dataset below and if secrecy of the sample applies to your data, estimate the size of the population from which it was drawn:
-				</p>
                 </div>
-                    <div style="border: 1px solid green; margin:15px; padding-top:20px;padding-bottom:20px;">
-                        <table align="center" style=""><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input name="epsilon" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Epsilon" onchange="epsilon_check(this)"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row_modal"><input id="delta_value_modal" name="delta" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Delta" onchange="delta_check(this)"> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray;width:100px" onclick="change_to_exponential_form('D', '_modal')" value="Exponential"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input name="SS" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder="" onchange="global_parameters_SS(this)"> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray;width: 100px;" value="Clear"></td></tr></table>
-                    </div>
                 <!--</div>-->
                 </div>
                 <div class="modal-footer">
-                    <a href="#myModal" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(1)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(3)" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();  hide_modal_progress();">Close</button>
+                    <a href="#myModal" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(1)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(3)" class="btn btn-info" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();  hide_modal_progress();">Close</button>
                 </div>
               </div>
 
@@ -246,7 +247,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#myModal3" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(2)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#" onclick="generate_modals_with_types()" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                    <a href="#myModal3" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(2)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#" onclick="generate_modals_with_types()" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
@@ -271,7 +272,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                    <a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
@@ -296,7 +297,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(3)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#myModal7" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="update_modal_progress(5);" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                    <a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(3)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#myModal7" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="update_modal_progress(5);" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
@@ -321,7 +322,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="#myModal6" id="modal6back" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(4)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="hide_modal_progress()" role="button">Submit</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                    <a href="#myModal6" id="modal6back" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(4)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="hide_modal_progress()" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
