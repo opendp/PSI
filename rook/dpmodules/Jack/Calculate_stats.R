@@ -612,44 +612,89 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 }
 
 formatted_release <- function(release, nameslist) {
-
 	# process each statistic in release
   num_of_stats <- length(release)
 	result <- vector("list", length = num_of_stats)
 
 	for (i in 1:num_of_stats) {
 		# retrieve data for current stat of interest
-		single_stat_release_data <- release[[i]]
-
-		single_stat_release <- list()
-
-		single_stat_release$release <- list()
-		single_stat_release$release$values <- single_stat_release_data$result$release
-
-		single_stat_release$post_process <- FALSE
-
-		single_stat_release$algorithm <- list()
-		single_stat_release$algorithm$name <- paste(single_stat_release_data$name, single_stat_release_data$mechanism, sep=" ")
-		single_stat_release$algorithm$arguments <- list()
-
-		single_stat_release$accuracy <- single_stat_release_data$result$accuracy
-
-		single_stat_release$privacy_loss <- list()
-		single_stat_release$privacy_loss$definition <- ""
-		single_stat_release$privacy_loss$epsilon <- single_stat_release_data$epsilon
-		single_stat_release$privacy_loss$delta <- single_stat_release_data$delta
-		single_stat_release$privacy_loss$rho <- ""
-
-		result_single <- list()
-		result_single$single_stat_release <- single_stat_release
-		result_single$variable <- single_stat_release_data$variable
-		result_single$stat <- single_stat_release_data$name
-
-		result[[i]] <- result_single
+		release_single <- release[[i]]
+		# identify whether uni or multivariate statistic
+		if (length(release_single$result$variable) > 1) {
+			print("THIS IS MULTI")
+			result[[i]] <- formatted_release_multi(release_single, nameslist)
+		} else {
+			print("THIS IS NOT MULTI")
+			result[[i]] <- formatted_release_uni(release_single, nameslist)
+		}
 	}
 
 	return(result)
 }
+
+formatted_release_uni <- function(release_single, nameslist) {
+	single_stat_release_data <- release_single
+
+	single_stat_release <- list()
+
+	single_stat_release$release <- list()
+	single_stat_release$release$values <- single_stat_release_data$result$release
+
+	single_stat_release$post_process <- FALSE
+
+	single_stat_release$algorithm <- list()
+	single_stat_release$algorithm$name <- paste(single_stat_release_data$name, single_stat_release_data$mechanism, sep=" ")
+	single_stat_release$algorithm$arguments <- list()
+
+	single_stat_release$accuracy <- single_stat_release_data$result$accuracy
+
+	single_stat_release$privacy_loss <- list()
+	single_stat_release$privacy_loss$definition <- ""
+	single_stat_release$privacy_loss$epsilon <- single_stat_release_data$epsilon
+	single_stat_release$privacy_loss$delta <- single_stat_release_data$delta
+	single_stat_release$privacy_loss$rho <- ""
+
+	result_single <- list()
+	result_single$single_stat_release <- single_stat_release
+	result_single$variable <- single_stat_release_data$result$variable
+	result_single$stat <- single_stat_release_data$name
+
+	return(result_single)
+}
+
+formatted_release_multi <- function(release_single, nameslist) {
+	single_stat_release_data <- release_single
+
+	single_stat_release <- list()
+
+	single_stat_release$release <- list()
+	for (r in row.names(single_stat_release_data$result$release)) {
+		single_stat_release$release[r] <- single_stat_release_data$result$release[r, ]
+	}
+
+	single_stat_release$post_process <- FALSE
+
+	single_stat_release$algorithm <- list()
+	single_stat_release$algorithm$name <- paste(single_stat_release_data$name, single_stat_release_data$mechanism, sep=" ")
+	single_stat_release$algorithm$arguments <- list()
+	single_stat_release$algorithm$formula <- single_stat_release_data$formula
+
+	single_stat_release$accuracy <- single_stat_release_data$result$accuracy
+
+	single_stat_release$privacy_loss <- list()
+	single_stat_release$privacy_loss$definition <- ""
+	single_stat_release$privacy_loss$epsilon <- single_stat_release_data$epsilon
+	single_stat_release$privacy_loss$delta <- single_stat_release_data$delta
+	single_stat_release$privacy_loss$rho <- ""
+
+	result_single <- list()
+	result_single$single_stat_release <- single_stat_release
+	result_single$variable <- paste(single_stat_release_data$result$variable, collapse="_")
+	result_single$stat <- single_stat_release_data$name
+
+	return(result_single)
+}
+
 
 append_release_to_file <- function(filename, release_object, variable, statname) {
 	# Read current JSON file
@@ -665,15 +710,22 @@ append_release_to_file <- function(filename, release_object, variable, statname)
 
 	filedata <- fromJSON(filepath)
 
-	# Check if this type of stat has been released before for this variable
-	if (statname %in% attributes(filedata$data$variables[[variable]])$names) {
-		# append to currently existing category
-		current_length <- length(filedata$data$variables[[variable]][[statname]])
-		filedata$data$variables[[variable]][[statname]][[paste(statname, as.character(current_length), sep="")]] <- release_object
-	} else {
-		# create category if new release stat type
+	# check if variable exists (mostly for multivariates)
+	if (!(variable %in% filedata$data$variables)) {
+		filedata$data$variables[[variable]] <- list()
 		filedata$data$variables[[variable]][[statname]] <- list()
 		filedata$data$variables[[variable]][[statname]][[paste(statname, "0", sep="")]] <- release_object
+	} else {
+		# Check if this type of stat has been released before for this variable
+		if (statname %in% attributes(filedata$data$variables[[variable]])$names) {
+			# append to currently existing category
+			current_length <- length(filedata$data$variables[[variable]][[statname]])
+			filedata$data$variables[[variable]][[statname]][[paste(statname, as.character(current_length), sep="")]] <- release_object
+		} else {
+			# create category if new release stat type
+			filedata$data$variables[[variable]][[statname]] <- list()
+			filedata$data$variables[[variable]][[statname]][[paste(statname, "0", sep="")]] <- release_object
+		}
 	}
 
 	# Overwrite to file

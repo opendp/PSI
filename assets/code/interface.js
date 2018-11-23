@@ -226,6 +226,9 @@ var types_for_vars = {};
 // Total number of modals for calculating percentage of modal progress bar
 var number_of_modals = 5;
 
+// determine whether in initial sequence of modals
+var initial_sequence = true;
+
 // Set default variables types according to metadata
 function initTypes() {
   // Boolean for production/file supplied/online or not
@@ -1548,6 +1551,9 @@ function generate_modal4 () {
   }
   variable_output += "</table>";
   $('#myModal4').find('.modal-body ul').append(variable_output);
+  if (!initial_sequence) {
+    $('#myModal4').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
 }
 
 function generate_modal5 (variable) {
@@ -1569,32 +1575,96 @@ function generate_modal5 (variable) {
   }
   variable_output += "</table>";
   $('#myModal5').find('.modal-body ul').append(variable_output);
+  if (!initial_sequence) {
+    $('#myModal4').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
+}
+
+// After types have been implemented, generate and add logic for bounds/bin names modals
+function generate_modals_with_types () {
+  var current_modal_counter = 3;
+  var modal6_exists = generate_modal6();
+  var modal7_exists = generate_modal7();
+  if (modal6_exists) {
+    number_of_modals = current_modal_counter + 2;
+    if (!modal7_exists) {
+        number_of_modals = current_modal_counter + 1;
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("href", "#");
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("onclick", "hide_modal_progress();");
+    } else {
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("href", "#myModal7");
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("onclick", "update_modal_progress(5);");
+    }
+    $('#myModal6').modal('show');
+    update_modal_progress(current_modal_counter + 1);
+  } else {
+    number_of_modals = current_modal_counter;
+    if (modal7_exists) {
+      number_of_modals = current_modal_counter + 1;
+      $('#myModal7').modal('show');
+      update_modal_progress(current_modal_counter + 1);
+      $("#myModal7").find('.modal-footer #modal6back')[0].setAttribute("href", "#myModal4");
+      $("#myModal7").find('.modal-footer #modal6back')[0].setAttribute("onclick", "update_modal_progress(3);");
+    } else {
+      hide_modal_progress();
+    }
+    // $("#myModal4").find('.modal-footer a').setAttribute("href", "#myModal7");
+    // $("#myModal4").find('.modal-footer a').setAttribute("onclick", "update_modal_progress(" + current_modal_counter+ ");");
+  }
+  // if (generate_modal7()) {
+  //   $("#myModal6").find('.modal-footer a').setAttribute("href", "#myModal7");
+  //   current_modal_counter++;
+  //   $("#myModal4").find('.modal-footer a').setAttribute("onclick", "update_modal_progress(" + current_modal_counter+ ");");
+  // }
 }
 
 /* Modal for Lower and Upper Bounds */
 function generate_modal6 () {
   $('#myModal6').find('.modal-body ul').html("");
-  var table_output = "";
-  table_output += "<table style='table-layout: fixed;'>";
-  // select/deselect all button
-  table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button' onclick='select_bound_vars()'>Select All</button></td><td></td><td></td></tr>";
-  table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Lower Bound</b></td><td><b>Upper Bound</b></td></tr>"; // Header
+  var is_table_not_empty = false;
   for (var n = 0; n < uni_variable_list.length; n++) {
     var var_entry = uni_variable_list[n];
     if (types_for_vars[var_entry] == "Numerical") {
-      table_output += "<tr>";
-      table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "' onclick='select_bounds_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
-      table_output += "<td class='bound_buffer'></td>";
-      // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
-      table_output += "<td><input id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Lower Bound'/></td>"; // Lower bound
-      // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Lower Bound' name='Lower_Bound' id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)'></td>"; // Lower bound
-      table_output += "<td><input id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Upper Bound'/></td>"; // Upper bound
-      // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Upper Bound' name='Upper_Bound' id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)'></td>"; // Upper bound
-      table_output += "</tr>";
+      is_table_not_empty = true;
     }
   }
-  table_output += "</table>";
-  $('#myModal6').find('.modal-body ul').append(table_output);
+  if (!is_table_not_empty) {
+    $('#myModal6').find('.modal-body ul').append("There are no numerical variables in the dataset.");
+  } else {
+    var table_output = "";
+    table_output += "<table style='table-layout: fixed;'>";
+    // select/deselect all button
+    table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button' onclick='select_bound_vars()'>Select All</button></td><td></td><td></td></tr>";
+    table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Lower Bound</b></td><td><b>Upper Bound</b></td></tr>"; // Header
+    for (var n = 0; n < uni_variable_list.length; n++) {
+      var var_entry = uni_variable_list[n];
+      if (types_for_vars[var_entry] == "Numerical") {
+        table_output += "<tr>";
+        table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "' onclick='select_bounds_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
+        table_output += "<td class='bound_buffer'></td>";
+        var lower_value = '';
+        if (var_entry in bound_data_stored && "Lower" in bound_data_stored[var_entry]) {
+          lower_value = bound_data_stored[var_entry]["Lower"];
+        }
+        var upper_value = '';
+        if (var_entry in bound_data_stored && "Upper" in bound_data_stored[var_entry]) {
+          upper_value = bound_data_stored[var_entry]["Upper"];
+        }
+        // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
+        table_output += "<td><input id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' value='" + lower_value + "' placeholder='Lower Bound'/></td>"; // Lower bound
+        // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Lower Bound' name='Lower_Bound' id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)'></td>"; // Lower bound
+        table_output += "<td><input id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' value='" + upper_value + "' placeholder='Upper Bound'/></td>"; // Upper bound
+        // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Upper Bound' name='Upper_Bound' id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)'></td>"; // Upper bound
+        table_output += "</tr>";
+      }
+    }
+    table_output += "</table>";
+    $('#myModal6').find('.modal-body ul').append(table_output);
+  }
+  if (!initial_sequence) {
+    $('#myModal6').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
+  return is_table_not_empty;
 }
 
 // Stores metadata in memory
@@ -1686,24 +1756,45 @@ function deselect_bound_vars () {
 /* Modal for Bin Names */
 function generate_modal7 () {
   $('#myModal7').find('.modal-body ul').html("");
-  var table_output = "";
-  table_output += "<table style='table-layout: fixed;'>";
-  // select/deselect all button
-  table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button_bins' onclick='select_bins_vars()'>Select All</button></td><td></td><td></td></tr>";
-  table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Bin Names</b></td></tr>"; // Header
+  var is_table_not_empty = false;
   for (var n = 0; n < uni_variable_list.length; n++) {
     var var_entry = uni_variable_list[n];
     if (types_for_vars[var_entry] == "Categorical") {
-      table_output += "<tr>";
-      table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "_bins' onclick='select_bins_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
-      table_output += "<td class='bound_buffer'></td>";
-      // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
-      table_output += "<td><input id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Bin Names'/></td>";
-      table_output += "</tr>";
+      is_table_not_empty = true;
     }
   }
-  table_output += "</table>";
-  $('#myModal7').find('.modal-body ul').append(table_output);
+  if (!is_table_not_empty) {
+    $('#myModal7').find('.modal-body ul').append("There are no categorical variables in this dataset.");
+  } else {
+    var table_output = "";
+    table_output += "<table style='table-layout: fixed;'>";
+    // select/deselect all button
+    table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button_bins' onclick='select_bins_vars()'>Select All</button></td><td></td><td></td></tr>";
+    table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Bin Names</b></td></tr>"; // Header
+    var is_table_not_empty = false;
+    for (var n = 0; n < uni_variable_list.length; n++) {
+      var var_entry = uni_variable_list[n];
+      if (types_for_vars[var_entry] == "Categorical") {
+        is_table_not_empty = true;
+        table_output += "<tr>";
+        table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "_bins' onclick='select_bins_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
+        table_output += "<td class='bound_buffer'></td>";
+        var stored_bins = "";
+        if (var_entry in bins_data_stored) {
+          stored_bins = bins_data_stored[var_entry];
+        }
+        // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
+        table_output += "<td><input id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' value='" + stored_bins + "' type='text' placeholder='Bin Names'/></td>";
+        table_output += "</tr>";
+      }
+    }
+    table_output += "</table>";
+    $('#myModal7').find('.modal-body ul').append(table_output);
+  }
+  if (!initial_sequence) {
+    $('#myModal7').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
+  return is_table_not_empty;
 }
 
 function bins_input_group (changed_var, field) {
@@ -1767,6 +1858,7 @@ function update_modal_progress(current_modal) {
 
 function hide_modal_progress() {
   document.getElementById("progress-modal").setAttribute("class", "progress_modal_hidden");
+  initial_sequence = false;
 }
 
 // Enables Collapsable Sections for JS Generated HTML
@@ -2154,7 +2246,23 @@ function Parameter_Memory (parameter, variable, specific_var) {
 	}
 	else{
    	 inputted_metadata[variable][column_index[parameter.name]] = parameter.value;
+     // add to the other copy for bound data storage specifically
+     if (parameter.name == "Lower_Bound") {
+       if (!(variable in bound_data_stored)) {
+         bound_data_stored[variable] = {};
+       }
+       bound_data_stored[variable]["Lower"] = parameter.value;
+     } else if (parameter.name == "Upper_Bound") {
+       if (!(variable in bound_data_stored)) {
+         bound_data_stored[variable] = {};
+       }
+       bound_data_stored[variable]["Upper"] = parameter.value;
+     }
    	}
+    // add to other copy for bin names storage
+    if (parameter.name == "Bin_Names") {
+      bins_data_stored[variable] = parameter.value;
+    }
 };
 
 function newtransform(x) {

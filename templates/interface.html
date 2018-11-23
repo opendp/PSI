@@ -78,6 +78,12 @@
             <br /><br />
             <input id="new-transform-box" size=16 style="display:none" type="text" class="transformation-box" placeholder="Name <- Formula" onfocusout="newtransform(this)"> <button type='button' class='manualinfo' data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}" data-toggle='modal' data-target='#myModal' data-id='transformer'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
           </div>
+          <br>
+          <div class="text-center">
+            <a href="#myModal4" data-toggle="modal" data-dismiss="modal"><button onclick="generate_modal4()" class="btn btn-default">Edit Types</button></a>
+            <a href="#myModal6" data-toggle="modal" data-dismiss="modal"><button onclick="generate_modal6()" class="btn btn-default">Edit Bounds</button></a>
+            <a href="#myModal7" data-toggle="modal" data-dismiss="modal"><button onclick="generate_modal7()" class="btn btn-default">Edit Bin Names</button></a>
+          </div>
         </nav>
 
         <article class="main middle_column_compress">
@@ -111,7 +117,7 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                    <a href="#myModal3" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="update_modal_progress(2)" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
@@ -184,6 +190,13 @@
                     </div>
                 </div>
                -->
+
+       <p>
+               Set the privacy loss parameters for your dataset below and if secrecy of the sample applies to your data, estimate the size of the population from which it was drawn:
+       </p>
+                   <div style="border: 1px solid green; margin:15px; padding-top:20px;padding-bottom:20px;">
+                       <table align="center" style=""><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input name="epsilon" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Epsilon" onchange="epsilon_check(this)"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row_modal"><input id="delta_value_modal" name="delta" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Delta" onchange="delta_check(this)"> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray;width:100px" onclick="change_to_exponential_form('D', '_modal')" value="Exponential"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input name="SS" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder="" onchange="global_parameters_SS(this)"> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray;width: 100px;" value="Clear"></td></tr></table>
+                   </div>
                 <div id="privacy-loss-params-info">
                 <h4>Privacy Loss Parameters</h4>
                The level of privacy protection for individuals in the dataset is governed by two <q>privacy loss parameters</q>, &epsilon; and &delta;. You can think of &delta; as the probability of a blatant privacy violation. As such,  &delta; should be kept quite small. &epsilon; should be set to a small constant. Larger &epsilon; corresponds to less privacy and more accurate statistics. We do not recommend &epsilon; exceeding 1. Below is Harvard's list of varying levels of sensitivity for datasets and reasonable privacy loss parameters for each level. The recommendations below are just a guideline. See <a href="http://files.vpr.harvard.edu/files/vpr-documents/files/data_classification_table_abridged_7.23.13_0.pdf" target="_blank">Harvard's secure data classifications</a> for more information.
@@ -204,17 +217,11 @@
 				<p>
 				This boost requires an estimate of the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay to underestimate but could violate privacy if you overestimate.
 				</p>
-				<p>
-                Set the privacy loss parameters for your dataset below and if secrecy of the sample applies to your data, estimate the size of the population from which it was drawn:
-				</p>
                 </div>
-                    <div style="border: 1px solid green; margin:15px; padding-top:20px;padding-bottom:20px;">
-                        <table align="center" style=""><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input name="epsilon" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Epsilon" onchange="epsilon_check(this)"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row_modal"><input id="delta_value_modal" name="delta" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy."  style="color: black;" type="text" placeholder="Delta" onchange="delta_check(this)"> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray;width:100px" onclick="change_to_exponential_form('D', '_modal')" value="Exponential"></td></tr><tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input name="SS" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder="" onchange="global_parameters_SS(this)"> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray;width: 100px;" value="Clear"></td></tr></table><div style="text-align:center; padding-top: 10px;"><a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(3)" class="btn btn-info" role="button">Submit</a></div>
-                    </div>
                 <!--</div>-->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();  hide_modal_progress();">Close</button>
+                    <a href="#myModal" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(1)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(3)" class="btn btn-info" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();  hide_modal_progress();">Close</button>
                 </div>
               </div>
 
@@ -233,17 +240,14 @@
                     <div>
                     <h4>Variables</h4>
 
-                    <p>The variables in the dataset are listed below, along with a default data type that has been inferred from the dataset. If the data type for a variable is not correct, please select the appropraite option from the dropdown menu. It is possible to return to this window and make changes later when choosing variables for analysis, by clicking the button beside the variable type displayed.</p>
+                    <p>The variables in the dataset are listed below, along with a default data type that has been inferred from the dataset. If the data type for a variable is not correct, please select the appropriate option from the dropdown menu. It is possible to return to this window and make changes later when choosing variables for analysis, by clicking the button beside the variable type displayed.</p>
                     </div>
                     <div>
                     <ul id="variable-modal"></ul>
                     </div>
-                    <p class="text-center">
-                    <a href="#myModal6" onclick="generate_modal7(); generate_modal6(); update_modal_progress(4);" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a>
-                    </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                    <a href="#myModal3" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(2)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#" onclick="generate_modals_with_types()" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
@@ -261,17 +265,14 @@
                     <div>
                     <h4>Variables</h4>
 
-                    <p>The variables in the dataset are listed below, along with a default data type that has been inferred from the dataset. If the data type for a variable is not correct, please select the appropraite option from the dropdown menu. It is possible to return to this window and make changes later when choosing variables for analysis, by clicking the button beside the variable type displayed.</p>
+                    <p>The variables in the dataset are listed below, along with a default data type that has been inferred from the dataset. If the data type for a variable is not correct, please select the appropriate option from the dropdown menu. It is possible to return to this window and make changes later when choosing variables for analysis, by clicking the button beside the variable type displayed.</p>
                     </div>
                     <div>
                     <ul id="variable-modal"></ul>
                     </div>
-                    <p class="text-center">
-                    <a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Submit</a>
-                    </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                    <a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
@@ -294,12 +295,9 @@
                     <div>
                     <ul></ul>
                     </div>
-                    <p class="text-center">
-                    <a href="#myModal7" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="update_modal_progress(5);" role="button">Submit</a>
-                    </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                    <a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(3)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#myModal7" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="update_modal_progress(5);" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
@@ -322,12 +320,9 @@
                     <div>
                     <ul></ul>
                     </div>
-                    <p class="text-center">
-                    <a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="hide_modal_progress()" role="button">Submit</a>
-                    </p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                    <a href="#myModal6" id="modal6back" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(4)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="hide_modal_progress()" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
@@ -372,7 +367,7 @@
     <footer>
         <div>
            <button class="btn btn-default" title="This shows the full underlying table that is being constructed, containing all the metadata information, and budgeting of epsilon and accuracies." onclick='report();' style="float:left;">Show Underlying Table</button>
-            <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}" data-toggle="modal" data-target="#myModal" data-id="submit" style="float:right;"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>           
+            <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}" data-toggle="modal" data-target="#myModal" data-id="submit" style="float:right;"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
             <button id="submit_button" class="btn btn-default" title="This button creates a differentially private release of the statistics presently requested, at their budgeted values of the privacy parameters." onclick='submit();' style="color:red;float:right;">Submit Statistics and Generate Differentially Private Release</button>
         </div>
         <div style="padding:7px;">
