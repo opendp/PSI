@@ -1510,7 +1510,7 @@ function make_bubble (variable) {
                 "<hr style='margin-top: -0.25em'>" +
                 "<div id='missing_data_" + variable + "' class='missing_data'></div>" +
                 //"<div id='missing_data_input_" + variable + "' class='missing_data'></div>" +
-                "<br><div><button class='btn btn-default' onclick='delete_variable(\"" + variable_raw + "\")' style='float:right;'>Delete variable</button><br /></div>" +
+                "<br><div><button class='btn btn-danger' onclick='delete_variable(\"" + variable_raw + "\"); remove_variable_from_sidebar(\"" + variable_raw + "\");'>Delete variable</button><button class='btn btn-default' onclick='delete_variable(\"" + variable_raw + "\")' style='float:right;'>Disable variable</button><br /></div>" +
             "<br>"+
             "</div>" +
         "</div>" +
