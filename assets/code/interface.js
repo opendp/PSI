@@ -3290,7 +3290,7 @@ var window_global_delta_base = (parseFloat(window_global_delta).toExponential())
 var window_global_delta_power = (parseFloat(window_global_delta).toExponential()).split('e')[1].substr(1);
 
 var base_toFixed_amt = 0;
-var scientific_notion_for_delta_toggle = false;
+var scientific_notion_for_delta_toggle = true;
 var window_reserved_epsilon_toggle = false;
 var submitted_reserved_epsilon_toggle = false;
 
@@ -3714,6 +3714,7 @@ function edit_parameters_window () {
     html += '<tr id="reserved_epsilon_row" style="display:none;"><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Reserved Budget:</span></td><td style="padding-left: 15px;"><input id="reserved_epsilon_value" name="reserved_epsilon" onfocusout="reserved_epsilon_check(this)" title="Reserving epsilon will decrease your privacy budget, but will enable future researchers to make queries on your dataset." value="' + reserved_epsilon + '" style="color: black;" type="text" placeholder="Reserved Budget"> <input title="" type="button" style="color:gray; width:200px;" onclick="remove_reserved_epsilon_field()" value="Remove Reserve Epsilon"></td></tr>';
 
     html += '<tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row"><input id="delta_value" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + global_delta + '" style="color: black;" type="text" placeholder="Delta">  <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'D\')" value="Exponential"></td></tr>';
+    // html += '<tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row"><input id="delta_value_base" name="delta_base" onfocusout="delta_check_exp(this, \'base\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta_base) + '" style="color: black;width:107.5px" type="text" placeholder="Delta">&times;10<sup>-<input id="delta_value_power" name="delta_power" onfocusout="delta_check_exp(this, \'power\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="" style="color: black;width:25px;" type="text" placeholder="Delta Power"></sup> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'E\',\'\')" value="Decimal">';
     if(!interactive){
 		if (SS_value_past == '') {
 		  html += '<tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input id="SS" name="SS" onfocusout="global_parameters_SS(this)" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder=""> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray; width:100px;" onclick="clear_SS()" value="Clear"></td></tr><tr id="FE" style="display:none;"><td style="text-align:right; padding-right: 15px; padding-top:15px;"><span title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields.">Functioning Epsilon:</span></td><td style="padding-left: 15px; padding-top:15px;"><div id="FE_value" name="FE" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." style="color: black;"></div></td></tr><tr id="FD" style="display:none;"><td style="text-align:right; padding-right: 15px;"><span title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields.">Functioning Delta:</span></td><td style="padding-left: 15px;"><div id="FD_value" name="FD" title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields." style="color: black;" ></div></td></tr></table>';
@@ -3728,9 +3729,10 @@ function edit_parameters_window () {
     document.getElementById("modal-body-edit-window").innerHTML = html;
     document.getElementById("privacy-loss-params-info-edit").innerHTML = document.getElementById("privacy-loss-params-info").innerHTML;
 	if(!interactive){
-		if (scientific_notion_for_delta_toggle) {
-		  change_to_exponential_form('D');
-		}
+    change_to_exponential_form('D');
+		// if (scientific_notion_for_delta_toggle) {
+		//   change_to_exponential_form('D');
+		// }
 
 		if (submitted_reserved_epsilon_toggle) {
 		  add_reserved_epsilon_field();
@@ -3807,6 +3809,9 @@ function change_to_exponential_form (key, suffix='') {
   else if (key == 'E') {
     var entry = document.getElementById('delta_value_base' + suffix).value;
     var digits = parseInt(window_global_delta_power) + entry.toString().length - 1;
+    if (entry.toString().length == 0) {
+      digits += 1;
+    }
     if (entry.includes('.')) {
       digits = digits - 1;
     }
