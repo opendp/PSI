@@ -2930,7 +2930,7 @@ function generate_epsilon_table () {
 			  "yOffset":-20,
 			  //"arrowOffset":260,
 			  "title": "Change the confidence level of the error estimates here",
-			  "content": "When this number is set to &alpha;, the probability that the worst-case error for each of the above statistics will not exceed the estimates shown in the table is 1-&alpha;. By default, &alpha; is set to 0.05, providing a 95 percent confidence level in the error estimates. <br><br> Click Next to continue the tour.",
+			  "content": "When this number is set to &alpha;, the probability that the worst-case error for each of the above statistics will not exceed the estimates shown in the table is 1-&alpha;. By default, &alpha; is set to 0.05, providing at least a 95 percent confidence level in the error estimates. <br><br> Click Next to continue the tour.",
 			  "showCTAButton":true,
 			  "ctaLabel": "Disable these messages",
 			  "onCTA": function() {
