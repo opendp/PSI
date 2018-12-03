@@ -3162,7 +3162,7 @@ function explain_accuracy (variable, statistic, accuracy, variable_type) {
 	var acc_prefix = "Releasing " + statistic + " for the variable " + variable +"."
 	var acc_suffix = " Here the units are the same units the variable has in the dataset.";
 	if(statistic == "Mean"){
-		acc_explanation =  acc_prefix + " With probability " + prob +" the output mean will differ from the true mean by at most "+accuracy +" units." +acc_suffix;
+		acc_explanation =  acc_prefix + " With at least probability " + prob +" the output mean will differ from the true mean by at most "+accuracy +" units." +acc_suffix;
 	}
 	if(statistic == "Histogram"){
 		acc_explanation =  acc_prefix + " Each output count will differ from its true count by at most "+accuracy+" records with probability "+prob+".";
@@ -3171,10 +3171,10 @@ function explain_accuracy (variable, statistic, accuracy, variable_type) {
 		acc_explanation =  acc_prefix + " For each t, the output count of the number of datapoints less than t will differ from the true count by at most "+accuracy+" records with probability "+prob+".";
 	}
 	if(statistic == "ATT with Matching"){
-		acc_explanation = acc_prefix + " With probability "+prob+" the number of matched treated units used in the ATT analysis will differ from the true number of matched treated units by at most "+accuracy+" records. Note that this does not account for the additional error in the reported confidence interval."
+		acc_explanation = acc_prefix + " With at least probability "+prob+" the number of matched treated units used in the ATT analysis will differ from the true number of matched treated units by at most "+accuracy+" records. Note that this does not account for the additional error in the reported confidence interval."
 	}
 	if(statistic == "Logistic Regression" || statistic == "Probit Regression" || statistic == "OLS Regression"){
-		acc_explanation = acc_prefix + " With probability "+prob+" the objective function for the regression will be perturbed by at most "+accuracy+".";
+		acc_explanation = acc_prefix + " With at least probability "+prob+" the objective function for the regression will be perturbed by at most "+accuracy+".";
 	}
 	alert(acc_explanation);
  // alert("Releasing the " + statistic + " for the variable: " + variable +", which is a " + variable_type + ". The accuracy at which this is released is: " + accuracy + ", which means (INSERT SIMPLE EXPLANATION).");
