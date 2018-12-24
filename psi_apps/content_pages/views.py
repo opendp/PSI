@@ -29,6 +29,14 @@ def interface(request):
                   'interface.html',
                   info_dict)
 
+def interactive(request):
+    """Return the interactiveInterface.html template"""
+    info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
+                     CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
+    return render(request,
+                  'interactiveInterface.html',
+                  info_dict)
+
 
 @cache_page(settings.PAGE_CACHE_TIME)
 def view_content_page(request, page_name='psiIntroduction.html'):
