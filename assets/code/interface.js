@@ -1132,7 +1132,28 @@ function add_variable_to_sidebar(variable) {
 }
 
 function remove_variable_from_sidebar(variable) {
-    $('#selection_sidebar_' + variable.replace(/\s/g, '_')).remove()
+    var currently_in_use = false;
+    if (!grouped_var_dict[variable]) {
+      for (var multikey in grouped_var_dict) {
+        // if current variable in use somewhere
+        if (grouped_var_dict[multikey].indexOf(variable) != -1) {
+          currently_in_use = true;
+          break;
+        }
+      }
+    }
+
+    if (currently_in_use) {
+      alert("This variable is currently part of a grouped variable. Please delete the grouped variable before trying again.");
+    } else {
+      var remove_index = uni_variable_list.indexOf(variable);
+      uni_variable_list.splice(remove_index, 1);
+      delete grouped_var_dict[variable];
+      remove_index = variable_list.indexOf(variable);
+      variable_list.splice(remove_index, 1);
+      delete_variable(variable);
+      $('#selection_sidebar_' + variable.replace(/\s/g, '_')).remove();
+    }
 }
 
 // Adding variables to the variable selection column
@@ -1510,8 +1531,8 @@ function make_bubble (variable) {
                 "<hr style='margin-top: -0.25em'>" +
                 "<div id='missing_data_" + variable + "' class='missing_data'></div>" + "<br><div>";
                 //"<div id='missing_data_input_" + variable + "' class='missing_data'></div>" +
-                if (transforms_data[variable]) {
-                    blank_bubble += "<button class='btn btn-danger' onclick='delete_variable(\"" + variable_raw + "\"); remove_variable_from_sidebar(\"" + variable_raw + "\");'>Delete variable</button>";
+                if (transforms_data[variable] || grouped_var_dict[variable]) {
+                    blank_bubble += "<button class='btn btn-danger' onclick='remove_variable_from_sidebar(\"" + variable_raw + "\");'>Delete variable</button>";
                 }
                 blank_bubble += "<button class='btn btn-default' onclick='delete_variable(\"" + variable_raw + "\")' style='float:right;'>Disable variable</button><br /></div>" +
             "<br>"+
