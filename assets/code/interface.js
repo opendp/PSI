@@ -3769,6 +3769,17 @@ function preset_none () {
   // $('input[name=notation_switch]').attr('disabled', false);
 }
 
+function privacy_proceed () {
+  if (document.getElementById("epsilon_input").value == "") {
+    alert("An epsilon value and a delta value must be specified before proceeding.");
+  } else {
+    update_ed();
+    update_modal_progress(3);
+    $('#myModal3').modal('hide');
+    $('#myModal4').modal('show');
+  }
+}
+
 function edit_parameters_window () {
     window_global_epsilon = global_epsilon;
     window_global_delta = global_delta;
