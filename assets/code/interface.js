@@ -3719,42 +3719,54 @@ function clear_SS () {
     // talk to R bc e, d, etc. changed
 }
 
+function jump_to_custom() {
+  document.getElementById("custom_privacy").checked = true;
+}
+
 function preset (epsilon, deltab, deltap) {
-  // disable inputs
-  $('input[name=epsilon]').attr('disabled', true);
-  if (scientific_notion_for_delta_toggle) {
-    $('input[name=delta_base]').attr('disabled', true);
-    $('input[name=delta_power]').attr('disabled', true);
-  } else {
-    $('input[name=delta]').attr('disabled', true);
-  }
-  $('input[name=notation_switch]').attr('disabled', true);
+  // // disable inputs
+  // $('input[name=epsilon]').attr('disabled', true);
+  // if (scientific_notion_for_delta_toggle) {
+  //   $('input[name=delta_base]').attr('disabled', true);
+  //   $('input[name=delta_power]').attr('disabled', true);
+  // } else {
+  //   $('input[name=delta]').attr('disabled', true);
+  // }
+  // $('input[name=notation_switch]').attr('disabled', true);
 
   // input preset values and update values
-  $('input[name=epsilon]').attr('value', epsilon);
-  epsilon_check($('input[name=epsilon]')[0]);
+  document.getElementById("epsilon_input").value = epsilon;
+  epsilon_check(document.getElementById("epsilon_input"));
+  // $('input[name=epsilon]').attr('value', epsilon);
+  // epsilon_check($('input[name=epsilon]')[0]);
   if (scientific_notion_for_delta_toggle) {
-    $('input[name=delta_base]').attr('value', deltab);
-    $('input[name=delta_power]').attr('value', deltap);
-    delta_check_exp($('input[name=delta_base]')[0], 'base');
-    delta_check_exp($('input[name=delta_power]')[0], 'power');
+    document.getElementById("delta_value_base_modal").value = deltab;
+    document.getElementById("delta_value_power").value = deltap;
+    delta_check_exp(document.getElementById("delta_value_base_modal"), 'base');
+    delta_check_exp(document.getElementById("delta_value_power"), 'power');
+    // $('input[name=delta_base]').attr('value', deltab);
+    // $('input[name=delta_power]').attr('value', deltap);
+    // delta_check_exp($('input[name=delta_base]')[0], 'base');
+    // delta_check_exp($('input[name=delta_power]')[0], 'power');
   } else {
-    $('input[name=delta]').attr('value', parseFloat(deltab * Math.pow(10, -1 * deltap)));
-    delta_check($('input[name=delta]')[0]);
+    document.getElementById("delta_value_modal").value = parseFloat(deltab * Math.pow(10, -1 * deltap));
+    delta_check(document.getElementById("delta_value_modal"));
+    // $('input[name=delta]').attr('value', parseFloat(deltab * Math.pow(10, -1 * deltap)));
+    // delta_check($('input[name=delta]')[0]);
   }
 
 }
 
 function preset_none () {
   // enable inputs
-  $('input[name=epsilon]').attr('disabled', false);
-  if (scientific_notion_for_delta_toggle) {
-    $('input[name=delta_base]').attr('disabled', false);
-    $('input[name=delta_power]').attr('disabled', false);
-  } else {
-    $('input[name=delta]').attr('disabled', false);
-  }
-  $('input[name=notation_switch]').attr('disabled', false);
+  // $('input[name=epsilon]').attr('disabled', false);
+  // if (scientific_notion_for_delta_toggle) {
+  //   $('input[name=delta_base]').attr('disabled', false);
+  //   $('input[name=delta_power]').attr('disabled', false);
+  // } else {
+  //   $('input[name=delta]').attr('disabled', false);
+  // }
+  // $('input[name=notation_switch]').attr('disabled', false);
 }
 
 function edit_parameters_window () {
@@ -3866,7 +3878,7 @@ function change_to_exponential_form (key, suffix='') {
     if (digits < 0 || digits > 20) {
       digits = base_toFixed_amt;
     }
-    var delta_html = '<input id="delta_value_base' + suffix + '" name="delta_base" onfocusout="delta_check_exp(this,\'base\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta_base).toFixed(digits) + '" style="color: black;width:107.5px" type="text" placeholder="Delta Base">&times;10<sup>-<input id="delta_value_power" name="delta_power" onfocusout="delta_check_exp(this, \'power\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + window_global_delta_power + '" style="color: black;width:25px;" type="text" placeholder="Delta Power"></sup> <input name="notation_switch" title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'E\',\'' + suffix + '\')" value="Decimal">';
+    var delta_html = '<input id="delta_value_base' + suffix + '" name="delta_base" onfocusout="delta_check_exp(this,\'base\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta_base).toFixed(digits) + '" style="color: black;width:107.5px" type="text" placeholder="Delta Base" onchange="jump_to_custom()">&times;10<sup>-<input id="delta_value_power" name="delta_power" onfocusout="delta_check_exp(this, \'power\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + window_global_delta_power + '" style="color: black;width:25px;" type="text" placeholder="Delta Power"  onchange="jump_to_custom()"></sup> <input name="notation_switch" title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'E\',\'' + suffix + '\')" value="Decimal">';
     document.getElementById('delta_row' + suffix).innerHTML = delta_html;
     scientific_notion_for_delta_toggle = true;
 
@@ -3885,7 +3897,7 @@ function change_to_exponential_form (key, suffix='') {
     }
 
     if (digits < 20) {
-      var delta_html = '<input id="delta_value' + suffix + '" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta).toFixed(digits) + '" style="color: black;" type="text" placeholder="Delta"> <input name="notation_switch" title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'D\',\'' + suffix + '\')" value="Exponential">';
+      var delta_html = '<input id="delta_value' + suffix + '" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta).toFixed(digits) + '" style="color: black;" type="text" placeholder="Delta" onchange="jump_to_custom()"> <input name="notation_switch" title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'D\',\'' + suffix + '\')" value="Exponential">';
       document.getElementById('delta_row' + suffix).innerHTML = delta_html;
       scientific_notion_for_delta_toggle = false;
 
