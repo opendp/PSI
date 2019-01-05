@@ -81,7 +81,7 @@ var variable_unselected_class =
 
 // toggle below for interactive query mode
 // Should only be true when called with interactiveInterface.html
-var interactive = false;
+// var interactive = false;
 var global_epsilon = 0.5;
 var global_delta = 0.000001;
 var global_beta = 0.05;

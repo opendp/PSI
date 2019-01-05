@@ -409,7 +409,8 @@
 
     <script type="text/javascript">
         var PSI_INTRO_URL = "{% url 'viewContentPage' 'psiIntroduction.html' %}";
-
+        // setting interactive flag for javascript file
+        var interactive = false;
     </script>
 
     <script type="text/javascript" src="{% static "code/interface.js" %}?t={% now "u" %}"></script>
