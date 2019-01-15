@@ -56,7 +56,8 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'psiproject.urls'
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = 'interface'
+LOGOUT_REDIRECT_URL = '/auth/login'
 
 TEMPLATES = [
     {

@@ -5,4 +5,4 @@ from django.conf.urls.static import static
 from psi_apps.content_pages.views import view_about_page
 
 urlpatterns = [\
-    re_path('', include('django.contrib.auth.urls'))]
+    re_path(r'^', include('django.contrib.auth.urls'))]
