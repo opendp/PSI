@@ -20,14 +20,13 @@ from django.conf.urls.static import static
 from psi_apps.content_pages.views import view_about_page
 
 urlpatterns = [\
+    re_path(r'auth/', include('django.contrib.auth.urls')),
+
     re_path(r'^admin/',
             admin.site.urls),
 
     re_path(r'^rook-custom/',
             include('psi_apps.rook_services.urls')),
-
-    re_path(r'^auth/',
-            include('psi_apps.psi_auth.urls')),
 
     re_path(r'^about$',
             view_about_page,
