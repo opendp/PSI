@@ -154,4 +154,6 @@ add_backslash('ROOK_SVC_URL', ROOK_SVC_URL)
 
 PAGE_CACHE_TIME = 0 # dev time
 
-LOGIN_REDIRECT_URL = '/'
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")
