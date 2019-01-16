@@ -6,9 +6,9 @@ from django.urls import reverse
 from django.views.decorators.cache import cache_page
 from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from psi_apps.utils.file_helper import load_file_as_json, load_file_contents
-from psi_apps.utils.view_helper import \
-    (get_json_error, get_json_success)
+from psi_apps.utils.view_helper import get_json_error, get_json_success
 
 
 @cache_page(settings.PAGE_CACHE_TIME)
@@ -19,6 +19,7 @@ def view_about_page(request):
 
     return HttpResponseRedirect(static_about_page)
 
+@login_required(login_url='login')
 def interface(request):
     """Return the interface.html template"""
     info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
