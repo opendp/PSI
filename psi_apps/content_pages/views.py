@@ -30,7 +30,7 @@ def interface(request):
                   'interface.html',
                   info_dict)
 
-
+@login_required(login_url='login')
 @cache_page(settings.PAGE_CACHE_TIME)
 def view_content_page(request, page_name='psiIntroduction.html'):
     """Render a template from this project "/templates/content/(page_name)" directory"""
@@ -47,6 +47,7 @@ def view_content_page(request, page_name='psiIntroduction.html'):
     return render(request,
                   template_name)
 
+@login_required(login_url='login')
 def getData(request):
     """Return a default/test preprocess file: preprocess_4_v1-0.json"""
     fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
@@ -63,7 +64,7 @@ def getData(request):
     #            get_json_success('success',
     #                             data=json_info.result_obj))
 
-
+@login_required(login_url='login')
 def getXML(request):
     """Return the default/test xml data: pumsmetaui.xml"""
     #file = open(os.path.join(settings.BASE_DIR, "data/pumsmetaui.xml"))
@@ -82,7 +83,7 @@ def getXML(request):
     #            get_json_success('success',
     #                             data=json_info.result_obj))
 
-
+@login_required(login_url='login')
 def view_monitoring_alive(request):
     """For kubernetes liveness check"""
     return JsonResponse(dict(status="ok",
