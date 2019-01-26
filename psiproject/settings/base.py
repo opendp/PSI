@@ -27,7 +27,7 @@ PSI_DATA_DIRECTORY_PATH = os.environ.get(\
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 
-# AUTH_USER_MODEL = 'auth_user'
+AUTH_USER_MODEL = 'psi_auth.CustomUser'
 
 # Application definition
 

@@ -5,10 +5,11 @@ from django.views import generic
 from psi_apps.content_pages.views import interface
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
+from .forms import CustomUserCreationForm
 
 
 class sign_up(generic.CreateView):
-    form_class = UserCreationForm
+    form_class = CustomUserCreationForm
     success_url = reverse_lazy('interface')
     template_name = 'registration/signup.html'
 
