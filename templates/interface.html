@@ -7,6 +7,18 @@
     <div class="flex-container">
         <header>
             <table style="width:100%">
+                <tr>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ user.username }}
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url "logout" %}">Logout</a></li>
+                        </ul>
+                    </div>
+                </td>
+                </tr>
               <tr>
                 <td style="width:5%">
                 </td>
@@ -18,7 +30,10 @@
                     </div>
                     <div id="datasetHelp" style="text-align:left;">
                     </div>
+
                 </td>
+
+                
 
                 <td style=''>
                                 <h4 title="These are adjustable parameters that define the level of privacy protection guaranteed by the differentially private released statistics." style="display: inline-block; padding-right:5px;"> Privacy Loss Parameters</h4>
@@ -364,9 +379,6 @@
             </div>
         </div>
     </div>
-
-
-    <p><a href="{% url 'logout' %}">logout</a></p>
 
     <!--Table and Submit Buttons in Footer -->
 
