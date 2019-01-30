@@ -1,14 +1,17 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+
+{% block title %}Signup{% endblock %}
+
+{% block content %}
 
 <h2>Login</h2>
 
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button type="submit">Register</button>
+  <button class="btn" type="submit">Register</button>
 </form>
 
 <a href="{% url 'login' %}">Back to homepage</a>
 
-</html>
+{% endblock %}
