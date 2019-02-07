@@ -1,9 +1,24 @@
 <!-- templates/registration/login.html -->
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
+
+        <header>
+            <table style="width:100%">
+
+              <tr>
+                <td style='width:60%'>
+                    <div title="This is the name, in Dataverse, of the selected example dataset." id="datasetName" style="text-align:center;">
+                        <h2 style="display:inline;">Welcome to Dataverse</h2>
+                      </div>
+                </td>
+              </tr>
+            </table>
+
+         </header>
 
 <h2>Login</h2>
 <form method="post">
@@ -14,5 +29,6 @@
 <p><a href="{% url 'signup' %}">Sign up</a></p>
 <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
 <p><a href="{% url 'test_user' %}">Log in as test user</a></p>
+
 
 {% endblock %}
