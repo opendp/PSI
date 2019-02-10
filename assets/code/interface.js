@@ -1496,7 +1496,7 @@ function make_bubble (variable) {
 
                   blank_bubble += "&nbsp;&nbsp;<a href='#myModal5' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal5(\"" + variable + "\")' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
 
-                	blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
+                	blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;' onclick='generate_modalinfo()'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 	blank_bubble += "<table>";
                 	for(var i=0; i< varlist.length; i++){
                 		v = varlist[i];
@@ -1521,7 +1521,7 @@ function make_bubble (variable) {
                     blank_bubble += "Variable Type: <span id='type-" + variable + "'>" + types_for_vars[variable] + "</span>";
                     // Option to return to modal window to change
                     blank_bubble += "&nbsp;&nbsp;<a href='#myModal4' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button class='btn btn-default' onclick='generate_modal4()' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
-                    blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
+                    blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'  onclick='generate_modalinfo()'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 }
                  blank_bubble += "</div>" +
                 "<hr style='margin-top: -0.25em'>" +
@@ -1561,6 +1561,12 @@ function check_all_multivars () {
     if (active_var in grouped_var_dict) {
       check_group_types(active_var);
     }
+  }
+}
+
+function generate_modalinfo () {
+  if (!initial_sequence) {
+    $('#myModal').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
   }
 }
 
@@ -1919,7 +1925,7 @@ function parameter_fields (variable, type_chosen) {
 		// makes blank html text
 		var parameter_field = "<table>";
 		if(needed_parameters.length > 0){
-			parameter_field+="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='metadata'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
+			parameter_field+="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='metadata' onclick='generate_modalinfo()' style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
 		}
 
     if (variable in bound_data_stored) {
@@ -2051,7 +2057,7 @@ function make_mult_with_reqs(variable, param, reqlist){
 	}
 
 function multivar_parameter_fields(variable){
-	var parameter_field ="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
+	var parameter_field ="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' onclick='generate_modalinfo()' style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
 	var varlist = grouped_var_dict[variable];
 	var typedict = inputted_metadata[variable][column_index["Variable_Type"]];
 	var statlist = [];
@@ -2830,7 +2836,7 @@ function toggle_reserved_epsilon_tool () {
 function generate_epsilon_table () {
     var completed_statistic = false;
     var epsilon_table =
-    "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL  + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
+    "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL  + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;' onclick='generate_modalinfo()'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
     "<table id='epsilon_table' style='width: calc(100% - 30px);'>" +
         "<tr>" +
             "<td style='font-weight: bold;'>" +
