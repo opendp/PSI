@@ -728,6 +728,7 @@ function submit_interactive(){
 				// end session somehow
 			}
 		}
+    document.getElementById("pdf-viewer-object").data = "/static/files/test.pdf";
 	}
 }
 
