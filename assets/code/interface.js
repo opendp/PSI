@@ -3780,6 +3780,16 @@ function privacy_proceed () {
   }
 }
 
+function privacy_close () {
+    if (document.getElementById("epsilon_input").value == "") {
+      alert("An epsilon value and a delta value must be specified before proceeding.");
+    } else {
+      $('#myModal3').modal('hide');
+      edit_window_closed();
+      hide_modal_progress();
+    }
+}
+
 function edit_parameters_window () {
     window_global_epsilon = global_epsilon;
     window_global_delta = global_delta;
