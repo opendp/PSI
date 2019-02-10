@@ -1808,7 +1808,7 @@ function generate_modal7 () {
           stored_bins = bins_data_stored[var_entry];
         }
         // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
-        table_output += "<td><input id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' value='" + stored_bins + "' type='text' placeholder='Bin Names'/></td>";
+        table_output += "<td><input style='width: 200px;' id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' value='" + stored_bins + "' type='text' placeholder='Optional but recommended'/></td>";
         table_output += "</tr>";
       }
     }
@@ -1947,7 +1947,11 @@ function parameter_fields (variable, type_chosen) {
       parameter_field += "<tr><td style='width:150px;vertical-align:middle;'><span onclick='display_help_id(\"" + needed_parameters[j].replace(/\s/g, '_') + '_help' + "\")' style='cursor:help;'>" + needed_parameters[j] + ":</span></td><td style='vertical-align:middle;'>";
 
 		  if (rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].input_type == "text") {
-			parameter_field += "<input type='text' value='" + inputted_metadata[variable][column_index[needed_parameters[j].replace(/\s/g, '_')]] + "' name='" + needed_parameters[j].replace(/\s/g, '_') + "'id='input_" + needed_parameters[j].replace(/\s/g, '_') + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].entry_type + "\", \"" + variable + "\")'></td></tr>";
+        if (needed_parameters[j].replace(/\s/g, '_') == "Bin_Names") {
+    			parameter_field += "<input type='text' value='" + inputted_metadata[variable][column_index[needed_parameters[j].replace(/\s/g, '_')]] + "' name='" + needed_parameters[j].replace(/\s/g, '_') + "'id='input_" + needed_parameters[j].replace(/\s/g, '_') + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].entry_type + "\", \"" + variable + "\")' placeholder='Optional but recommended'></td></tr>";
+        } else {
+    			parameter_field += "<input type='text' value='" + inputted_metadata[variable][column_index[needed_parameters[j].replace(/\s/g, '_')]] + "' name='" + needed_parameters[j].replace(/\s/g, '_') + "'id='input_" + needed_parameters[j].replace(/\s/g, '_') + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].entry_type + "\", \"" + variable + "\")'></td></tr>";
+        }
 		  }
 		  else if (rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].input_type == "multiple_choice_with_other_variables") {
 			parameter_field +=
@@ -2117,7 +2121,11 @@ function multivar_parameter_fields(variable){
 					ValidateInput(parameter, rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type, variable, v);
 				}
 				if(rfunctions.parameter_info[metadata_list.indexOf(param)].input_type == "text"){
-					parameter_field += "<input type='text' value='" + default_val + "' name='" + param + "'id="+v+"_input_" + param + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\",\""+v+"\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type + "\", \"" + variable + "\",\""+v+"\")'></td></tr>";
+              if (param == "Bin_Names") {
+                parameter_field += "<input type='text' value='" + default_val + "' name='" + param + "'id="+v+"_input_" + param + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\",\""+v+"\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type + "\", \"" + variable + "\",\""+v+"\")' placeholder='Optional but recommended'></td></tr>";
+              } else {
+    					parameter_field += "<input type='text' value='" + default_val + "' name='" + param + "'id="+v+"_input_" + param + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\",\""+v+"\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type + "\", \"" + variable + "\",\""+v+"\")'></td></tr>";
+            }
 			  	}
 			  	else if(rfunctions.parameter_info[metadata_list.indexOf(param)].input_type == "multiple_choice_from_group_with_reqs"){
 			  		var reqlist = [];
