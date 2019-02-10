@@ -592,9 +592,35 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 
 		print(paste("good_objects_length: ", good_objects_length, sep=""))
 
-		for (i in 1:good_objects_length) {
-			append_release_to_file("metadata-pums.json", good_objects[[i]]$single_stat_release, good_objects[[i]]$variable, good_objects[[i]]$stat)
+		# open file connection
+		# Read current JSON file
+		#filepath <- paste("../data/", filename, sep="")
+		filepath <- paste(PSI_DATA_DIRECTORY_PATH, "metadata-pums.json", sep="")
+
+		if(!file.exists(filepath)){
+			fileConn<-file(filepath)
+			writeLines('{"data":{"previous":0,"variables":{}}}', fileConn)	# create json file with only {}
+			close(fileConn)
+			#print(paste("ERROR in 'Calculate_stats.R -> append_release_to_file'!  File not found! ", filepath, sep=""))
 		}
+
+		filedata <- fromJSON(filepath)
+
+		# determine the batch ID
+		batch_id <- filedata$data$previous + 1
+
+		for (i in 1:good_objects_length) {
+			filedata <- append_release_to_file(filedata, good_objects[[i]]$single_stat_release,
+				 good_objects[[i]]$variable, good_objects[[i]]$stat, batch_id)
+		}
+
+		# increment batch ID
+		filedata$data$previous <- batch_id
+
+		# Overwrite to file
+		fileconn <- file(filepath)
+		writeLines(toJSON(filedata), fileconn)
+		close(fileconn)
 
 	}
 	else{
@@ -621,10 +647,8 @@ formatted_release <- function(release, nameslist) {
 		release_single <- release[[i]]
 		# identify whether uni or multivariate statistic
 		if (length(release_single$result$variable) > 1) {
-			print("THIS IS MULTI")
 			result[[i]] <- formatted_release_multi(release_single, nameslist)
 		} else {
-			print("THIS IS NOT MULTI")
 			result[[i]] <- formatted_release_uni(release_single, nameslist)
 		}
 	}
@@ -696,40 +720,31 @@ formatted_release_multi <- function(release_single, nameslist) {
 }
 
 
-append_release_to_file <- function(filename, release_object, variable, statname) {
-	# Read current JSON file
-	#filepath <- paste("../data/", filename, sep="")
-	filepath <- paste(PSI_DATA_DIRECTORY_PATH, filename, sep="")
+append_release_to_file <- function(filedata, release_object, variable, statname, batch_id) {
 
-	if(!file.exists(filepath)){
-		fileConn<-file(filepath)
-		writeLines(c("{}"), fileConn)	# create json file with only {}
-		close(fileConn)
-		#print(paste("ERROR in 'Calculate_stats.R -> append_release_to_file'!  File not found! ", filepath, sep=""))
-	}
-
-	filedata <- fromJSON(filepath)
+	finalstatname <- ""
 
 	# check if variable exists (mostly for multivariates)
-	if (!(variable %in% filedata$data$variables)) {
+	if (!(variable %in% attributes(filedata$data$variables)$names)) {
 		filedata$data$variables[[variable]] <- list()
 		filedata$data$variables[[variable]][[statname]] <- list()
-		filedata$data$variables[[variable]][[statname]][[paste(statname, "0", sep="")]] <- release_object
+		finalstatname <- paste(statname, "0", sep="")
 	} else {
 		# Check if this type of stat has been released before for this variable
 		if (statname %in% attributes(filedata$data$variables[[variable]])$names) {
 			# append to currently existing category
 			current_length <- length(filedata$data$variables[[variable]][[statname]])
-			filedata$data$variables[[variable]][[statname]][[paste(statname, as.character(current_length), sep="")]] <- release_object
+			finalstatname <- paste(statname, as.character(current_length), sep="")
 		} else {
 			# create category if new release stat type
 			filedata$data$variables[[variable]][[statname]] <- list()
-			filedata$data$variables[[variable]][[statname]][[paste(statname, "0", sep="")]] <- release_object
+			finalstatname <- paste(statname, "0", sep="")
 		}
 	}
+	# store the actaul stat itself
+	filedata$data$variables[[variable]][[statname]][[finalstatname]] <- release_object
+	# label the batch it is part of
+	filedata$data$variables[[variable]][[statname]][[finalstatname]]["batch"] <- batch_id
 
-	# Overwrite to file
-	fileconn <- file(filepath)
-	writeLines(toJSON(filedata), fileconn)
-	close(fileconn)
+	return(filedata)
 }

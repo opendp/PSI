@@ -1,68 +1,8 @@
-<!DOCTYPE html>
-<html>
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-    <!-- Linking to Javascript/CSS libraries -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link href="libraries/css/simple-sidebar.css" rel="stylesheet">
-    <link rel="stylesheet" href="libraries/hopscotch/css/hopscotch.css"></link>
-    <script type="text/javascript" src="libraries/hopscotch/js/hopscotch.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../lib/d3.v3.min.js"></script>
-
-    <link rel="stylesheet" type="text/css" href="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/css/bootstrap-slider.min.css">
-    <script type="text/javascript" src="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/bootstrap-slider.min.js"></script>
-
-    <!-- Linking to CSS stylesheet -->
-    <link rel="stylesheet" type="text/css" href="interface.css">
-
-    <title>Budgeting Tool</title>
-
-    <!-- <style type="text/css">
-      body {
-             overflow:hidden;
-           }
-    </style> -->
-
-</head>
-
-<body onload="generate_epsilon_table(); ">
-<body>
-
-<div id="setdataset" style="padding:10px 10px 10px 50px;background:#f2f2e6;">
-<table>
-    <tr>
-        <td title="This demonstration is linked to a test instance of Dataverse at https://beta.dataverse.org &#13;  You can select one of the example datasets by name, or any other dataset (including your own) by entering the file ID number below." align="right">
-            Select Dataverse dataset for demonstration:
-        </td>
-        <td title="This demonstration is linked to a test instance of Dataverse at https://beta.dataverse.org &#13;  You can select one of the example datasets by name, or any other dataset (including your own) by entering the file ID number below." style="padding:0 0 0 8px;">
-            <select name="dataselect" id="dataselect" onchange="changedataset(this.value)">
-            <option value="0">- Select -</option>
-            <option value="20" selected="selected" >Census PUMS</option>
-            <option value="5126">Science Teachers and Climate Change</option>
-            <option value="5127">Voter Validation CCES</option>
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td title="You can select any dataset on the test Dataverse instance at https://beta.dataverse.org by entering its unique file ID number, or use one of the datasets provided in the selection box above." align="right">
-            or enter Dataverse fileid number:
-        </td>
-        <td title="You can select any dataset on the test Dataverse instance at https://beta.dataverse.org by entering its unique file ID number, or use one of the datasets provided in the selection box above." style="padding:0 0 0 8px;">
-            <input type="text" name="altfileid" onchange="overridedataset(this.value)" maxlength="5" style="width: 50px;" >
-            <button type="button" class="manualinfo" data-load-url="psiIntroduction.html" data-toggle="modal" data-target="#myModal" data-id="data"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: 12px;"></span></button>
-        </td>
-    </tr>
-    <button title="Show a video describing the features and use of this budgeting tool." onclick="location.href='http://beta.dataverse.org/custom/DifferentialPrivacyPrototype/video/BudgetInterfaceDemo.mp4';" style="color:#108db7;float:right; margin-right: 10%; margin-top:0.5em; padding-right:0.5em; padding-top:0.5em;">
-        <span class="glyphicon glyphicon-play-circle" style="color:#108db7; font-size: 22px; vertical-align: middle; margin-bottom: 0.125em; margin-top: -0.125em;" aria-hidden="true"></span>
-        Watch a Video Overview of this Tool</button>
-</table>
-</div>
-
-
-
+{% block main_content %}
+  {% include 'content/div-setdataset.html' %}
 
     <div class="flex-container">
         <header style="height: 134px">
@@ -83,7 +23,7 @@
                 <td style='width: 417px; float: right'>
                                 <h4 title="These are adjustable parameters that define the level of privacy protection guaranteed by the differentially private released statistics." style="display: inline-block; padding-right:5px;"> Privacy Loss Parameters</h4>
                              <!--   <button id="edit_button" style='color:#108db7;' onclick="edit_parameters_window()">Edit Parameters</button> -->
-                                <button type="button" class="manualinfo" data-load-url="psiIntroduction.html" data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
+                                <button type="button" class="manualinfo" data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}" data-toggle="modal" data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
 
 
                         <div id='display_parameters'>
@@ -183,7 +123,7 @@
                   <br><br>
                   <button id="submit_button" title="This button creates a differentially private release of the statistics presently requested, at their budgeted values of the privacy parameters." onclick='submit();' style="color:red;">Submit</button>
 
-                  <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="psiIntroduction.html" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
+                  <button id= "submit_info_button" type="button" class="manualinfo" data-load-url="{% url 'viewContentPage' 'psiIntroduction.html' %}" data-toggle="modal" data-target="#myModal" data-id="submit"><span class="glyphicon glyphicon-question-sign" style="color:"+qmark_color+";font-size: "+qmark_size+";"></span></button>
                </div>
             </div>
         </nav>
@@ -193,7 +133,7 @@
         <div id='pdf-viewer' class='normal-pdf'>
           <div style='position: absolute; left: 0; width: 45px; z-index: 10'><button id='pdf-button' onclick="medtomaxpdf()"><span id='pdf-icon' class='glyphicon glyphicon-arrow-up' style="font-size: 2em"></span></button></div>
           <div style='position: absolute; left: 45px; z-index: 10'><button id='pdf-button-second' class="" onclick="medtominpdf()"><span id='pdf-icon-second' class='glyphicon glyphicon-arrow-down' style="font-size: 2em"></span></button></div>
-          <div id='pdf-object' class='pdf-object' style='height: 100%'><object data="test.pdf" type="application/pdf" height="100%" width="100%">
+          <div id='pdf-object' class='pdf-object' style='height: 100%'><object id="pdf-viewer-object" type="application/pdf" height="100%" width="100%">
           </object></div>
 </div>
 
@@ -206,7 +146,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title" style="text-align: center;"> <img src="../images/dpr.png" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
                 </div>
                 <div class="modal-body">
                 </div>
@@ -259,7 +199,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h3 class="modal-title" style="text-align: center;"> <img src="../images/dpr.png" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
                 </div>
 
                 <div style="margin:15px; overflow:auto; height:600px;">
@@ -315,7 +255,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
-                    <h3 class="modal-title" style="text-align: center;"> <img src="../images/dpr.png" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
                 </div>
                 <div class="modal-body">
                     <div>
@@ -343,7 +283,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed()">&times;</button>
-                    <h3 class="modal-title" style="text-align: center;"> <img src="../images/dpr.png" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): a Private data Sharing Interface</h3>
                 </div>
                 <div class="modal-body">
                     <div>
@@ -423,16 +363,27 @@
         });
         });
     </script>
-    <script type="text/javascript" src="interface.js"></script>
+    <script type="text/javascript">
+        var PSI_INTRO_URL = "{% url 'viewContentPage' 'psiIntroduction.html' %}";
+        // setting interactive flag for javascript file
+        var interactive = true;
+    </script>
+
+    <script type="text/javascript" src="{% static "code/interface.js" %}?t={% now "u" %}"></script>
     <script type="text/javascript">
         console.log(UI);  // UI set from url in interface.js
         // open the modal window on page load
         $(window).load(function(){
-        $('#myModal').modal('show');
-       $('#myModal').find('.modal-body').load("psiOpenInteractive.html");
+          $('#myModal').modal('show');
+          if(UI){
+              $('#myModal').find('.modal-body').load("{% url 'viewContentPage' 'psiOpen.html' %}"); //JM for UI/UX
+          }else{
+             $('#myModal').find('.modal-body').load("{% url 'viewContentPage' 'psiOpenPrototype.html' %}");
+              //$('#myModal').find('.modal-body').load("psiOpen.html");
+          };
         });
+
+
     </script>
 
-</body>
-
-</html>
+{% endblock %}

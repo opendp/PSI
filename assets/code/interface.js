@@ -81,7 +81,7 @@ var variable_unselected_class =
 
 // toggle below for interactive query mode
 // Should only be true when called with interactiveInterface.html
-var interactive = false;
+// var interactive = false;
 var global_epsilon = 0.5;
 var global_delta = 0.000001;
 var global_beta = 0.05;
@@ -728,6 +728,7 @@ function submit_interactive(){
 				// end session somehow
 			}
 		}
+    document.getElementById("pdf-viewer-object").data = "/static/files/test.pdf";
 	}
 }
 
@@ -1495,7 +1496,7 @@ function make_bubble (variable) {
 
                   blank_bubble += "&nbsp;&nbsp;<a href='#myModal5' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal5(\"" + variable + "\")' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
 
-                	blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
+                	blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;' onclick='generate_modalinfo()'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 	blank_bubble += "<table>";
                 	for(var i=0; i< varlist.length; i++){
                 		v = varlist[i];
@@ -1520,7 +1521,7 @@ function make_bubble (variable) {
                     blank_bubble += "Variable Type: <span id='type-" + variable + "'>" + types_for_vars[variable] + "</span>";
                     // Option to return to modal window to change
                     blank_bubble += "&nbsp;&nbsp;<a href='#myModal4' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button class='btn btn-default' onclick='generate_modal4()' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
-                    blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
+                    blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'  onclick='generate_modalinfo()'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 }
                  blank_bubble += "</div>" +
                 "<hr style='margin-top: -0.25em'>" +
@@ -1560,6 +1561,12 @@ function check_all_multivars () {
     if (active_var in grouped_var_dict) {
       check_group_types(active_var);
     }
+  }
+}
+
+function generate_modalinfo () {
+  if (!initial_sequence) {
+    $('#myModal').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
   }
 }
 
@@ -1808,7 +1815,7 @@ function generate_modal7 () {
           stored_bins = bins_data_stored[var_entry];
         }
         // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
-        table_output += "<td><input id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' value='" + stored_bins + "' type='text' placeholder='Bin Names'/></td>";
+        table_output += "<td><input style='width: 200px;' id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' value='" + stored_bins + "' type='text' placeholder='Optional but recommended'/></td>";
         table_output += "</tr>";
       }
     }
@@ -1918,7 +1925,7 @@ function parameter_fields (variable, type_chosen) {
 		// makes blank html text
 		var parameter_field = "<table>";
 		if(needed_parameters.length > 0){
-			parameter_field+="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='metadata'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
+			parameter_field+="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='metadata' onclick='generate_modalinfo()' style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
 		}
 
     if (variable in bound_data_stored) {
@@ -1947,7 +1954,11 @@ function parameter_fields (variable, type_chosen) {
       parameter_field += "<tr><td style='width:150px;vertical-align:middle;'><span onclick='display_help_id(\"" + needed_parameters[j].replace(/\s/g, '_') + '_help' + "\")' style='cursor:help;'>" + needed_parameters[j] + ":</span></td><td style='vertical-align:middle;'>";
 
 		  if (rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].input_type == "text") {
-			parameter_field += "<input type='text' value='" + inputted_metadata[variable][column_index[needed_parameters[j].replace(/\s/g, '_')]] + "' name='" + needed_parameters[j].replace(/\s/g, '_') + "'id='input_" + needed_parameters[j].replace(/\s/g, '_') + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].entry_type + "\", \"" + variable + "\")'></td></tr>";
+        if (needed_parameters[j].replace(/\s/g, '_') == "Bin_Names") {
+    			parameter_field += "<input type='text' value='" + inputted_metadata[variable][column_index[needed_parameters[j].replace(/\s/g, '_')]] + "' name='" + needed_parameters[j].replace(/\s/g, '_') + "'id='input_" + needed_parameters[j].replace(/\s/g, '_') + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].entry_type + "\", \"" + variable + "\")' placeholder='Optional but recommended'></td></tr>";
+        } else {
+    			parameter_field += "<input type='text' value='" + inputted_metadata[variable][column_index[needed_parameters[j].replace(/\s/g, '_')]] + "' name='" + needed_parameters[j].replace(/\s/g, '_') + "'id='input_" + needed_parameters[j].replace(/\s/g, '_') + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].entry_type + "\", \"" + variable + "\")'></td></tr>";
+        }
 		  }
 		  else if (rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].input_type == "multiple_choice_with_other_variables") {
 			parameter_field +=
@@ -2046,7 +2057,7 @@ function make_mult_with_reqs(variable, param, reqlist){
 	}
 
 function multivar_parameter_fields(variable){
-	var parameter_field ="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
+	var parameter_field ="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' onclick='generate_modalinfo()' style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
 	var varlist = grouped_var_dict[variable];
 	var typedict = inputted_metadata[variable][column_index["Variable_Type"]];
 	var statlist = [];
@@ -2117,7 +2128,11 @@ function multivar_parameter_fields(variable){
 					ValidateInput(parameter, rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type, variable, v);
 				}
 				if(rfunctions.parameter_info[metadata_list.indexOf(param)].input_type == "text"){
-					parameter_field += "<input type='text' value='" + default_val + "' name='" + param + "'id="+v+"_input_" + param + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\",\""+v+"\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type + "\", \"" + variable + "\",\""+v+"\")'></td></tr>";
+              if (param == "Bin_Names") {
+                parameter_field += "<input type='text' value='" + default_val + "' name='" + param + "'id="+v+"_input_" + param + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\",\""+v+"\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type + "\", \"" + variable + "\",\""+v+"\")' placeholder='Optional but recommended'></td></tr>";
+              } else {
+    					parameter_field += "<input type='text' value='" + default_val + "' name='" + param + "'id="+v+"_input_" + param + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\",\""+v+"\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type + "\", \"" + variable + "\",\""+v+"\")'></td></tr>";
+            }
 			  	}
 			  	else if(rfunctions.parameter_info[metadata_list.indexOf(param)].input_type == "multiple_choice_from_group_with_reqs"){
 			  		var reqlist = [];
@@ -2821,7 +2836,7 @@ function toggle_reserved_epsilon_tool () {
 function generate_epsilon_table () {
     var completed_statistic = false;
     var epsilon_table =
-    "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL  + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
+    "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL  + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;' onclick='generate_modalinfo()'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
     "<table id='epsilon_table' style='width: calc(100% - 30px);'>" +
         "<tr>" +
             "<td style='font-weight: bold;'>" +
@@ -3778,6 +3793,16 @@ function privacy_proceed () {
     $('#myModal3').modal('hide');
     $('#myModal4').modal('show');
   }
+}
+
+function privacy_close () {
+    if (document.getElementById("epsilon_input").value == "") {
+      alert("An epsilon value and a delta value must be specified before proceeding.");
+    } else {
+      $('#myModal3').modal('hide');
+      edit_window_closed();
+      hide_modal_progress();
+    }
 }
 
 function edit_parameters_window () {
