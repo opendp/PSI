@@ -1,5 +1,7 @@
 # PSI - Private data Sharing Interface
 
+This is a repository for the frontend, backend, and cloud deployment of the PSI system.  For the R library of algorithms, see the repository PSI-library.
+
 - Reference: https://privacytools.seas.harvard.edu/project-description
 
 To run locally:
