@@ -77,30 +77,67 @@ def run_web(context):
     run_local_cmd(cmd, run_web.__doc__)
 
 @task
-def create_django_superuser(context):
+def create_superuser_random_pw(context):
+    create_superuser(context, random_pw=True)
+
+
+@task
+def create_superuser(context, random_pw=False):
     """(Test only) Create superuser with username: dev_admin. Password is printed to the console."""
-    from psi_apps.psi_auth.models import User
-    import random
+    from psi_apps.psi_auth.models import CustomUser
 
     dev_admin_username = 'dev_admin'
 
     #User.objects.filter(username=dev_admin_username).delete()
-    if User.objects.filter(username=dev_admin_username).count() > 0:
-        print('A "%s" superuser already exists' % dev_admin_username)
+    if CustomUser.objects.filter(username=dev_admin_username).count() > 0:
+        print('Superuser "%s" already exists' % dev_admin_username)
         return
 
-    admin_pw = 'admin'
-    #''.join(random.choice(string.ascii_lowercase + string.digits)
-    #                   for _ in range(7))
+    if random_pw:
+        import random, string
+        admin_pw = ''.join(random.choice(string.ascii_lowercase + string.digits)
+                           for _ in range(7))
+    else:
+        admin_pw = 'admin'
 
-    new_user = User(username=dev_admin_username,
-                    first_name='Dev',
-                    last_name='Administrator',
-                    is_staff=True,
-                    is_active=True,
-                    is_superuser=True)
+    new_user = CustomUser(username=dev_admin_username,
+                          first_name='Dev',
+                          last_name='Administrator',
+                          email='',
+                          is_staff=True,
+                          is_active=True,
+                          is_superuser=True)
     new_user.set_password(admin_pw)
     new_user.save()
 
     print('superuser created: "%s"' % dev_admin_username)
     print('password: "%s"' % admin_pw)
+
+
+
+
+@task
+def create_test_user(context):
+    """(Test only) Create a test user with credentials: test_user/test_user"""
+    from psi_apps.psi_auth.models import CustomUser
+    import random
+
+    test_username = 'test_user'
+
+    #User.objects.filter(username=dev_admin_username).delete()
+    if CustomUser.objects.filter(username=test_username).count() > 0:
+        print('User "%s" already exists' % test_username)
+        return
+
+    new_user = CustomUser(username=test_username,
+                          first_name='Ye Test',
+                          last_name='User',
+                          email='',
+                          is_staff=True,
+                          is_active=True,
+                          is_superuser=False)
+    new_user.set_password(test_username)
+    new_user.save()
+
+    print('test user created: "%s"' % test_username)
+    print('password: "%s"' % test_username)

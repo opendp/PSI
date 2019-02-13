@@ -12,7 +12,7 @@
               <tr>
                 <td style='width:60%'>
                     <div title="This is the name, in Dataverse, of the selected example dataset." id="datasetName" style="text-align:center;">
-                        <h2 style="display:inline;">Welcome to Dataverse</h2>
+                        <h2 style="display:inline;">PSI (&Psi;): A Private Data Sharing Interface</h2>
                       </div>
                 </td>
               </tr>
@@ -24,7 +24,7 @@
 <form method="post">
   {% csrf_token %}
   {{ form.as_p }}
-  <button class="btn" type="submit">Login</button>
+  <button class="btn btn-primary" type="submit">Login</button>
 </form>
 <p><a href="{% url 'signup' %}">Sign up</a></p>
 <p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
