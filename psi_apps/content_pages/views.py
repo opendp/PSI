@@ -31,6 +31,15 @@ def interface(request):
                   info_dict)
 
 @login_required(login_url='login')
+def interactive(request):
+    """Return the interactiveInterface.html template"""
+    info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
+                     CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
+    return render(request,
+                  'interactiveInterface.html',
+                  info_dict)
+
+
 @cache_page(settings.PAGE_CACHE_TIME)
 def view_content_page(request, page_name='psiIntroduction.html'):
     """Render a template from this project "/templates/content/(page_name)" directory"""

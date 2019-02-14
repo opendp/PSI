@@ -27,6 +27,9 @@ urlpatterns = [
             views.view_content_page,
             name='viewContentPageBase'),
 
+    # Serve interactive queries
+    re_path(r'^interactive$', views.interactive, name='interactive'),
+
     # Serve the home page
     #
     re_path(r'^', views.interface, name='interface'),

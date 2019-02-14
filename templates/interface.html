@@ -33,7 +33,7 @@
 
                 </td>
 
-                
+
 
                 <td style=''>
                                 <h4 title="These are adjustable parameters that define the level of privacy protection guaranteed by the differentially private released statistics." style="display: inline-block; padding-right:5px;"> Privacy Loss Parameters</h4>
@@ -132,7 +132,7 @@
                 <div class="modal-body">
                 </div>
                 <div class="modal-footer">
-                    <a href="#myModal3" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="update_modal_progress(2); change_to_exponential_form('D', '_modal')" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                    <a href="#myModal3" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="update_modal_progress(2); change_to_exponential_form('D', '_modal')" role="button">Next</a>
                 </div>
             </div>
         </div>
@@ -239,7 +239,7 @@
                 <!--</div>-->
                 </div>
                 <div class="modal-footer">
-                    <a href="#myModal" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(1)" class="btn btn-default" style="float: left" role="button">Back</a><a onclick="privacy_proceed()" class="btn btn-info" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();  hide_modal_progress();">Close</button>
+                    <a href="#myModal" data-toggle="modal" data-dismiss="modal" onclick="update_ed(); update_modal_progress(1)" class="btn btn-default" style="float: left" role="button">Back</a><a onclick="privacy_proceed()" class="btn btn-info" role="button">Next</a><button type="button" class="btn btn-default" onclick="privacy_close();">Close</button>
                     <!--<a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(3)" class="btn btn-info" role="button">Next</a> -->
                 </div>
               </div>
@@ -423,7 +423,8 @@
 
     <script type="text/javascript">
         var PSI_INTRO_URL = "{% url 'viewContentPage' 'psiIntroduction.html' %}";
-
+        // setting interactive flag for javascript file
+        var interactive = false;
     </script>
 
     <script type="text/javascript" src="{% static "code/interface.js" %}?t={% now "u" %}"></script>
