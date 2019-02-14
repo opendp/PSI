@@ -1,35 +1,34 @@
-<!DOCTYPE html>
-<html>
+<!-- templates/registration/login.html -->
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-    <!-- Linking to Javascript/CSS libraries -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% block title %}Login{% endblock %}
 
-    <link rel="stylesheet" type="text/  css" href="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/css/bootstrap-slider.min.css">
-    <script type="text/javascript" src="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/bootstrap-slider.min.js"></script>
+{% block content %}
+
+        <header>
+            <table style="width:100%">
+
+              <tr>
+                <td style='width:60%'>
+                    <div title="This is the name, in Dataverse, of the selected example dataset." id="datasetName" style="text-align:center;">
+                        <h2 style="display:inline;">PSI (&Psi;): A Private Data Sharing Interface</h2>
+                      </div>
+                </td>
+              </tr>
+            </table>
+
+         </header>
+
+<h2>Login</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button class="btn btn-primary" type="submit">Login</button>
+</form>
+<p><a href="{% url 'signup' %}">Sign up</a></p>
+<p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+<p><a href="{% url 'test_user' %}">Log in as test user</a></p>
 
 
-    <title>Budgeting Tool</title>
-
-</head>
-
-<body>
-
-  <h2>Login</h2>
-
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
-
-  Why is nothing else showing up
-
-  <a href="{% url 'register' %}">Register</a>
-
-</body>
-
-</html>
+{% endblock %}

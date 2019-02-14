@@ -40,9 +40,14 @@
 </head>
 <body>
 
-{% block main_content %}
-(main content)
-{% endblock %}
+
+    <main>
+        {% block main_content %}
+        {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
 
 </body>
 
