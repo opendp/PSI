@@ -1,0 +1,78 @@
+#form-wrapper {     
+    width: 300px;           /* Set this to your convenience */
+    height: 200px;          /* Set this to your convenience */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -250px;     /* Half of height */
+    margin-left: -150px;     /* Half of width */
+}
+
+
+
+.login-p{
+  font-size:12px;
+  text-decoration: none;
+  color:#2672ae;
+}
+
+h1{
+  font-size:1.5em;
+  color:#525252;
+}
+
+.box{
+  text-align:center;
+  background:white;
+  width:300px;
+  height: 250px;
+  border-radius:6px;
+  margin: 0 auto 0 auto;
+  padding:0px 0px 70px 0px;
+  border: #2980b9 4px solid; 
+  position: absolute;
+  top:25%;
+  left: 45%
+}
+
+
+.login-btn{
+  background:#2ecc71;
+  width:125px;
+  padding-top:5px;
+  padding-bottom:5px;
+  color:white;
+  border-radius:4px;
+  border: #27ae60 1px solid;
+  
+  margin-top:20px;
+  margin-bottom:20px;
+  float:left;
+  margin-left:16px;
+  font-weight:800;
+  font-size:0.8em;
+}
+
+.login-btn:hover{
+  background:#2CC06B; 
+}
+
+#login-btn2{
+  float:left;
+  background:#3498db;
+  width:125px;  padding-top:5px;
+  padding-bottom:5px;
+  color:white;
+  border-radius:4px;
+  border: #2980b9 1px solid;
+  
+  margin-top:20px;
+  margin-bottom:20px;
+  margin-left:10px;
+  font-weight:800;
+  font-size:0.8em;
+}
+
+#btn2:hover{ 
+background:#3594D2; 
+}

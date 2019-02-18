@@ -2,8 +2,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Login{% endblock %}
-
 {% block content %}
 
         <header>
@@ -20,15 +18,27 @@
 
          </header>
 
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button class="btn btn-primary" type="submit">Login</button>
+
+
+<form id="loginForm" method="post">
+  <div class="box">
+    <h1>Log in</h1>
+      {% csrf_token %}
+      {{ form.as_p }}
+
+    <!-- <button class="btn btn-success" type="submit">Login</button> -->
+
+    <a href="#" onclick="document.getElementById('loginForm').submit()"><div class="login-btn">Sign In</div></a> <!-- End Btn -->
+
+    <a href="{% url 'signup' %}"><div id="login-btn2">Sign Up</div></a> <!-- End Btn2 -->
+
+    <p class="login-p">Forgot your password? <a href="{% url 'password_reset' %}" style="color:#f1c40f;">Click Here!</a>
+
+    <p class="login-p">Log in as test user <a href="{% url 'test_user' %}" style="color:#f1c40f;"">here</a>
+    
+  </div> <!-- End Box -->
+  
 </form>
-<p><a href="{% url 'signup' %}">Sign up</a></p>
-<p><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
-<p><a href="{% url 'test_user' %}">Log in as test user</a></p>
 
 
 {% endblock %}
