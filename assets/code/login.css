@@ -29,10 +29,10 @@ h1{
   border-radius:6px;
   margin: 0 auto 0 auto;
   padding:0px 0px 70px 0px;
-  border: #2980b9 4px solid; 
-  position: absolute;
+  border: #64867f 4px solid; 
+  position: fixed;
   top:25%;
-  left: 45%
+  left: 42%
 }
 
 
