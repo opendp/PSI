@@ -5,6 +5,7 @@ class DataSet(models.Model):
 	description = models.TextField()
 	creators = models.TextField()
 	file_name = models.TextField()
+	permission = models.IntegerField(default = 1, null=True)
 
 	class Meta:
 		ordering = ['title']
