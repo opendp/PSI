@@ -10,14 +10,14 @@ from .forms import CustomUserCreationForm
 
 class sign_up(generic.CreateView):
     form_class = CustomUserCreationForm
-    success_url = reverse_lazy('interface')
+    success_url = reverse_lazy('datasets')
     template_name = 'registration/signup.html'
 
 def test_user(request):
 	user = authenticate(request, username='test', password='adminadmin')
 	if user is not None:
 		login(request, user)
-		return redirect('interface')
+		return redirect('datasets')
 		# interface(request)
 	else:
 		return render(request, 'login.html')

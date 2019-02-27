@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Data sets{% endblock %}
+
+{% block content %}
+
+Made it to the dataset page!
+
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ user.username }}
+        <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="{% url "logout" %}">Logout</a></li>
+    </ul>
+</div>
+
+{% for set in sets %}
+{{set.title}}
+{% endfor %}
+
+{% endblock %}

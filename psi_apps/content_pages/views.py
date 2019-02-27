@@ -3,6 +3,7 @@ from os.path import join, normpath, split
 # from django.conf import settings
 from django.conf import settings
 from django.urls import reverse
+from .models import DataSet
 from django.views.decorators.cache import cache_page
 from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -18,6 +19,11 @@ def view_about_page(request):
     static_about_page = join(settings.STATIC_URL, 'about', 'index.html')
 
     return HttpResponseRedirect(static_about_page)
+
+@login_required(login_url='login')
+def datasets(request):
+    sets = DataSet.objects.all()
+    return render(request, 'datasets.html', {'sets':sets})
 
 @login_required(login_url='login')
 def interface(request):

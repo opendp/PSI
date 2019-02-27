@@ -30,9 +30,13 @@ urlpatterns = [
     # Serve interactive queries
     re_path(r'^interactive$', views.interactive, name='interactive'),
 
+    # Serve page to select datasets
+    re_path(r'^datasets$', views.datasets, name='datasets'),
+
     # Serve the home page
     #
     re_path(r'^', views.interface, name='interface'),
+
 
     # re_path(r'^%s' % views.ROOK_FILES_PATH, # 'rook-files/'
     # 	views.view_rook_file_passthrough,

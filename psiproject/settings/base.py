@@ -56,7 +56,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'psiproject.urls'
 
-LOGIN_REDIRECT_URL = 'interface'
+LOGIN_REDIRECT_URL = 'datasets'
 LOGOUT_REDIRECT_URL = 'login'
 
 TEMPLATES = [
@@ -122,7 +122,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static  files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
