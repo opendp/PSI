@@ -4,19 +4,27 @@
 
 {% block content %}
 
-Made it to the dataset page!
 
-<div class="dropdown">
+<form action="content-pages/interface" method="post">
+	<div class="form-group">
+    	<label for="exampleFormControlSelect1">Select the data set you would like to work on below</label>
+    	<select class="form-control" id="exampleFormControlSelect1">
+    		{% for set in sets %}
+				<option id="{{set.title}}">{{set.title}}</option>
+			{% endfor %}	
+		</select>
+  	</div>
+  <button class="btn btn-primary" type="submit">select</button>
+</form>
+
+<!-- <div class="dropdown">
     <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{ user.username }}
         <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
         <li><a href="{% url "logout" %}">Logout</a></li>
     </ul>
-</div>
+</div> -->
 
-{% for set in sets %}
-{{set.title}}
-{% endfor %}
 
 {% endblock %}
