@@ -7,10 +7,10 @@
 
 <form action="content-pages/interface" method="post">
 	<div class="form-group">
-    	<label for="exampleFormControlSelect1">Select the data set you would like to work on below</label>
-    	<select class="form-control" id="exampleFormControlSelect1">
+    	<label for="exampleFormControlSelect2">Select the data set you would like to work on below</label>
+    	<select class="form-control" id="exampleFormControlSelect2">
     		{% for set in sets %}
-				<option id="{{set.title}}">{{set.title}}</option>
+				<option id="{{set.id}}"> {{set.title}}: {{set.description }} </option>
 			{% endfor %}	
 		</select>
   	</div>

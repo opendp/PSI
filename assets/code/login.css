@@ -21,7 +21,7 @@ h1{
   color:#525252;
 }
 
-.box{
+.loginbox{
   text-align:center;
   background:white;
   width:300px;
@@ -32,7 +32,21 @@ h1{
   border: #64867f 4px solid; 
   position: fixed;
   top:25%;
-  left: 42%
+  left: 43%
+}
+
+.regbox{
+  text-align:center;
+  background:white;
+  width:500px;
+  height: 400px;
+  border-radius:6px;
+  margin: 0 auto 0 auto;
+  padding:0px 0px 70px 0px;
+  border: #64867f 4px solid; 
+  position: fixed;
+  top:25%;
+  left: 43%
 }
 
 

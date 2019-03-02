@@ -4,12 +4,14 @@
 
 {% block content %}
 
-<h2>Sign up</h2>
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button class="btn btn-primary" type="submit">Register</button>
+<form id="loginForm" method="post">
+	<div class="regbox">
+    	<h1>Register</h1>
+  		{% csrf_token %}
+  		{{ form.as_p }}
+  		<button class="btn btn-primary" type="submit">Register</button>
+  	</div>
 </form>
 
 <p><a href="{% url 'login' %}">Back to homepage</a></p>
