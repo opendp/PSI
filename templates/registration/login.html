@@ -23,8 +23,14 @@
 <form id="loginForm" method="post">
   <div class="loginbox">
     <h1>Log in</h1>
-      {% csrf_token %}
-      {{ form.as_p }}
+ <!--      {% csrf_token %}
+      {{ form.as_p }} -->
+
+    {% for field in form %}
+        <p><label for="{{ field.id_for_label }}">{{ field.html_name }}: </label>
+          <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" maxlength="30"> </p>
+                {{ field.errors }}
+    {% endfor %}
 
     <!-- <button class="btn btn-success" type="submit">Login</button> -->
 

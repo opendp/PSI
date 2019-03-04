@@ -4,16 +4,67 @@
 
 {% block content %}
 
+<!-- <form role="form" class="form-horizontal" method="post" >{% csrf_token %}
+    <div class="form-group">
+        {% for field in form %}
+            <div class="input-group">
+                <span class="input-group-addon" style="background-color:#b77b48; color:white"><span class="glyphicon glyphicon-user"></span></span>
+                <input class="form-control" id="{{ field.id_for_label }}" maxlength="30" name="{{ field.html_name }}" value="{{ field.value }}" type="text" /> 
+                {{ field.errors }}
+            </div>
+        {% endfor %}
+        <input type="submit" class="btn btn-primary" value="login" />
+        <input type="hidden" name="next" value="{{ next }}" />
+    </div>
+</form>
 
-<form id="loginForm" method="post">
+
+ -->
+
+ <header>
+    <table style="width:100%">
+
+      <tr>
+        <td style='width:60%'>
+            <div title="This is the name, in Dataverse, of the selected example dataset." id="datasetName" style="text-align:center;">
+                <h2 style="display:inline;">PSI (&Psi;): A Private Data Sharing Interface</h2>
+              </div>
+        </td>
+      </tr>
+    </table>
+
+ </header>
+
+<form id="regForm" method="post">
 	<div class="regbox">
     	<h1>Register</h1>
-  		{% csrf_token %}
-  		{{ form.as_p }}
-  		<button class="btn btn-primary" type="submit">Register</button>
+
+  		{% for field in form %}
+        <p>
+        	{% if field.html_name == "password1" %}
+        		<label for="{{ field.id_for_label }}">Password: </label>
+        		<input id="{{ field.id_for_label }}" type="password" name="{{ field.html_name }}" maxlength="30">
+        	{% elif field.html_name == "password2" %}
+        		<label for="{{ field.id_for_label }}">Confirm passord: </label>
+        		<input id="{{ field.id_for_label }}" type="password" name="{{ field.html_name }}" maxlength="30">
+        	{% else %}
+        		<label for="{{ field.id_for_label }}">{{ field.html_name }}: </label>
+        		<input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" maxlength="30">
+        	{% endif %}
+          	
+        </p>
+    	{% endfor %}
+    	<a onclick="document.getElementById('regForm').submit()" class="reg-btn">Register</a> 
+  		<!-- <button class="btn btn-primary" type="submit">Register</button> -->
   	</div>
 </form>
 
 <p><a href="{% url 'login' %}">Back to homepage</a></p>
+
+	{% for error in form.errors %}
+  		<div class="alert alert-danger">
+  			{{ error }} field is required
+  		</div>
+  	{% endfor %}
 
 {% endblock %}

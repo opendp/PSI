@@ -8,37 +8,29 @@
     margin-left: -150px;     /* Half of width */
 }
 
-
-
-.login-p{
-  font-size:12px;
-  text-decoration: none;
-  color:#2672ae;
-}
-
 h1{
   font-size:1.5em;
   color:#525252;
 }
 
-.loginbox{
+.regbox{
   text-align:center;
   background:white;
-  width:300px;
-  height: 250px;
+  width:500px;
+  height: 280px;
   border-radius:6px;
   margin: 0 auto 0 auto;
   padding:0px 0px 70px 0px;
   border: #64867f 4px solid; 
   position: fixed;
   top:25%;
-  left: 43%
+  left: 33%
 }
 
-
-.login-btn{
+a.reg-btn{
   background:#2ecc71;
-  width:125px;
+  padding-left:30px;
+  padding-right: 30px;
   padding-top:5px;
   padding-bottom:5px;
   color:white;
@@ -47,32 +39,13 @@ h1{
   
   margin-top:20px;
   margin-bottom:20px;
-  float:left;
-  margin-left:16px;
+  float:center;
   font-weight:800;
   font-size:0.8em;
 }
 
-.login-btn:hover{
+a.reg-btn:hover, a.reg-btn:active{
+  text-decoration: none;
   background:#2CC06B; 
 }
 
-#login-btn2{
-  float:left;
-  background:#3498db;
-  width:125px;  padding-top:5px;
-  padding-bottom:5px;
-  color:white;
-  border-radius:4px;
-  border: #2980b9 1px solid;
-  
-  margin-top:20px;
-  margin-bottom:20px;
-  margin-left:10px;
-  font-weight:800;
-  font-size:0.8em;
-}
-
-#btn2:hover{ 
-background:#3594D2; 
-}
