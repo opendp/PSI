@@ -703,10 +703,13 @@ formatted_release_multi <- function(release_single, nameslist) {
 	single_stat_release$algorithm$arguments <- list()
 	single_stat_release$algorithm$formula <- single_stat_release_data$formula
 
-	single_stat_release$accuracy <- single_stat_release_data$result$accuracy
+	single_stat_release$accuracy <- list()
+	single_stat_release$accuracy$error <- single_stat_release_data$result$accuracy
+	single_stat_release$accuracy$confidence_interval <- single_stat_release_data$result$interval
+	single_stat_release$accuracy$alpha <- single_stat_release_data$alpha
 
 	single_stat_release$privacy_loss <- list()
-	single_stat_release$privacy_loss$definition <- ""
+	single_stat_release$privacy_loss$definition <- "approx_dp"
 	single_stat_release$privacy_loss$epsilon <- single_stat_release_data$epsilon
 	single_stat_release$privacy_loss$delta <- single_stat_release_data$delta
 	single_stat_release$privacy_loss$rho <- ""
