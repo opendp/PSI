@@ -67,6 +67,9 @@ def init_db(context):
     print("about to run init_db")
     run_local_cmd(cmd, init_db.__doc__)
 
+    create_test_user(context)
+    create_superuser(context)
+
 @task
 def run_web(context):
     """Run the django web app"""
@@ -122,7 +125,8 @@ def create_test_user(context):
     from psi_apps.psi_auth.models import CustomUser
     import random
 
-    test_username = 'test_user'
+    test_username = 'test'
+    password = 'adminadmin'
 
     #User.objects.filter(username=dev_admin_username).delete()
     if CustomUser.objects.filter(username=test_username).count() > 0:
@@ -136,8 +140,8 @@ def create_test_user(context):
                           is_staff=True,
                           is_active=True,
                           is_superuser=False)
-    new_user.set_password(test_username)
+    new_user.set_password(password)
     new_user.save()
 
     print('test user created: "%s"' % test_username)
-    print('password: "%s"' % test_username)
+    print('password: "%s"' % password)
