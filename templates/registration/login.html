@@ -23,20 +23,20 @@
 <form id="loginForm" method="post">
   <div class="loginbox">
     <h1>Log in</h1>
- <!--      {% csrf_token %}
+ <!--      
       {{ form.as_p }} -->
-
+      {% csrf_token %}
     {% for field in form %}
-        <p><label for="{{ field.id_for_label }}">{{ field.html_name }}: </label>
-          <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" maxlength="30"> </p>
-                {{ field.errors }}
+        <p><label for="{{ field.id_for_label }}" class="ufirst"> {{ field.html_name }}: </label>
+          <input id="{{ field.id_for_label }}" type="text" name="{{ field.html_name }}" maxlength="30" required> </p>
     {% endfor %}
 
     <!-- <button class="btn btn-success" type="submit">Login</button> -->
 
-    <a onclick="document.getElementById('loginForm').submit()"><div class="login-btn">Sign In</div></a> <!-- End Btn -->
+    <button class="btn login-btn" type="submit">Sign in </button>
 
-    <a href="{% url 'signup' %}"><div id="login-btn2">Sign Up</div></a> <!-- End Btn2 -->
+
+    <a href="{% url 'signup' %}"><div id="login-btn2">Sign Up</div></a>  <!-- End Btn2 -->
 
     <p class="login-p">Forgot your password? <a href="{% url 'password_reset' %}" style="color:#f1c40f;">Click Here!</a>
 

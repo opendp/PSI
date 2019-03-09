@@ -54,7 +54,8 @@ h1{
 }
 
 .login-btn:hover{
-  background:#2CC06B; 
+  background:#2ecc71;
+  color:white; 
 }
 
 #login-btn2{
@@ -75,4 +76,8 @@ h1{
 
 #btn2:hover{ 
 background:#3594D2; 
+}
+
+.ufirst{
+  text-transform: capitalize;
 }

@@ -17,7 +17,7 @@ h1{
   text-align:center;
   background:white;
   width:500px;
-  height: 280px;
+  height: 320px;
   border-radius:6px;
   margin: 0 auto 0 auto;
   padding:0px 0px 70px 0px;
@@ -27,7 +27,7 @@ h1{
   left: 33%
 }
 
-a.reg-btn{
+/*a.reg-btn{
   background:#2ecc71;
   padding-left:30px;
   padding-right: 30px;
@@ -47,5 +47,32 @@ a.reg-btn{
 a.reg-btn:hover, a.reg-btn:active{
   text-decoration: none;
   background:#2CC06B; 
+}*/
+
+.login-p{
+  font-size:12px;
+  text-decoration: none;
+  color:#2672ae;
+}
+
+.ufirst {
+  text-transform: capitalize;
+}
+
+.reg-btn{
+    background:#2ecc71;
+  padding-left:30px;
+  padding-right: 30px;
+  padding-top:5px;
+  padding-bottom:5px;
+  color:white;
+  border-radius:4px;
+  border: #27ae60 1px solid;
+  
+  margin-bottom:10px;
+  float:center;
+  font-weight:800;
+  font-size:0.8em;
+
 }
 
