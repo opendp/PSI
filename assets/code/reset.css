@@ -1,0 +1,56 @@
+#form-wrapper {     
+    width: 300px;           /* Set this to your convenience */
+    height: 200px;          /* Set this to your convenience */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -250px;     /* Half of height */
+    margin-left: -150px;     /* Half of width */
+}
+
+h1{
+  font-size:1.5em;
+  color:#525252;
+}
+
+.resetformbox{
+  text-align:center;
+  background:white;
+  width:300px;
+  height: 170px;
+  border-radius:6px;
+  margin: 0 auto 0 auto;
+  padding:0px 0px 70px 0px;
+  border: #64867f 4px solid; 
+  position: fixed;
+  top:25%;
+  left: 43%
+}
+
+.login-p{
+  font-size:12px;
+  text-decoration: none;
+  color:#2672ae;
+}
+
+.ufirst {
+  text-transform: capitalize;
+}
+
+.reset-btn{
+  background:#2ecc71;
+  padding-left:30px;
+  padding-right: 30px;
+  padding-top:5px;
+  padding-bottom:5px;
+  color:white;
+  border-radius:4px;
+  border: #27ae60 1px solid;
+  
+  margin-bottom:10px;
+  float:center;
+  font-weight:800;
+  font-size:0.8em;
+
+}
+
