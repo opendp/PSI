@@ -16,11 +16,6 @@ urlpatterns = [
     re_path(r'^getData$', views.getData, name='getData'),
     re_path(r'^getXML$', views.getXML, name='getXML'),
 
-
-    re_path(r'^content/$',
-            views.view_content_page,
-            name='viewContentPageBase'),
-
     # serve templates from the "/templates/content"
     #    directory in this project
     #
@@ -28,7 +23,10 @@ urlpatterns = [
             views.view_content_page,
             name='viewContentPage'),
 
-
+    re_path(r'^content/$',
+            views.view_content_page,
+            name='viewContentPageBase'),
+    
     # Serve interactive queries
     re_path(r'^interactive$', views.interactive, name='interactive'),
 
