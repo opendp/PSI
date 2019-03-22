@@ -27,6 +27,7 @@ def datasets(request):
 
 @login_required(login_url='login')
 def interface(request):
+    print("made it to interface")
     """Return the interface.html template"""
     info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
                      CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
@@ -65,8 +66,10 @@ def view_content_page(request, page_name='psiIntroduction.html'):
 @login_required(login_url='login')
 def getData(request):
     """Return a default/test preprocess file: preprocess_4_v1-0.json"""
+    print("Getting data")
     fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
                  'preprocess_4_v1-0.json')
+    print("from the following location\n", fpath)
 
     json_info = load_file_as_json(fpath)
     if not json_info.success:
@@ -84,10 +87,14 @@ def getXML(request):
     """Return the default/test xml data: pumsmetaui.xml"""
     #file = open(os.path.join(settings.BASE_DIR, "data/pumsmetaui.xml"))
     #return HttpResponse(file.read())
+    print("Getting XML")
     fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
                  'pumsmetaui.xml')
 
+    print("Path\n", fpath)
+
     file_info = load_file_contents(fpath)
+
     if not file_info.success:
         return JsonResponse(get_json_error(file_info.err_msg))
 
