@@ -47,6 +47,20 @@
   		<button class="btn btn-sm reg-btn" type="submit">Register</button>
   		 <p class="reg-p">Already have an account? <a href="{% url 'login' %}" style="color:#f1c40f;">Log in</a>
   	</div>
+  	{% if form.errors %}
+	    {% for field in form %}
+	        {% for error in field.errors %}
+	            <div class="alert alert-danger">
+	                <strong>{{ error|escape }}</strong>
+	            </div>
+	        {% endfor %}
+	    {% endfor %}
+	    {% for error in form.non_field_errors %}
+	        <div class="alert alert-danger">
+	            <strong>{{ error|escape }}</strong>
+	        </div>
+	    {% endfor %}
+	{% endif %}
 </form>
 
 
