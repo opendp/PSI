@@ -2,7 +2,9 @@
 
 This is a repository for the frontend, backend, and cloud deployment of the PSI system.  For the R library of algorithms, see the repository PSI-Library.
 
+- Deployment: http://psiprivacy.org/about
 - Reference: https://privacytools.seas.harvard.edu/project-description
+- System Paper: https://arxiv.org/abs/1609.04340
 
 To run locally:
 

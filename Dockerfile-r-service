@@ -10,7 +10,7 @@ LABEL organization="PSI" \
 # Install R openssl library
 # -------------------------------------
 #RUN R -e 'install.packages("openssl", repos="http://cran.rstudio.org")'
-RUN R -e 'library(devtools);install_github("IQSS/PSI-Library")'
+RUN R -e 'library(devtools);install_github("privacytoolsproject/PSI-Library")'
 
 # -------------------------------------
 # Copy the repo over
