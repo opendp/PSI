@@ -229,6 +229,7 @@ var number_of_modals = 5;
 // determine whether in initial sequence of modals
 var initial_sequence = true;
 
+
 // Set default variables types according to metadata
 function initTypes() {
   // Boolean for production/file supplied/online or not

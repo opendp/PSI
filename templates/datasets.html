@@ -4,11 +4,10 @@
 
 {% block content %}
 
-
-<form action="interface" method="post">
+<form action="interface" method="post" onsubmit="return selectSet()">
 	<div class="form-group">
     	<label for="exampleFormControlSelect2">Select the data set you would like to work on below</label>
-    	<select class="form-control" id="exampleFormControlSelect2">
+    	<select class="form-control" id="selectset" name="selectset" required>
     		{% for set in sets %}
 				<option id="{{set.id}}"> {{set.title}}: {{set.description }} </option>
 			{% endfor %}	

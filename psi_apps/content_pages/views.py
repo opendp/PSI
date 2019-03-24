@@ -31,10 +31,22 @@ def interface(request):
     info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
                      CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
 
-
     return render(request,
-                  'interface.html',
-                  info_dict)
+                'interface.html',
+                info_dict)
+    # if request.method =="POST":
+
+    #     set_id = request.POST.get('selectset')
+    #     print("id:\n", set_id)
+
+    #     info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
+    #                  CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
+
+    #     return render(request,
+    #                 'interface.html',
+    #                 info_dict)
+    # else:
+    #     return HttpResponseRedirect('auth/login')
 
 @login_required(login_url='login')
 def interactive(request):
