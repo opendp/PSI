@@ -5,7 +5,7 @@ from django.conf import settings
 from django.urls import reverse
 from .models import DataSet
 from django.views.decorators.cache import cache_page
-from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
+from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse, HttpResponseNotFound
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from psi_apps.utils.file_helper import load_file_as_json, load_file_contents
@@ -28,25 +28,24 @@ def datasets(request):
 @login_required(login_url='login')
 def interface(request):
     """Return the interface.html template"""
+    # info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
+    #                  CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
+
+    # return render(request,
+    #             'interface.html',
+    #             info_dict)
     info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
                      CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
+
+    if request.method =="POST":
+
+        set_id = request.POST.get('selectset')
+        request.session['active_set_id'] = set_id
+        print("id:\n", set_id)
 
     return render(request,
                 'interface.html',
                 info_dict)
-    # if request.method =="POST":
-
-    #     set_id = request.POST.get('selectset')
-    #     print("id:\n", set_id)
-
-    #     info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
-    #                  CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
-
-    #     return render(request,
-    #                 'interface.html',
-    #                 info_dict)
-    # else:
-    #     return HttpResponseRedirect('auth/login')
 
 @login_required(login_url='login')
 def interactive(request):
@@ -77,8 +76,15 @@ def view_content_page(request, page_name='psiIntroduction.html'):
 @login_required(login_url='login')
 def getData(request):
     """Return a default/test preprocess file: preprocess_4_v1-0.json"""
-    fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
-                 'preprocess_4_v1-0.json')
+    if 'active_set_id' in request.session.keys():
+        dataset = DataSet.objects.get(id=request.session['active_set_id'])
+        print(dataset)
+        file_name = dataset.json_file
+    else:
+        return HttpResponseNotFound("no active data set")
+
+    fpath = join(settings.PSI_DATA_DIRECTORY_PATH, file_name)
+                 #'preprocess_4_v1-0.json')
     json_info = load_file_as_json(fpath)
     if not json_info.success:
         return JsonResponse(get_json_error(json_info.err_msg))
@@ -95,8 +101,14 @@ def getXML(request):
     """Return the default/test xml data: pumsmetaui.xml"""
     #file = open(os.path.join(settings.BASE_DIR, "data/pumsmetaui.xml"))
     #return HttpResponse(file.read())
-    fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
-                 'pumsmetaui.xml')
+    if 'active_set_id' in request.session.keys():
+        dataset = DataSet.objects.get(id=request.session['active_set_id'])
+        file_name = dataset.xml_file
+    else:
+        return HttpResponseNotFound("no active data set")
+
+    fpath = join(settings.PSI_DATA_DIRECTORY_PATH, file_name)
+                 #'pumsmetaui.xml')
 
     file_info = load_file_contents(fpath)
 
