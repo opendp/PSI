@@ -41,7 +41,7 @@ def interface(request):
 
         set_id = request.POST.get('selectset')
         request.session['active_set_id'] = set_id
-        print("id:\n", set_id)
+        # print("id:\n", set_id)
 
     return render(request,
                 'interface.html',
@@ -78,7 +78,7 @@ def getData(request):
     """Return a default/test preprocess file: preprocess_4_v1-0.json"""
     if 'active_set_id' in request.session.keys():
         dataset = DataSet.objects.get(id=request.session['active_set_id'])
-        print(dataset)
+        # print(dataset)
         file_name = dataset.json_file
     else:
         return HttpResponseNotFound("no active data set")
