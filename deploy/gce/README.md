@@ -29,30 +29,30 @@ git push # push it to github
 #### Step 2
 
 - Go to Travis.  
-  - https://www.travis-ci.com/TwoRavens/PSI/builds
+  - https://www.travis-ci.com/privacytoolsproject/PSI/builds
   
 - When Travis finishes, the master image should be updated here:
-  - https://hub.docker.com/r/tworavens/psi-web/tags/
+  - https://hub.docker.com/r/privacytoolsproject/psi-web/tags/
 
 - If you've updated the Rook section, also look for this image to be complete:
-  - https://hub.docker.com/r/tworavens/psi-r-service/tags/
-  or check build status here: https://hub.docker.com/r/tworavens/psi-r-service/builds/
-  - Note: This build starts on Docker -- _after_ the (previous build)[https://hub.docker.com/r/tworavens/psi-web/tags/] is completed
+  - https://hub.docker.com/r/privacytoolsproject/psi-r-service/tags/
+  or check build status here: https://hub.docker.com/r/privacytoolsproject/psi-r-service/builds/
+  - Note: This build starts on Docker -- _after_ the (previous build)[https://hub.docker.com/r/privacytoolsproject/psi-web/tags/] is completed
 
 
 ## Docker images
 
-The docker images are being pulled from [hub.docker](https://hub.docker.com/r/tworavens).  
-- In general, docker images are rebuilt (via [Travis](https://www.travis-ci.com/TwoRavens/PSI)), whenever code is checked into the `develop` or `master` branches.
-- The docker images deployed on gce are from the master branch and tagged as `master`, as in `tworavens/psi-web:master`, etc.
+The docker images are being pulled from [hub.docker](https://hub.docker.com/r/privacytoolsproject).  
+- In general, docker images are rebuilt (via [Travis](https://www.travis-ci.com/privacytoolsproject/PSI)), whenever code is checked into the `develop` or `master` branches.
+- The docker images deployed on gce are from the master branch and tagged as `master`, as in `privacytoolsproject/psi-web:master`, etc.
 
 Docker Image list:
 
-- [tworavens/psi-web](https://hub.docker.com/r/tworavens/psi-web/tags/)
+- [privacytoolsproject/psi-web](https://hub.docker.com/r/tworavens/psi-web/tags/)
   - Contains the main web service which routes calls to rook.
-- [tworavens/psi-r-service](https://hub.docker.com/r/tworavens/psi-r-service/tags/)
+- [privacytoolsproject/psi-r-service](https://hub.docker.com/r/tworavens/psi-r-service/tags/)
   - Rook applications, including the core PSI code is run here
-- [tworavens/psi-nginx](https://hub.docker.com/r/tworavens/psi-nginx/tags/)
+- [privacytoolsproject/psi-nginx](https://hub.docker.com/r/tworavens/psi-nginx/tags/)
   - In deployment, nginx handles all requests, either sending them to psi-web, or handling static file* requests directly.  (* css, js, etc)
 
 
@@ -95,7 +95,7 @@ kubectl get secret psi-web-secrets
 #    
 mkdir psi-deploy
 cd psi-deploy
-wget https://raw.githubusercontent.com/TwoRavens/PSI/master/deploy/gce/psi-pod-with-svc.yml
+wget https://raw.githubusercontent.com/privacytoolsproject/PSI/master/deploy/gce/psi-pod-with-svc.yml
 
 # Start the service
 #
