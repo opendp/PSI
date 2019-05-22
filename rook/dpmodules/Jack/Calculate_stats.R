@@ -592,9 +592,35 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 
 		print(paste("good_objects_length: ", good_objects_length, sep=""))
 
-		for (i in 1:good_objects_length) {
-			append_release_to_file("metadata-pums.json", good_objects[[i]]$single_stat_release, good_objects[[i]]$variable, good_objects[[i]]$stat)
+		# open file connection
+		# Read current JSON file
+		#filepath <- paste("../data/", filename, sep="")
+		filepath <- paste(PSI_DATA_DIRECTORY_PATH, "metadata-pums.json", sep="")
+
+		if(!file.exists(filepath)){
+			fileConn<-file(filepath)
+			writeLines('{"data":{"previous":0,"variables":{}}}', fileConn)	# create json file with only {}
+			close(fileConn)
+			#print(paste("ERROR in 'Calculate_stats.R -> append_release_to_file'!  File not found! ", filepath, sep=""))
 		}
+
+		filedata <- fromJSON(filepath)
+
+		# determine the batch ID
+		batch_id <- filedata$data$previous + 1
+
+		for (i in 1:good_objects_length) {
+			filedata <- append_release_to_file(filedata, good_objects[[i]]$single_stat_release,
+				 good_objects[[i]]$variable, good_objects[[i]]$stat, batch_id)
+		}
+
+		# increment batch ID
+		filedata$data$previous <- batch_id
+
+		# Overwrite to file
+		fileconn <- file(filepath)
+		writeLines(toJSON(filedata), fileconn)
+		close(fileconn)
 
 	}
 	else{
@@ -612,72 +638,116 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 }
 
 formatted_release <- function(release, nameslist) {
-
 	# process each statistic in release
   num_of_stats <- length(release)
 	result <- vector("list", length = num_of_stats)
 
 	for (i in 1:num_of_stats) {
 		# retrieve data for current stat of interest
-		single_stat_release_data <- release[[i]]
-
-		single_stat_release <- list()
-
-		single_stat_release$release <- list()
-		single_stat_release$release$values <- single_stat_release_data$result$release
-
-		single_stat_release$post_process <- FALSE
-
-		single_stat_release$algorithm <- list()
-		single_stat_release$algorithm$name <- paste(single_stat_release_data$name, single_stat_release_data$mechanism, sep=" ")
-		single_stat_release$algorithm$arguments <- list()
-
-		single_stat_release$accuracy <- single_stat_release_data$result$accuracy
-
-		single_stat_release$privacy_loss <- list()
-		single_stat_release$privacy_loss$definition <- ""
-		single_stat_release$privacy_loss$epsilon <- single_stat_release_data$epsilon
-		single_stat_release$privacy_loss$delta <- single_stat_release_data$delta
-		single_stat_release$privacy_loss$rho <- ""
-
-		result_single <- list()
-		result_single$single_stat_release <- single_stat_release
-		result_single$variable <- single_stat_release_data$variable
-		result_single$stat <- single_stat_release_data$name
-
-		result[[i]] <- result_single
+		release_single <- release[[i]]
+		# identify whether uni or multivariate statistic
+		if (length(release_single$result$variable) > 1) {
+			result[[i]] <- formatted_release_multi(release_single, nameslist)
+		} else {
+			result[[i]] <- formatted_release_uni(release_single, nameslist)
+		}
 	}
 
 	return(result)
 }
 
-append_release_to_file <- function(filename, release_object, variable, statname) {
-	# Read current JSON file
-	#filepath <- paste("../data/", filename, sep="")
-	filepath <- paste(PSI_DATA_DIRECTORY_PATH, filename, sep="")
+formatted_release_uni <- function(release_single, nameslist) {
+	single_stat_release_data <- release_single
 
-	if(!file.exists(filepath)){
-		fileConn<-file(filepath)
-		writeLines(c("{}"), fileConn)	# create json file with only {}
-		close(fileConn)
-		#print(paste("ERROR in 'Calculate_stats.R -> append_release_to_file'!  File not found! ", filepath, sep=""))
+	single_stat_release <- list()
+
+	single_stat_release$release <- list()
+	single_stat_release$release$values <- single_stat_release_data$result$release
+
+	single_stat_release$post_process <- FALSE
+
+	single_stat_release$algorithm <- list()
+	single_stat_release$algorithm$name <- paste(single_stat_release_data$name, single_stat_release_data$mechanism, sep=" ")
+	single_stat_release$algorithm$arguments <- list()
+
+	single_stat_release$accuracy <- single_stat_release_data$result$accuracy
+
+	single_stat_release$privacy_loss <- list()
+	single_stat_release$privacy_loss$definition <- ""
+	single_stat_release$privacy_loss$epsilon <- single_stat_release_data$epsilon
+	single_stat_release$privacy_loss$delta <- single_stat_release_data$delta
+	single_stat_release$privacy_loss$rho <- ""
+
+	result_single <- list()
+	result_single$single_stat_release <- single_stat_release
+	result_single$variable <- single_stat_release_data$result$variable
+	result_single$stat <- single_stat_release_data$name
+
+	return(result_single)
+}
+
+formatted_release_multi <- function(release_single, nameslist) {
+	single_stat_release_data <- release_single
+
+	single_stat_release <- list()
+
+	single_stat_release$release <- list()
+	for (r in row.names(single_stat_release_data$result$release)) {
+		single_stat_release$release[r] <- single_stat_release_data$result$release[r, ]
 	}
 
-	filedata <- fromJSON(filepath)
+	single_stat_release$post_process <- FALSE
 
-	# Check if this type of stat has been released before for this variable
-	if (statname %in% attributes(filedata$data$variables[[variable]])$names) {
-		# append to currently existing category
-		current_length <- length(filedata$data$variables[[variable]][[statname]])
-		filedata$data$variables[[variable]][[statname]][[paste(statname, as.character(current_length), sep="")]] <- release_object
-	} else {
-		# create category if new release stat type
+	single_stat_release$algorithm <- list()
+	single_stat_release$algorithm$name <- paste(single_stat_release_data$name, single_stat_release_data$mechanism, sep=" ")
+	single_stat_release$algorithm$arguments <- list()
+	single_stat_release$algorithm$formula <- single_stat_release_data$formula
+
+	single_stat_release$accuracy <- list()
+	single_stat_release$accuracy$error <- single_stat_release_data$result$accuracy
+	single_stat_release$accuracy$confidence_interval <- single_stat_release_data$result$interval
+	single_stat_release$accuracy$alpha <- single_stat_release_data$alpha
+
+	single_stat_release$privacy_loss <- list()
+	single_stat_release$privacy_loss$definition <- "approx_dp"
+	single_stat_release$privacy_loss$epsilon <- single_stat_release_data$epsilon
+	single_stat_release$privacy_loss$delta <- single_stat_release_data$delta
+	single_stat_release$privacy_loss$rho <- ""
+
+	result_single <- list()
+	result_single$single_stat_release <- single_stat_release
+	result_single$variable <- paste(single_stat_release_data$result$variable, collapse="_")
+	result_single$stat <- single_stat_release_data$name
+
+	return(result_single)
+}
+
+
+append_release_to_file <- function(filedata, release_object, variable, statname, batch_id) {
+
+	finalstatname <- ""
+
+	# check if variable exists (mostly for multivariates)
+	if (!(variable %in% attributes(filedata$data$variables)$names)) {
+		filedata$data$variables[[variable]] <- list()
 		filedata$data$variables[[variable]][[statname]] <- list()
-		filedata$data$variables[[variable]][[statname]][[paste(statname, "0", sep="")]] <- release_object
+		finalstatname <- paste(statname, "0", sep="")
+	} else {
+		# Check if this type of stat has been released before for this variable
+		if (statname %in% attributes(filedata$data$variables[[variable]])$names) {
+			# append to currently existing category
+			current_length <- length(filedata$data$variables[[variable]][[statname]])
+			finalstatname <- paste(statname, as.character(current_length), sep="")
+		} else {
+			# create category if new release stat type
+			filedata$data$variables[[variable]][[statname]] <- list()
+			finalstatname <- paste(statname, "0", sep="")
+		}
 	}
+	# store the actaul stat itself
+	filedata$data$variables[[variable]][[statname]][[finalstatname]] <- release_object
+	# label the batch it is part of
+	filedata$data$variables[[variable]][[statname]][[finalstatname]]["batch"] <- batch_id
 
-	# Overwrite to file
-	fileconn <- file(filepath)
-	writeLines(toJSON(filedata), fileconn)
-	close(fileconn)
+	return(filedata)
 }

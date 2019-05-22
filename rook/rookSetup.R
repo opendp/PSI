@@ -50,7 +50,7 @@ source(paste(modulesPath,"updatedRttpd.R", sep=""))
 UsePackage <- TRUE
 if(!IS_PRODUCTION_MODE && UsePackage){
    library(devtools)
-   install_github("IQSS/PSI-Library")
+   install_github("privacytoolsproject/PSI-Library")
 }
 library(PSIlence)
 

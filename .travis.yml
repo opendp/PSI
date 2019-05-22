@@ -32,6 +32,11 @@ after_success:
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
     docker push tworavens/psi-web:master;
     fi
+  - if [ "$TRAVIS_BRANCH" == "61-deploy" ]; then
+    docker build -t tworavens/psi-web:master -f Dockerfile-web .;
+    docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push tworavens/psi-web:master;
+    fi
   - if [ "$TRAVIS_BRANCH" == "develop" ]; then
     docker build -t tworavens/psi-web:latest -f Dockerfile-web .;
     docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";

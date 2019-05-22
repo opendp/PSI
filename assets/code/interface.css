@@ -332,10 +332,18 @@ footer {
   display: none;
 }
 
-.modal {
+.opening_modal_back {
   top: 70px;
 }
 
 .opening_modal {
+  width: 70%;
+}
+
+.later_modal_back {
+  top: 70px
+}
+
+.later_modal {
   width: 70%;
 }

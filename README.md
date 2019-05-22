@@ -1,6 +1,10 @@
 # PSI - Private data Sharing Interface
 
+This is a repository for the frontend, backend, and cloud deployment of the PSI system.  For the R library of algorithms, see the repository PSI-Library.
+
+- Deployment: http://psiprivacy.org/about
 - Reference: https://privacytools.seas.harvard.edu/project-description
+- System Paper: https://arxiv.org/abs/1609.04340
 
 To run locally:
 
@@ -12,7 +16,9 @@ To run locally:
 2. Start rook:
 
       In the Terminal, run:
-
+        
+          # Note: To point to a local Haskell transform executable, use a line similar to
+          # export TRANSFORM_HASKELL_APP_PATH=/Users/Documents/Github/PrivateZelig/transformer/transformer-exe 
           fab run-rook
 
       Alternatively, in R, run:

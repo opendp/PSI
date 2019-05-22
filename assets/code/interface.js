@@ -22,9 +22,9 @@ var JSON_file = '{"rfunctions":[' +
      '{"statistic": "Probit Regression", "stat_info": "Release a probit regression on the group of variables", "statistic_type": [{"stype": "Multivar", "parameter": ["Regression"]}], "type_params_dict": {"General":["Outcome Variable"],"Numerical":["Lower Bound", "Upper Bound"],"Categorical":["Lower Bound", "Upper Bound"],"Boolean":[]},"requirements":["outcome_boolean"]},' +
     '{"statistic": "ATT with Matching", "stat_info": "Computes the average treatment effect on the treated with the option to first match the dataset", "statistic_type": [{"stype": "Multivar", "parameter": ["ATT"]}], "type_params_dict": {"General":["Outcome Variable", "Treatment Variable", "Matching Multiplier"],"Numerical":["Coarsening"],"Categorical":[],"Boolean":[]},"requirements":["outcome_boolean","two_booleans","three_vars"]},' +
      //'{"statistic": "Difference of Means", "stat_info": "Release a difference of means on the chosen variables", "statistic_type": [{"stype": "Multivar", "parameter": ["Outcome Variable", "Lower Bound", "Upper Bound"]}], "requirements":[]},' +
-    '{"statistic": "Quantile", "stat_info": "Release a cumulative distribution function at the given level of granularity (can extract median, percentiles, quartiles, etc from this).", "statistic_type": [{"stype": "Numerical", "parameter": ["Lower Bound", "Upper Bound", "Granularity"]}]} ],' +
+    '{"statistic": "Quantile", "stat_info": "Release a cumulative distribution function at the given level of granularity (can extract median, percentiles, quartiles, etc from this).", "statistic_type": [{"stype": "Numerical", "parameter": ["Lower Bound", "Upper Bound", "Number of Bins"]}]} ],' +
     '"type_label": [ {"stype": "Numerical", "type_info": "Data should be treated as numbers"}, {"stype": "Boolean", "type_info": "Data contains two possible categories"}, {"stype": "Categorical", "type_info": "Datapoints should be treated as categories/bins"} ],' +
-    '"parameter_info": [ {"parameter": "Lower Bound", "entry_type": "number", "pinfo": "Minimum value that the chosen variable can take on", "input_type": "text"}, {"parameter": "Upper Bound", "entry_type": "number", "pinfo": "Maximum value that the chosen variable can take on", "input_type": "text"}, {"parameter": "Number of Bins", "entry_type": "pos_integer", "pinfo": "Number of distinct categories the variable can take on", "input_type": "text"}, {"parameter": "Granularity", "entry_type": "pos_integer", "pinfo": "The minimum positive distance between two different records in the data", "input_type": "text"}, {"parameter": "Treatment Variable", "entry_type": "none", "pinfo": "Treatment variable in the model", "input_type": "multiple_choice_from_group_with_reqs"}, {"parameter": "Bin Names", "entry_type": "none", "pinfo": "Give the names of all the bins", "input_type": "text"}, {"parameter": "Outcome Variable", "entry_type": "none", "pinfo": "Outcome variable in the model", "input_type": "multiple_choice_from_group_with_reqs"}, {"parameter": "Coarsening", "entry_type": "pos_number", "pinfo": "Coarsening for coarsened exact matching", "input_type": "text"},{"parameter": "Matching Multiplier", "entry_type": "pos_int", "pinfo": "A positive integer indicating the structure of matched strata", "input_type": "text"} ] }';
+    '"parameter_info": [ {"parameter": "Lower Bound", "entry_type": "number", "pinfo": "Minimum value that the chosen variable can take on", "input_type": "text"}, {"parameter": "Upper Bound", "entry_type": "number", "pinfo": "Maximum value that the chosen variable can take on", "input_type": "text"}, {"parameter": "Number of Bins", "entry_type": "pos_integer", "pinfo": "Number of distinct categories the variable can take on", "input_type": "text"}, {"parameter": "Number of Bins", "entry_type": "pos_integer", "pinfo": "The minimum positive distance between two different records in the data", "input_type": "text"}, {"parameter": "Treatment Variable", "entry_type": "none", "pinfo": "Treatment variable in the model", "input_type": "multiple_choice_from_group_with_reqs"}, {"parameter": "Bin Names", "entry_type": "none", "pinfo": "Give the names of all the bins", "input_type": "text"}, {"parameter": "Outcome Variable", "entry_type": "none", "pinfo": "Outcome variable in the model", "input_type": "multiple_choice_from_group_with_reqs"}, {"parameter": "Coarsening", "entry_type": "pos_number", "pinfo": "Coarsening for coarsened exact matching", "input_type": "text"},{"parameter": "Matching Multiplier", "entry_type": "pos_int", "pinfo": "A positive integer indicating the structure of matched strata", "input_type": "text"} ] }';
 
 // Parses the function and varlist data structure
 var rfunctions = JSON.parse(JSON_file);
@@ -81,7 +81,7 @@ var variable_unselected_class =
 
 // toggle below for interactive query mode
 // Should only be true when called with interactiveInterface.html
-var interactive = false;
+// var interactive = false;
 var global_epsilon = 0.5;
 var global_delta = 0.000001;
 var global_beta = 0.05;
@@ -225,6 +225,9 @@ var types_for_vars = {};
 
 // Total number of modals for calculating percentage of modal progress bar
 var number_of_modals = 5;
+
+// determine whether in initial sequence of modals
+var initial_sequence = true;
 
 // Set default variables types according to metadata
 function initTypes() {
@@ -725,6 +728,7 @@ function submit_interactive(){
 				// end session somehow
 			}
 		}
+    document.getElementById("pdf-viewer-object").data = "/static/files/test.pdf";
 	}
 }
 
@@ -1129,7 +1133,28 @@ function add_variable_to_sidebar(variable) {
 }
 
 function remove_variable_from_sidebar(variable) {
-    $('#selection_sidebar_' + variable.replace(/\s/g, '_')).remove()
+    var currently_in_use = false;
+    if (!grouped_var_dict[variable]) {
+      for (var multikey in grouped_var_dict) {
+        // if current variable in use somewhere
+        if (grouped_var_dict[multikey].indexOf(variable) != -1) {
+          currently_in_use = true;
+          break;
+        }
+      }
+    }
+
+    if (currently_in_use) {
+      alert("This variable is currently part of a grouped variable. Please delete the grouped variable before trying again.");
+    } else {
+      var remove_index = uni_variable_list.indexOf(variable);
+      uni_variable_list.splice(remove_index, 1);
+      delete grouped_var_dict[variable];
+      remove_index = variable_list.indexOf(variable);
+      variable_list.splice(remove_index, 1);
+      delete_variable(variable);
+      $('#selection_sidebar_' + variable.replace(/\s/g, '_')).remove();
+    }
 }
 
 // Adding variables to the variable selection column
@@ -1471,7 +1496,7 @@ function make_bubble (variable) {
 
                   blank_bubble += "&nbsp;&nbsp;<a href='#myModal5' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button onclick='generate_modal5(\"" + variable + "\")' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
 
-                	blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
+                	blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;' onclick='generate_modalinfo()'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 	blank_bubble += "<table>";
                 	for(var i=0; i< varlist.length; i++){
                 		v = varlist[i];
@@ -1496,7 +1521,7 @@ function make_bubble (variable) {
                     blank_bubble += "Variable Type: <span id='type-" + variable + "'>" + types_for_vars[variable] + "</span>";
                     // Option to return to modal window to change
                     blank_bubble += "&nbsp;&nbsp;<a href='#myModal4' id='variable_type_" + variable + "' data-toggle='modal' data-dismiss='modal'><button class='btn btn-default' onclick='generate_modal4()' ><span class='glyphicon glyphicon-pencil'></span></button></a>";
-                    blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
+                    blank_bubble += "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' style='float:right;'  onclick='generate_modalinfo()'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>";
                 }
                  blank_bubble += "</div>" +
                 "<hr style='margin-top: -0.25em'>" +
@@ -1505,9 +1530,12 @@ function make_bubble (variable) {
                 "<hr style='margin-top: -0.25em'>" +
                 "<div id='necessary_parameters_" + variable + "' class='necessary_parameters'></div>" +
                 "<hr style='margin-top: -0.25em'>" +
-                "<div id='missing_data_" + variable + "' class='missing_data'></div>" +
+                "<div id='missing_data_" + variable + "' class='missing_data'></div>" + "<br><div>";
                 //"<div id='missing_data_input_" + variable + "' class='missing_data'></div>" +
-                "<br><div><button class='btn btn-default' onclick='delete_variable(\"" + variable_raw + "\")' style='float:right;'>Delete variable</button><br /></div>" +
+                if (transforms_data[variable] || grouped_var_dict[variable]) {
+                    blank_bubble += "<button class='btn btn-danger' onclick='remove_variable_from_sidebar(\"" + variable_raw + "\");'>Delete variable</button>";
+                }
+                blank_bubble += "<button class='btn btn-default' onclick='delete_variable(\"" + variable_raw + "\")' style='float:right;'>Disable variable</button><br /></div>" +
             "<br>"+
             "</div>" +
         "</div>" +
@@ -1536,6 +1564,12 @@ function check_all_multivars () {
   }
 }
 
+function generate_modalinfo () {
+  if (!initial_sequence) {
+    $('#myModal').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
+}
+
 function generate_modal4 () {
   $('#myModal4').find('.modal-body ul').html("");
   var variable_output = "";
@@ -1548,6 +1582,9 @@ function generate_modal4 () {
   }
   variable_output += "</table>";
   $('#myModal4').find('.modal-body ul').append(variable_output);
+  if (!initial_sequence) {
+    $('#myModal4').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
 }
 
 function generate_modal5 (variable) {
@@ -1569,32 +1606,96 @@ function generate_modal5 (variable) {
   }
   variable_output += "</table>";
   $('#myModal5').find('.modal-body ul').append(variable_output);
+  if (!initial_sequence) {
+    $('#myModal4').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
+}
+
+// After types have been implemented, generate and add logic for bounds/bin names modals
+function generate_modals_with_types () {
+  var current_modal_counter = 3;
+  var modal6_exists = generate_modal6();
+  var modal7_exists = generate_modal7();
+  if (modal6_exists) {
+    number_of_modals = current_modal_counter + 2;
+    if (!modal7_exists) {
+        number_of_modals = current_modal_counter + 1;
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("href", "#");
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("onclick", "hide_modal_progress();");
+    } else {
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("href", "#myModal7");
+        $("#myModal6").find('.modal-footer .btn-info')[0].setAttribute("onclick", "update_modal_progress(5);");
+    }
+    $('#myModal6').modal('show');
+    update_modal_progress(current_modal_counter + 1);
+  } else {
+    number_of_modals = current_modal_counter;
+    if (modal7_exists) {
+      number_of_modals = current_modal_counter + 1;
+      $('#myModal7').modal('show');
+      update_modal_progress(current_modal_counter + 1);
+      $("#myModal7").find('.modal-footer #modal6back')[0].setAttribute("href", "#myModal4");
+      $("#myModal7").find('.modal-footer #modal6back')[0].setAttribute("onclick", "update_modal_progress(3);");
+    } else {
+      hide_modal_progress();
+    }
+    // $("#myModal4").find('.modal-footer a').setAttribute("href", "#myModal7");
+    // $("#myModal4").find('.modal-footer a').setAttribute("onclick", "update_modal_progress(" + current_modal_counter+ ");");
+  }
+  // if (generate_modal7()) {
+  //   $("#myModal6").find('.modal-footer a').setAttribute("href", "#myModal7");
+  //   current_modal_counter++;
+  //   $("#myModal4").find('.modal-footer a').setAttribute("onclick", "update_modal_progress(" + current_modal_counter+ ");");
+  // }
 }
 
 /* Modal for Lower and Upper Bounds */
 function generate_modal6 () {
   $('#myModal6').find('.modal-body ul').html("");
-  var table_output = "";
-  table_output += "<table style='table-layout: fixed;'>";
-  // select/deselect all button
-  table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button' onclick='select_bound_vars()'>Select All</button></td><td></td><td></td></tr>";
-  table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Lower Bound</b></td><td><b>Upper Bound</b></td></tr>"; // Header
+  var is_table_not_empty = false;
   for (var n = 0; n < uni_variable_list.length; n++) {
     var var_entry = uni_variable_list[n];
     if (types_for_vars[var_entry] == "Numerical") {
-      table_output += "<tr>";
-      table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "' onclick='select_bounds_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
-      table_output += "<td class='bound_buffer'></td>";
-      // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
-      table_output += "<td><input id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Lower Bound'/></td>"; // Lower bound
-      // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Lower Bound' name='Lower_Bound' id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)'></td>"; // Lower bound
-      table_output += "<td><input id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Upper Bound'/></td>"; // Upper bound
-      // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Upper Bound' name='Upper_Bound' id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)'></td>"; // Upper bound
-      table_output += "</tr>";
+      is_table_not_empty = true;
     }
   }
-  table_output += "</table>";
-  $('#myModal6').find('.modal-body ul').append(table_output);
+  if (!is_table_not_empty) {
+    $('#myModal6').find('.modal-body ul').append("There are no numerical variables in the dataset.");
+  } else {
+    var table_output = "";
+    table_output += "<table style='table-layout: fixed;'>";
+    // select/deselect all button
+    table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button' onclick='select_bound_vars()'>Select All</button></td><td></td><td></td></tr>";
+    table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Lower Bound</b></td><td><b>Upper Bound</b></td></tr>"; // Header
+    for (var n = 0; n < uni_variable_list.length; n++) {
+      var var_entry = uni_variable_list[n];
+      if (types_for_vars[var_entry] == "Numerical") {
+        table_output += "<tr>";
+        table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "' onclick='select_bounds_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
+        table_output += "<td class='bound_buffer'></td>";
+        var lower_value = '';
+        if (var_entry in bound_data_stored && "Lower" in bound_data_stored[var_entry]) {
+          lower_value = bound_data_stored[var_entry]["Lower"];
+        }
+        var upper_value = '';
+        if (var_entry in bound_data_stored && "Upper" in bound_data_stored[var_entry]) {
+          upper_value = bound_data_stored[var_entry]["Upper"];
+        }
+        // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
+        table_output += "<td><input id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' value='" + lower_value + "' placeholder='Lower Bound'/></td>"; // Lower bound
+        // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Lower Bound' name='Lower_Bound' id='input_Lower_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Lower\", this)'></td>"; // Lower bound
+        table_output += "<td><input id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' class='bound_input' type='text' value='" + upper_value + "' placeholder='Upper Bound'/></td>"; // Upper bound
+        // table_output += "<td><input type='text' value='' class='bound_input' placeholder='Upper Bound' name='Upper_Bound' id='input_Upper_Bound_" + var_entry.replace(/\s/g, '_') + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + var_entry + "\")' onchange='ValidateInput(this, \"number\", \"" + var_entry + "\")' onfocusout='bound_input_group(\"" + var_entry + "\", \"Upper\", this)'></td>"; // Upper bound
+        table_output += "</tr>";
+      }
+    }
+    table_output += "</table>";
+    $('#myModal6').find('.modal-body ul').append(table_output);
+  }
+  if (!initial_sequence) {
+    $('#myModal6').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
+  return is_table_not_empty;
 }
 
 // Stores metadata in memory
@@ -1686,24 +1787,45 @@ function deselect_bound_vars () {
 /* Modal for Bin Names */
 function generate_modal7 () {
   $('#myModal7').find('.modal-body ul').html("");
-  var table_output = "";
-  table_output += "<table style='table-layout: fixed;'>";
-  // select/deselect all button
-  table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button_bins' onclick='select_bins_vars()'>Select All</button></td><td></td><td></td></tr>";
-  table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Bin Names</b></td></tr>"; // Header
+  var is_table_not_empty = false;
   for (var n = 0; n < uni_variable_list.length; n++) {
     var var_entry = uni_variable_list[n];
     if (types_for_vars[var_entry] == "Categorical") {
-      table_output += "<tr>";
-      table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "_bins' onclick='select_bins_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
-      table_output += "<td class='bound_buffer'></td>";
-      // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
-      table_output += "<td><input id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' type='text' placeholder='Bin Names'/></td>";
-      table_output += "</tr>";
+      is_table_not_empty = true;
     }
   }
-  table_output += "</table>";
-  $('#myModal7').find('.modal-body ul').append(table_output);
+  if (!is_table_not_empty) {
+    $('#myModal7').find('.modal-body ul').append("There are no categorical variables in this dataset.");
+  } else {
+    var table_output = "";
+    table_output += "<table style='table-layout: fixed;'>";
+    // select/deselect all button
+    table_output += "<tr><td><button class='bounds_all_button' id='all_vars_button_bins' onclick='select_bins_vars()'>Select All</button></td><td></td><td></td></tr>";
+    table_output += "<tr><td><b>Variable</b></td><td></td><td><b>Bin Names</b></td></tr>"; // Header
+    var is_table_not_empty = false;
+    for (var n = 0; n < uni_variable_list.length; n++) {
+      var var_entry = uni_variable_list[n];
+      if (types_for_vars[var_entry] == "Categorical") {
+        is_table_not_empty = true;
+        table_output += "<tr>";
+        table_output += "<td class='var_selectable var_bound_text' id='var_selectable_" + var_entry.replace(/\s/g, '_') + "_bins' onclick='select_bins_group(\"" + var_entry + "\")'>" + var_entry + "</td>"; // Variable button
+        table_output += "<td class='bound_buffer'></td>";
+        var stored_bins = "";
+        if (var_entry in bins_data_stored) {
+          stored_bins = bins_data_stored[var_entry];
+        }
+        // <button class='btn btn-primary' type='button' data-toggle='button' aria-pressed='false'>" + var_entry + "</button>
+        table_output += "<td><input style='width: 200px;' id='input_Bin_Names_" + var_entry.replace(/\s/g, '_') + "' onfocusout='bins_input_group(\"" + var_entry + "\", this)' onchange='ValidateInput(this, \"none\", \"" + var_entry + "\")' class='bound_input' value='" + stored_bins + "' type='text' placeholder='Optional but recommended'/></td>";
+        table_output += "</tr>";
+      }
+    }
+    table_output += "</table>";
+    $('#myModal7').find('.modal-body ul').append(table_output);
+  }
+  if (!initial_sequence) {
+    $('#myModal7').find('.modal-footer').html('<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed();">Close</button>');
+  }
+  return is_table_not_empty;
 }
 
 function bins_input_group (changed_var, field) {
@@ -1767,6 +1889,7 @@ function update_modal_progress(current_modal) {
 
 function hide_modal_progress() {
   document.getElementById("progress-modal").setAttribute("class", "progress_modal_hidden");
+  initial_sequence = false;
 }
 
 // Enables Collapsable Sections for JS Generated HTML
@@ -1802,7 +1925,7 @@ function parameter_fields (variable, type_chosen) {
 		// makes blank html text
 		var parameter_field = "<table>";
 		if(needed_parameters.length > 0){
-			parameter_field+="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='metadata'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
+			parameter_field+="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='metadata' onclick='generate_modalinfo()' style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
 		}
 
     if (variable in bound_data_stored) {
@@ -1831,7 +1954,11 @@ function parameter_fields (variable, type_chosen) {
       parameter_field += "<tr><td style='width:150px;vertical-align:middle;'><span onclick='display_help_id(\"" + needed_parameters[j].replace(/\s/g, '_') + '_help' + "\")' style='cursor:help;'>" + needed_parameters[j] + ":</span></td><td style='vertical-align:middle;'>";
 
 		  if (rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].input_type == "text") {
-			parameter_field += "<input type='text' value='" + inputted_metadata[variable][column_index[needed_parameters[j].replace(/\s/g, '_')]] + "' name='" + needed_parameters[j].replace(/\s/g, '_') + "'id='input_" + needed_parameters[j].replace(/\s/g, '_') + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].entry_type + "\", \"" + variable + "\")'></td></tr>";
+        if (needed_parameters[j].replace(/\s/g, '_') == "Bin_Names") {
+    			parameter_field += "<input type='text' value='" + inputted_metadata[variable][column_index[needed_parameters[j].replace(/\s/g, '_')]] + "' name='" + needed_parameters[j].replace(/\s/g, '_') + "'id='input_" + needed_parameters[j].replace(/\s/g, '_') + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].entry_type + "\", \"" + variable + "\")' placeholder='Optional but recommended'></td></tr>";
+        } else {
+    			parameter_field += "<input type='text' value='" + inputted_metadata[variable][column_index[needed_parameters[j].replace(/\s/g, '_')]] + "' name='" + needed_parameters[j].replace(/\s/g, '_') + "'id='input_" + needed_parameters[j].replace(/\s/g, '_') + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].entry_type + "\", \"" + variable + "\")'></td></tr>";
+        }
 		  }
 		  else if (rfunctions.parameter_info[metadata_list.indexOf(needed_parameters[j].replace(/\s/g, '_'))].input_type == "multiple_choice_with_other_variables") {
 			parameter_field +=
@@ -1930,7 +2057,7 @@ function make_mult_with_reqs(variable, param, reqlist){
 	}
 
 function multivar_parameter_fields(variable){
-	var parameter_field ="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics'  style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
+	var parameter_field ="<div><p><span style='color:blue;line-height:1.1;display:block; font-size:small'>The selected statistic(s) require the metadata fields below. Fill these in with reasonable estimates that a knowledgeable person could make without having looked at the raw data. <b>Do not use values directly from your raw data as this may leak private information</b>. Click <button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='statistics' onclick='generate_modalinfo()' style='padding-left:0'><u>here for more information.</u></button></span></p></div>";
 	var varlist = grouped_var_dict[variable];
 	var typedict = inputted_metadata[variable][column_index["Variable_Type"]];
 	var statlist = [];
@@ -2001,7 +2128,11 @@ function multivar_parameter_fields(variable){
 					ValidateInput(parameter, rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type, variable, v);
 				}
 				if(rfunctions.parameter_info[metadata_list.indexOf(param)].input_type == "text"){
-					parameter_field += "<input type='text' value='" + default_val + "' name='" + param + "'id="+v+"_input_" + param + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\",\""+v+"\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type + "\", \"" + variable + "\",\""+v+"\")'></td></tr>";
+              if (param == "Bin_Names") {
+                parameter_field += "<input type='text' value='" + default_val + "' name='" + param + "'id="+v+"_input_" + param + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\",\""+v+"\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type + "\", \"" + variable + "\",\""+v+"\")' placeholder='Optional but recommended'></td></tr>";
+              } else {
+    					parameter_field += "<input type='text' value='" + default_val + "' name='" + param + "'id="+v+"_input_" + param + "_" + variable + "' onfocusin='record_table()' oninput='Parameter_Memory(this,\"" + variable + "\",\""+v+"\")' onchange='ValidateInput(this, \"" + rfunctions.parameter_info[metadata_list.indexOf(param)].entry_type + "\", \"" + variable + "\",\""+v+"\")'></td></tr>";
+            }
 			  	}
 			  	else if(rfunctions.parameter_info[metadata_list.indexOf(param)].input_type == "multiple_choice_from_group_with_reqs"){
 			  		var reqlist = [];
@@ -2154,7 +2285,23 @@ function Parameter_Memory (parameter, variable, specific_var) {
 	}
 	else{
    	 inputted_metadata[variable][column_index[parameter.name]] = parameter.value;
+     // add to the other copy for bound data storage specifically
+     if (parameter.name == "Lower_Bound") {
+       if (!(variable in bound_data_stored)) {
+         bound_data_stored[variable] = {};
+       }
+       bound_data_stored[variable]["Lower"] = parameter.value;
+     } else if (parameter.name == "Upper_Bound") {
+       if (!(variable in bound_data_stored)) {
+         bound_data_stored[variable] = {};
+       }
+       bound_data_stored[variable]["Upper"] = parameter.value;
+     }
    	}
+    // add to other copy for bin names storage
+    if (parameter.name == "Bin_Names") {
+      bins_data_stored[variable] = parameter.value;
+    }
 };
 
 function newtransform(x) {
@@ -2689,7 +2836,7 @@ function toggle_reserved_epsilon_tool () {
 function generate_epsilon_table () {
     var completed_statistic = false;
     var epsilon_table =
-    "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL  + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
+    "<button type='button' class='manualinfo' data-load-url='" + CONTENT_PAGES_BASE_URL  + "psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='accuracy' style='float:right;padding-top:0.5em;' onclick='generate_modalinfo()'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>" +
     "<table id='epsilon_table' style='width: calc(100% - 30px);'>" +
         "<tr>" +
             "<td style='font-weight: bold;'>" +
@@ -2822,7 +2969,7 @@ function generate_epsilon_table () {
 			  "yOffset":-20,
 			  //"arrowOffset":260,
 			  "title": "Change the confidence level of the error estimates here",
-			  "content": "When this number is set to &alpha;, the probability that the worst-case error for each of the above statistics will not exceed the estimates shown in the table is 1-&alpha;. By default, &alpha; is set to 0.05, providing a 95 percent confidence level in the error estimates. <br><br> Click Next to continue the tour.",
+			  "content": "When this number is set to &alpha;, the probability that the worst-case error for each of the above statistics will not exceed the estimates shown in the table is 1-&alpha;. By default, &alpha; is set to 0.05, providing at least a 95 percent confidence level in the error estimates. <br><br> Click Next to continue the tour.",
 			  "showCTAButton":true,
 			  "ctaLabel": "Disable these messages",
 			  "onCTA": function() {
@@ -3054,7 +3201,7 @@ function explain_accuracy (variable, statistic, accuracy, variable_type) {
 	var acc_prefix = "Releasing " + statistic + " for the variable " + variable +"."
 	var acc_suffix = " Here the units are the same units the variable has in the dataset.";
 	if(statistic == "Mean"){
-		acc_explanation =  acc_prefix + " With probability " + prob +" the output mean will differ from the true mean by at most "+accuracy +" units." +acc_suffix;
+		acc_explanation =  acc_prefix + " With at least probability " + prob +" the output mean will differ from the true mean by at most "+accuracy +" units." +acc_suffix;
 	}
 	if(statistic == "Histogram"){
 		acc_explanation =  acc_prefix + " Each output count will differ from its true count by at most "+accuracy+" records with probability "+prob+".";
@@ -3063,10 +3210,10 @@ function explain_accuracy (variable, statistic, accuracy, variable_type) {
 		acc_explanation =  acc_prefix + " For each t, the output count of the number of datapoints less than t will differ from the true count by at most "+accuracy+" records with probability "+prob+".";
 	}
 	if(statistic == "ATT with Matching"){
-		acc_explanation = acc_prefix + " With probability "+prob+" the number of matched treated units used in the ATT analysis will differ from the true number of matched treated units by at most "+accuracy+" records. Note that this does not account for the additional error in the reported confidence interval."
+		acc_explanation = acc_prefix + " With at least probability "+prob+" the number of matched treated units used in the ATT analysis will differ from the true number of matched treated units by at most "+accuracy+" records. Note that this does not account for the additional error in the reported confidence interval."
 	}
 	if(statistic == "Logistic Regression" || statistic == "Probit Regression" || statistic == "OLS Regression"){
-		acc_explanation = acc_prefix + " With probability "+prob+" the objective function for the regression will be perturbed by at most "+accuracy+".";
+		acc_explanation = acc_prefix + " With at least probability "+prob+" the objective function for the regression will be perturbed by at most "+accuracy+".";
 	}
 	alert(acc_explanation);
  // alert("Releasing the " + statistic + " for the variable: " + variable +", which is a " + variable_type + ". The accuracy at which this is released is: " + accuracy + ", which means (INSERT SIMPLE EXPLANATION).");
@@ -3182,7 +3329,7 @@ var window_global_delta_base = (parseFloat(window_global_delta).toExponential())
 var window_global_delta_power = (parseFloat(window_global_delta).toExponential()).split('e')[1].substr(1);
 
 var base_toFixed_amt = 0;
-var scientific_notion_for_delta_toggle = false;
+var scientific_notion_for_delta_toggle = true;
 var window_reserved_epsilon_toggle = false;
 var submitted_reserved_epsilon_toggle = false;
 
@@ -3587,6 +3734,77 @@ function clear_SS () {
     // talk to R bc e, d, etc. changed
 }
 
+function jump_to_custom() {
+  document.getElementById("custom_privacy").checked = true;
+}
+
+function preset (epsilon, deltab, deltap) {
+  // // disable inputs
+  // $('input[name=epsilon]').attr('disabled', true);
+  // if (scientific_notion_for_delta_toggle) {
+  //   $('input[name=delta_base]').attr('disabled', true);
+  //   $('input[name=delta_power]').attr('disabled', true);
+  // } else {
+  //   $('input[name=delta]').attr('disabled', true);
+  // }
+  // $('input[name=notation_switch]').attr('disabled', true);
+
+  // input preset values and update values
+  document.getElementById("epsilon_input").value = epsilon;
+  epsilon_check(document.getElementById("epsilon_input"));
+  // $('input[name=epsilon]').attr('value', epsilon);
+  // epsilon_check($('input[name=epsilon]')[0]);
+  if (scientific_notion_for_delta_toggle) {
+    document.getElementById("delta_value_base_modal").value = deltab;
+    document.getElementById("delta_value_power").value = deltap;
+    delta_check_exp(document.getElementById("delta_value_base_modal"), 'base');
+    delta_check_exp(document.getElementById("delta_value_power"), 'power');
+    // $('input[name=delta_base]').attr('value', deltab);
+    // $('input[name=delta_power]').attr('value', deltap);
+    // delta_check_exp($('input[name=delta_base]')[0], 'base');
+    // delta_check_exp($('input[name=delta_power]')[0], 'power');
+  } else {
+    document.getElementById("delta_value_modal").value = parseFloat(deltab * Math.pow(10, -1 * deltap));
+    delta_check(document.getElementById("delta_value_modal"));
+    // $('input[name=delta]').attr('value', parseFloat(deltab * Math.pow(10, -1 * deltap)));
+    // delta_check($('input[name=delta]')[0]);
+  }
+
+}
+
+function preset_none () {
+  // enable inputs
+  // $('input[name=epsilon]').attr('disabled', false);
+  // if (scientific_notion_for_delta_toggle) {
+  //   $('input[name=delta_base]').attr('disabled', false);
+  //   $('input[name=delta_power]').attr('disabled', false);
+  // } else {
+  //   $('input[name=delta]').attr('disabled', false);
+  // }
+  // $('input[name=notation_switch]').attr('disabled', false);
+}
+
+function privacy_proceed () {
+  if (document.getElementById("epsilon_input").value == "") {
+    alert("An epsilon value and a delta value must be specified before proceeding.");
+  } else {
+    update_ed();
+    update_modal_progress(3);
+    $('#myModal3').modal('hide');
+    $('#myModal4').modal('show');
+  }
+}
+
+function privacy_close () {
+    if (document.getElementById("epsilon_input").value == "") {
+      alert("An epsilon value and a delta value must be specified before proceeding.");
+    } else {
+      $('#myModal3').modal('hide');
+      edit_window_closed();
+      hide_modal_progress();
+    }
+}
+
 function edit_parameters_window () {
     window_global_epsilon = global_epsilon;
     window_global_delta = global_delta;
@@ -3596,33 +3814,41 @@ function edit_parameters_window () {
 
     window_global_delta_base = (parseFloat(window_global_delta).toExponential()).split('e')[0];
     window_global_delta_power = (parseFloat(window_global_delta).toExponential()).split('e')[1].substr(1);
+
+    var html = "";
+    html += '<div id="privacy-loss-params-info-edit"></div>'; //style="margin-top: 40px
+    html += '<div style="text-align:center;"><div>';//JM removed second submit button//<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Submit</button><div>';// padding-top: 40px;
+
+    preset_html = '<p></p><ul style="list-style-type:none; padding-left: 30px"><li><input type="radio" name="privacy_presets" value="1" disabled=true>&nbsp;&nbsp; 1. Public information: It is not necessary to use differential privacy for public information.</li><li><input type="radio" name="privacy_presets" value="2" onclick="preset(1, 1, 5)">&nbsp;&nbsp; 2. Information the disclosure of which would not cause material harm, but which the University has chosen to keep confidential: (&epsilon;=1,&delta;=10<sup>-5</sup>=0.00001)</li><li><input type="radio" name="privacy_presets" value="3" onclick="preset(0.25, 1, 6)">&nbsp;&nbsp; 3. Information that could cause risk of material harm to individuals or the University if disclosed: (&epsilon;=.25, &delta;=10<sup>-6</sup>=0.000001)</li><li><input type="radio" name="privacy_presets" value="4" onclick="preset(0.05, 1, 7)">&nbsp;&nbsp; 4. Information that would likely cause serious harm to individuals or the University if disclosed: (&epsilon;=.05, &delta;=10<sup>-7</sup>=0.0000001)</li><li><input type="radio" name="privacy_presets" value="5" disabled=true>&nbsp;&nbsp; 5. Information that would cause severe harm to individuals or the University if disclosed: It is not recommended that the PSI tool be used with such severely sensitive data.</li><li><input type="radio" name="privacy_presets" value="6" onclick="preset_none()" checked>&nbsp;&nbsp; Alternatively, set custom privacy loss parameters for your dataset below and if secrecy of the sample applies to your data, estimate the size of the population from which it was drawn:</li></ul>';
+
     if(!interactive){
-   	 	var html = '<table id="parameter_editing_table" align="center"><tr><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input id="epsilon_value" name="epsilon" onfocusout="epsilon_check(this)" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy." value="' + global_epsilon + '" style="color: black;" type="text" placeholder="Epsilon"> <!-- JM restricting reserve epsilon to slider <input title="Reserving epsilon will decrease your privacy budget, but will enable future researchers to make queries on your dataset." type="button" style="color:gray; width:200px;" onclick="add_reserved_epsilon_field()" value="Reserve Epsilon"></td></tr>-->';
+      preset_html += '<table id="parameter_editing_table" align="center"><tr><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input id="epsilon_value" name="epsilon" onfocusout="epsilon_check(this)" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy." value="' + global_epsilon + '" style="color: black;" type="text" placeholder="Epsilon"> <!-- JM restricting reserve epsilon to slider <input title="Reserving epsilon will decrease your privacy budget, but will enable future researchers to make queries on your dataset." type="button" style="color:gray; width:200px;" onclick="add_reserved_epsilon_field()" value="Reserve Epsilon"></td></tr>-->';
     }
     else{
-    	var html = '<div>Remaining budget: Epsilon (&epsilon):</div>'
-	    html += '<table id="parameter_editing_table" align="center"><tr><td style="text-align:right; padding-right: 15px;"><span title="Your allotted epsilon value from the definition of differential privacy. Smaller values correspond to more privacy and less accurate statistics.">Remaining Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input id="epsilon_value" name="epsilon" onfocusout="epsilon_check(this)" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy." value="' + global_epsilon + '" style="color: black;" type="text" placeholder="Epsilon"> <!-- JM restricting reserve epsilon to slider <input title="Reserving epsilon will decrease your privacy budget, but will enable future researchers to make queries on your dataset." type="button" style="color:gray; width:200px;" onclick="add_reserved_epsilon_field()" value="Reserve Epsilon"></td></tr>-->';
+      preset_html += '<div>Remaining budget: Epsilon (&epsilon):</div>'
+      preset_html += '<table id="parameter_editing_table" align="center"><tr><td style="text-align:right; padding-right: 15px;"><span title="Your allotted epsilon value from the definition of differential privacy. Smaller values correspond to more privacy and less accurate statistics.">Remaining Epsilon (&epsilon;):</span></td><td style="padding-left: 15px;"><input id="epsilon_value" name="epsilon" onfocusout="epsilon_check(this)" title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy." value="' + global_epsilon + '" style="color: black;" type="text" placeholder="Epsilon"> <!-- JM restricting reserve epsilon to slider <input title="Reserving epsilon will decrease your privacy budget, but will enable future researchers to make queries on your dataset." type="button" style="color:gray; width:200px;" onclick="add_reserved_epsilon_field()" value="Reserve Epsilon"></td></tr>-->';
     }
-    html += '<tr id="reserved_epsilon_row" style="display:none;"><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Reserved Budget:</span></td><td style="padding-left: 15px;"><input id="reserved_epsilon_value" name="reserved_epsilon" onfocusout="reserved_epsilon_check(this)" title="Reserving epsilon will decrease your privacy budget, but will enable future researchers to make queries on your dataset." value="' + reserved_epsilon + '" style="color: black;" type="text" placeholder="Reserved Budget"> <input title="" type="button" style="color:gray; width:200px;" onclick="remove_reserved_epsilon_field()" value="Remove Reserve Epsilon"></td></tr>';
+    preset_html += '<tr id="reserved_epsilon_row" style="display:none;"><td style="text-align:right; padding-right: 15px;"><span title="Epsilon from definition of differential privacy. Smaller values correspond to more privacy.">Reserved Budget:</span></td><td style="padding-left: 15px;"><input id="reserved_epsilon_value" name="reserved_epsilon" onfocusout="reserved_epsilon_check(this)" title="Reserving epsilon will decrease your privacy budget, but will enable future researchers to make queries on your dataset." value="' + reserved_epsilon + '" style="color: black;" type="text" placeholder="Reserved Budget"> <input title="" type="button" style="color:gray; width:200px;" onclick="remove_reserved_epsilon_field()" value="Remove Reserve Epsilon"></td></tr>';
 
-    html += '<tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row"><input id="delta_value" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + global_delta + '" style="color: black;" type="text" placeholder="Delta">  <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'D\')" value="Exponential"></td></tr>';
+    preset_html += '<tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row"><input id="delta_value" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + global_delta + '" style="color: black;" type="text" placeholder="Delta">  <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'D\')" value="Exponential"></td></tr>';
+    // html += '<tr><td style="text-align:right; padding-right: 15px;"><span title = "Delta from definition of differential privacy. Smaller values correspond to more privacy.">Delta (&delta;):</span></td><td style="padding-left: 15px;" id="delta_row"><input id="delta_value_base" name="delta_base" onfocusout="delta_check_exp(this, \'base\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta_base) + '" style="color: black;width:107.5px" type="text" placeholder="Delta">&times;10<sup>-<input id="delta_value_power" name="delta_power" onfocusout="delta_check_exp(this, \'power\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="" style="color: black;width:25px;" type="text" placeholder="Delta Power"></sup> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'E\',\'\')" value="Decimal">';
+
     if(!interactive){
-		if (SS_value_past == '') {
-		  html += '<tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input id="SS" name="SS" onfocusout="global_parameters_SS(this)" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder=""> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray; width:100px;" onclick="clear_SS()" value="Clear"></td></tr><tr id="FE" style="display:none;"><td style="text-align:right; padding-right: 15px; padding-top:15px;"><span title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields.">Functioning Epsilon:</span></td><td style="padding-left: 15px; padding-top:15px;"><div id="FE_value" name="FE" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." style="color: black;"></div></td></tr><tr id="FD" style="display:none;"><td style="text-align:right; padding-right: 15px;"><span title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields.">Functioning Delta:</span></td><td style="padding-left: 15px;"><div id="FD_value" name="FD" title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields." style="color: black;" ></div></td></tr></table>';
-		}
-		else {
-		  html += '<tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input id="SS" name="SS" onfocusout="global_parameters_SS(this)" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="' + SS_value_past + '" style="color: black;" type="text" placeholder=""> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray; width:100px;" onclick="clear_SS()" value="Clear"></td></tr><tr id="FE" style=""><td style="text-align:right; padding-right: 15px; padding-top:15px;"><span title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields.">Functioning Epsilon:</span></td><td style="padding-left: 15px; padding-top:15px;"><div id="FE_value" name="FE" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." style="color: black;">' + global_fe.toFixed(4) + '</div></td></tr><tr id="FD" style=""><td style="text-align:right; padding-right: 15px;"><span title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields.">Functioning Delta:</span></td><td style="padding-left: 15px;"><div id="FD_value" name="FD" title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields." style="color: black;" >' + global_fd.toFixed(10) + '</div></td></tr></table>';
-		}
-   }
-    html += '<div id="privacy-loss-params-info-edit" style="margin-top: 40px"></div>';
-    html += '<div style="text-align:center; padding-top: 40px;"><div>';//JM removed second submit button//<button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Submit</button><div>';
+    if (SS_value_past == '') {
+      preset_html += '<tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input id="SS" name="SS" onfocusout="global_parameters_SS(this)" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="" style="color: black;" type="text" placeholder=""> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray; width:100px;" onclick="clear_SS()" value="Clear"></td></tr><tr id="FE" style="display:none;"><td style="text-align:right; padding-right: 15px; padding-top:15px;"><span title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields.">Functioning Epsilon:</span></td><td style="padding-left: 15px; padding-top:15px;"><div id="FE_value" name="FE" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." style="color: black;"></div></td></tr><tr id="FD" style="display:none;"><td style="text-align:right; padding-right: 15px;"><span title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields.">Functioning Delta:</span></td><td style="padding-left: 15px;"><div id="FD_value" name="FD" title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields." style="color: black;" ></div></td></tr></table>';
+    }
+    else {
+      preset_html += '<tr><td style="text-align:right; padding-right: 15px;"><span title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate.">Population size (optional):</span></td><td style="padding-left: 15px;"><input id="SS" name="SS" onfocusout="global_parameters_SS(this)" title="Is the data a random and secret sample from a larger population of known size? Here, secret means that the choice of the people in the sample has not been revealed. If this is the case, you can improve the accuracy of your statistics without changing the privacy guarantee. Estimate the size of the larger population. It is important to be conservative in your estimate. In other words, it is okay underestimate but could violate privacy if you overestimate." value="' + SS_value_past + '" style="color: black;" type="text" placeholder=""> <input title="Remove any entered value for the secrecy of the sample, and revert privacy parameters to the values without adjustment." type="button" style="color:gray; width:100px;" onclick="clear_SS()" value="Clear"></td></tr><tr id="FE" style=""><td style="text-align:right; padding-right: 15px; padding-top:15px;"><span title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields.">Functioning Epsilon:</span></td><td style="padding-left: 15px; padding-top:15px;"><div id="FE_value" name="FE" title="When using secrecy of the sample, you get a boost in epsilon, which is represented here. This value can only be edited by changing the epsilon or secrecy of the sample fields." style="color: black;">' + global_fe.toFixed(4) + '</div></td></tr><tr id="FD" style=""><td style="text-align:right; padding-right: 15px;"><span title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields.">Functioning Delta:</span></td><td style="padding-left: 15px;"><div id="FD_value" name="FD" title="When using secrecy of the sample, you get a boost in delta, which is represented here. This value can only be edited by changing the delta or secrecy of the sample fields." style="color: black;" >' + global_fd.toFixed(10) + '</div></td></tr></table>';
+    }
+    }
 
     document.getElementById("modal-body-edit-window").innerHTML = html;
-    document.getElementById("privacy-loss-params-info-edit").innerHTML = document.getElementById("privacy-loss-params-info").innerHTML;
+    document.getElementById("privacy-loss-params-info-edit").innerHTML = document.getElementById("privacy-loss-params-info-1").innerHTML + preset_html + document.getElementById("privacy-loss-params-info-2").innerHTML;
 	if(!interactive){
-		if (scientific_notion_for_delta_toggle) {
-		  change_to_exponential_form('D');
-		}
+    change_to_exponential_form('D');
+		// if (scientific_notion_for_delta_toggle) {
+		//   change_to_exponential_form('D');
+		// }
 
 		if (submitted_reserved_epsilon_toggle) {
 		  add_reserved_epsilon_field();
@@ -3688,7 +3914,7 @@ function change_to_exponential_form (key, suffix='') {
     if (digits < 0 || digits > 20) {
       digits = base_toFixed_amt;
     }
-    var delta_html = '<input id="delta_value_base' + suffix + '" name="delta_base" onfocusout="delta_check_exp(this,\'base\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta_base).toFixed(digits) + '" style="color: black;width:107.5px" type="text" placeholder="Delta Base">&times;10<sup>-<input id="delta_value_power" name="delta_power" onfocusout="delta_check_exp(this, \'power\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + window_global_delta_power + '" style="color: black;width:25px;" type="text" placeholder="Delta Power"></sup> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'E\',\'' + suffix + '\')" value="Decimal">';
+    var delta_html = '<input id="delta_value_base' + suffix + '" name="delta_base" onfocusout="delta_check_exp(this,\'base\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta_base).toFixed(digits) + '" style="color: black;width:107.5px" type="text" placeholder="Delta Base" onchange="jump_to_custom()">&times;10<sup>-<input id="delta_value_power" name="delta_power" onfocusout="delta_check_exp(this, \'power\')" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + window_global_delta_power + '" style="color: black;width:25px;" type="text" placeholder="Delta Power"  onchange="jump_to_custom()"></sup> <input name="notation_switch" title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'E\',\'' + suffix + '\')" value="Decimal">';
     document.getElementById('delta_row' + suffix).innerHTML = delta_html;
     scientific_notion_for_delta_toggle = true;
 
@@ -3699,12 +3925,15 @@ function change_to_exponential_form (key, suffix='') {
   else if (key == 'E') {
     var entry = document.getElementById('delta_value_base' + suffix).value;
     var digits = parseInt(window_global_delta_power) + entry.toString().length - 1;
+    if (entry.toString().length == 0) {
+      digits += 1;
+    }
     if (entry.includes('.')) {
       digits = digits - 1;
     }
 
     if (digits < 20) {
-      var delta_html = '<input id="delta_value' + suffix + '" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta).toFixed(digits) + '" style="color: black;" type="text" placeholder="Delta"> <input title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'D\',\'' + suffix + '\')" value="Exponential">';
+      var delta_html = '<input id="delta_value' + suffix + '" name="delta" onfocusout="delta_check(this)" title = "Delta from definition of differential privacy. Smaller values correspond to more privacy." value="' + parseFloat(window_global_delta).toFixed(digits) + '" style="color: black;" type="text" placeholder="Delta" onchange="jump_to_custom()"> <input name="notation_switch" title="Use exponential notation to enter in delta as delta is normally very small and using exponential notation to convey it is more convenient." type="button" style="color:gray; width: 100px" onclick="change_to_exponential_form(\'D\',\'' + suffix + '\')" value="Exponential">';
       document.getElementById('delta_row' + suffix).innerHTML = delta_html;
       scientific_notion_for_delta_toggle = false;
 

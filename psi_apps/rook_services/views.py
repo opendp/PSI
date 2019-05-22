@@ -3,6 +3,7 @@ import requests
 import urllib.parse
 
 from django.http import JsonResponse, HttpResponse, Http404
+from django.contrib.auth.decorators import login_required
 #from psiproject.settings.local import ROOK_SVC_URL
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -10,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from psi_apps.utils.view_helper import \
     (get_json_error, get_json_success)
 
-
+@login_required(login_url='login')
 def view_rook_route(request, app_name_in_url):
     """Route the call to Rook and back"""
 

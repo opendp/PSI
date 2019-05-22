@@ -27,7 +27,7 @@ PSI_DATA_DIRECTORY_PATH = os.environ.get(\
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
 
-AUTH_USER_MODEL = 'psi_auth.User'
+AUTH_USER_MODEL = 'psi_auth.CustomUser'
 
 # Application definition
 
@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'psi_apps',
     'psi_apps.rook_services',
     'psi_apps.content_pages',
@@ -49,13 +48,16 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'psiproject.urls'
+
+LOGIN_REDIRECT_URL = 'interface'
+LOGOUT_REDIRECT_URL = 'login'
 
 TEMPLATES = [
     {
@@ -152,4 +154,6 @@ add_backslash('ROOK_SVC_URL', ROOK_SVC_URL)
 
 PAGE_CACHE_TIME = 0 # dev time
 
-LOGIN_REDIRECT_URL = '/'
+
+EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, "sent_emails")

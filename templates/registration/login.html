@@ -1,35 +1,44 @@
-<!DOCTYPE html>
-<html>
+<!-- templates/registration/login.html -->
+{% extends 'base.html' %}
+{% load static %}
 
-<head>
-    <!-- Linking to Javascript/CSS libraries -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+{% block content %}
 
-    <link rel="stylesheet" type="text/  css" href="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/css/bootstrap-slider.min.css">
-    <script type="text/javascript" src="https://rawgit.com/mitsos1os/bootstrap-slider/master/dist/bootstrap-slider.min.js"></script>
+        <header>
+            <table style="width:100%">
+
+              <tr>
+                <td style='width:60%'>
+                    <div title="This is the name, in Dataverse, of the selected example dataset." id="datasetName" style="text-align:center;">
+                        <h2 style="display:inline;">PSI (&Psi;): A Private Data Sharing Interface</h2>
+                      </div>
+                </td>
+              </tr>
+            </table>
+
+         </header>
 
 
-    <title>Budgeting Tool</title>
 
-</head>
+<form id="loginForm" method="post">
+  <div class="box">
+    <h1>Log in</h1>
+      {% csrf_token %}
+      {{ form.as_p }}
 
-<body>
+    <!-- <button class="btn btn-success" type="submit">Login</button> -->
 
-  <h2>Login</h2>
+    <a href="#" onclick="document.getElementById('loginForm').submit()"><div class="login-btn">Sign In</div></a> <!-- End Btn -->
 
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-  </form>
+    <a href="{% url 'signup' %}"><div id="login-btn2">Sign Up</div></a> <!-- End Btn2 -->
 
-  Why is nothing else showing up
+    <p class="login-p">Forgot your password? <a href="{% url 'password_reset' %}" style="color:#f1c40f;">Click Here!</a>
 
-  <a href="{% url 'register' %}">Register</a>
+    <p class="login-p">Log in as test user <a href="{% url 'test_user' %}" style="color:#f1c40f;"">here</a>
+    
+  </div> <!-- End Box -->
+  
+</form>
 
-</body>
 
-</html>
+{% endblock %}

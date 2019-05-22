@@ -14,7 +14,7 @@ cp -r /var/webapps/PSI/data/. /psi_volume/data
 printf "\n(20) Run Init Steps"
 fab init-db
 fab collect-static
-fab create-django-superuser
+# fab create-django-superuser
 
 # -----------------------------------
 # (30) "Run web server.."

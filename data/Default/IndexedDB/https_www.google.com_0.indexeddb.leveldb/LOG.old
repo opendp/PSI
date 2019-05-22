@@ -1,3 +1,3 @@
-2018/07/11-10:02:09.392 31108 Reusing MANIFEST /home/jkaashoek/Documents/env01/PrivateZelig/data/Default/IndexedDB/https_www.google.com_0.indexeddb.leveldb/MANIFEST-000001
-2018/07/11-10:02:09.392 31108 Recovering log #3
-2018/07/11-10:02:09.392 31108 Reusing old log /home/jkaashoek/Documents/env01/PrivateZelig/data/Default/IndexedDB/https_www.google.com_0.indexeddb.leveldb/000003.log 
+2018/07/11-10:18:50.224 31596 Reusing MANIFEST /home/jkaashoek/Documents/env01/PrivateZelig/data/Default/IndexedDB/https_www.google.com_0.indexeddb.leveldb/MANIFEST-000001
+2018/07/11-10:18:50.225 31596 Recovering log #3
+2018/07/11-10:18:50.225 31596 Reusing old log /home/jkaashoek/Documents/env01/PrivateZelig/data/Default/IndexedDB/https_www.google.com_0.indexeddb.leveldb/000003.log 
