@@ -7,6 +7,8 @@
 ##
 source("rookconfig.R") # global variables such as "IS_PRODUCTION_MODE"
 
+default_output_path <- paste(getwd(), "/rook-files/", sep="")
+RELEASE_OUTPUT_PATH <- Sys.getenv(x='RELEASE_OUTPUT_PATH', unset=default_output_path)
 
 packageList<-c("Rook","jsonlite","openssl", "devtools")
 for(i in 1:length(packageList)){
@@ -91,7 +93,6 @@ if(!IS_PRODUCTION_MODE){
     R.server <- Rhttpd2$new()
 
     cat("Type:", typeof(R.server), "Class:", class(R.server))
-    R.server$add(app = File$new(getwd()), name = "pic_dir")
     print(R.server)
 
     #R.server$start(listen=myInterface, port=myPort)
@@ -102,6 +103,7 @@ if(!IS_PRODUCTION_MODE){
 
 source("rookPrivate.R")
 source("rookTransform.R")
+source("rookReport.R")
 
 print("-----------------------------------------")
 print(paste("TRANSFORM_HASKELL_APP_PATH: ", TRANSFORM_HASKELL_APP_PATH, sep=""))
@@ -111,12 +113,40 @@ if(!IS_PRODUCTION_MODE){
     R.server$add(app = privateAccuracies.app, name = "privateAccuraciesapp")
     R.server$add(app = privateStatistics.app, name = "privateStatisticsapp")
     R.server$add(app = verifyTransform.app, name = "verifyTransformapp")
+    R.server$add(app = function(post) parsePOST(post, rookReport.app), name = "reportGeneratorApp")
+    R.server$add(app = File$new(paste0(getwd(), '/rook-files/')), name = "rook-files")
     R.server$add(app = healthcheck.app, name="healthcheck")
     print("-----------------------------------------")
     print(R.server)
     print("-----------------------------------------")
 }
 
+
+parsePOST <- function(env, app) {
+  
+  if(IS_PRODUCTION_MODE)
+    sink(file = stderr(), type = "output")
+
+  request <- Rook::Request$new(env)
+  parameters <- request$POST()
+  
+  body <- paste0(rawToChar(request$body()$postBody, multiple = T), collapse="")
+  
+  if (request$content_type() == 'application/json') {
+    if(!jsonlite::validate(body))
+      return(list(
+        success=jsonlite::unbox(FALSE), 
+        message=jsonlite::unbox('The request is not valid json. Check for special characters.')
+      ))
+    body <- jsonlite::fromJSON(body)
+  }
+
+  result <- app(parameters, body)
+  
+  response <- Response$new(headers = list( "Access-Control-Allow-Origin"="*"))
+  response$write(jsonlite::toJSON(result))
+  response$finish()
+}
 
 # Other useful commands (see also "myrookrestart.R"):
 #R.server$browse("myrookapp")
