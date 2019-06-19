@@ -1,0 +1,201 @@
+---
+params:
+  title: "Differential Privacy Statistics Release"
+  author: "PSI"
+  date: 
+  path: 
+  merge:
+
+title: "`r params$title`"
+author: "`r params$author`"
+date: "`r if(is.null(params$date)) format(Sys.time(), '%d %B, %Y') else params$date`"
+output: 
+  pdf_document:
+    toc: true
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+# hide report generation code from output
+knitr::opts_chunk$set(echo = FALSE)
+
+# xtable generates latex tables
+options(xtable.comment = FALSE)
+
+# load differential privacy release
+release <- if (is.null(params$metadata)) jsonlite::fromJSON(params$path) else params$metadata
+release <- release$data
+```
+
+
+```{r helpers, include=FALSE}
+
+# reweights a collection of estimates for a statistic
+mergeEstimates <- function(statistic) {
+  if (length(names(statistic)) == 1L) return(statistic[[names(statistic)[[1]]]])
+  
+  algorithmLaplace <- list()
+  algorithmOther <- list()
+
+  for (name in names(statistic)) {
+    if (grepl('Laplace', statistic[[name]]$algorithm$name[[1]]))
+      algorithmLaplace[[name]] <- statistic[[name]]
+    else
+      algorithmOther[[name]] <- statistic[[name]]    
+  }
+  
+  # weighted mean by algorithm
+  reweight <- function(algorithms, weights) {
+    releases <- lapply(algorithms, function(stat) stat$release)
+    
+    apply(
+      as.data.frame(lapply(releases, unlist)), 1, 
+      function(stat) weighted.mean(stat, weights))
+  }
+  
+  # for laplace specifically, weight via variance of the noise
+  laplaceMerged <- reweight(
+    algorithmLaplace,
+    weights=sapply(
+      algorithmLaplace, 
+      function(stat) {
+        # default to 1 if specificity not provided
+        delta <- 1
+        try(delta <- as.numeric(stat$privacy_loss$delta[[1]]), silent=T)
+        
+        epsilon <- stat$privacy_loss$epsilon[[1]]
+        
+        # compute variance of the Laplacian noise
+        parameter <- delta / epsilon # parameter to laplace distribution is sensitivity / epsilon
+        variance <- 2 * parameter^2
+        
+        1 / variance
+      })
+    )
+
+  # for any estimate, evenly weight
+  otherMerged <- reweight(
+    algorithmOther,
+    weights=rep(1, length(algorithmOther)) # by committee, equal weights
+  )
+  
+  # merge releases from all algorithms
+  release <- NA
+  if (length(laplaceMerged) == 0L)
+    release <- otherMerged
+  else if (length(otherMerged) == 0L)
+    release <- laplaceMerged
+  else
+    release <- apply(
+      data.frame(laplace=laplaceMerged, other=otherMerged), 1, 
+      function(source) weighted.mean(source, c(length(algorithmLaplace), length(algorithmOther))))
+
+  # keep release names
+  release <- as.data.frame(release)
+  colnames(release) <- names(statistic[[names(statistic)[[1]]]]$release)
+  
+  algorithmNames <- sapply(names(statistic), function(algorithm) statistic[[algorithm]]$algorithm$name)
+  isPostprocessed <- sapply(names(statistic), function(algorithm) statistic[[algorithm]]$post_process)
+
+  list(
+    release=release,
+    algorithm=list(name=paste0('Merged: (', paste(algorithmNames, collapse=', '), ')')),
+    post_process=any(isPostprocessed)
+  )
+}
+
+
+# mergeEstimates(list(stat1=list(algorithm=list(name=c("Laplacexx1")), post_process=F, release=list(value_a=4, value=6), privacy_loss=list(epsilon=1, delta=c(""))),stat2=list(algorithm=list(name=c("Laplacexx2")), post_process=F,release=list(value_a=4, value=12), privacy_loss=list(epsilon=12, delta=c(.02)))))
+```
+
+<!-- # Introduction -->
+<!-- This is the introduction to the differential privacy report.   -->
+<!-- It contains useful information about differential privacy.   -->
+
+
+# Variables
+<!-- Differentially private statistics are organized by variable. -->
+
+```{r variables, results='asis'}
+
+printEstimate <- function(metadata, name) {
+
+    # cat('\nRelease:\n')
+    if (grepl('histogram', name)) {
+        barplot(as.matrix(metadata$release$values))
+        cat('  ')
+    }
+    else
+        print(xtable::xtable(as.data.frame(metadata$release)), include.rownames=FALSE)
+
+    cat('\n')
+
+    if ('accuracy' %in% names(metadata)) {
+      if (is.recursive(metadata$accuracy))
+        cat('The released statistic differs from the actual statistic by at most ', metadata$accuracy$error,
+            ' with ', (1 - metadata$accuracy$alpha) * 100, '% confidence. ', sep='')
+      else
+        cat('The released statistic differs from the actual statistic by at most ', metadata$accuracy, '. ', sep='')
+    }
+
+    descriptors <- c()
+
+    if (any(metadata$merged))
+      descriptors <- c(descriptors, 'by reweighting several released estimates based on the variance of each estimate')
+
+    if (any(metadata$post_process))
+      descriptors <- c(descriptors, 'through post-processing of previous releases at no additional privacy cost')
+
+    if (length(descriptors) > 0)
+      cat(paste0('This statistic was acquired ', paste0(descriptors, collapse=", and "), '. '))
+
+    cat('The algorithm used was "', metadata$algorithm$name, '"', sep = "")
+    if (length(metadata$algorithm$arguments)) {
+      cat(', with arguments:\n')
+      arguments <- as.data.frame(metadata$algorithm$arguments)
+      colnames(arguments) <- NULL
+      print(xtable::xtable(arguments), include.rownames=FALSE)
+      cat('\n')
+
+    } else cat('. ')
+
+    if (!is.null(metadata$algorithm$formula)) cat('The regression formula is "', metadata$algorithm$formula, '". ', sep = "")
+
+    cat('\n')
+}
+
+# a statistic is composed of multiple estimates
+printStatistic <- function(statistic, name) {
+  instances <- names(statistic)
+  
+  # in most situations, there is only one instance of a statistic
+  if (length(instances) == 1L) {
+    cat('\n### Statistic: ', name, '\n', sep = "")
+    printEstimate(statistic[[instances[[1]]]], instances[[1]])
+  }
+  else {
+    for(instance in instances) {
+      cat('\n### Statistic: ', instance, '\n', sep = "")
+      printEstimate(statistic[[instance]], instance)
+    }
+  }
+}
+
+# a variable is composed of multiple statistics
+printVariable <- function(variable) {
+  for (statistic in names(variable)) {
+    if (params$merge == 'true' && length(names(variable[[statistic]])) > 1L) {
+      mergedEstimates <- mergeEstimates(variable[[statistic]])
+      variable[[statistic]] <- list()
+      variable[[statistic]][[paste0('Merged ', statistic)]] <- mergedEstimates
+    }
+    
+    printStatistic(variable[[statistic]], statistic)
+  }
+}
+
+for (variable in names(release$variables)) {
+  cat('\n## ', variable, '\n', sep = "")
+  printVariable(release$variables[[variable]])
+}
+```

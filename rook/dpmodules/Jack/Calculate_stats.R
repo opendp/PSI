@@ -253,7 +253,7 @@ calculate_stats <- function(toprocess, df, globals, fakebinlist = c()){
 }
 
 
-calculate_stats_with_PSIlence <- function(data, df, globals){
+calculate_stats_with_PSIlence <- function(data, df, globals, release=NULL){
 	# PSIlence syntax for each stat
 	# out <-  :
 	# dpMean$new(mechanism='mechanismLaplace', var.type, n, rng=c(lo,hi), epsilon=NULL, accuracy=NULL, impute.rng=NULL, alpha=0.05, boot.fun=boot.mean, ...)
@@ -592,41 +592,20 @@ calculate_stats_with_PSIlence <- function(data, df, globals){
 
 		print(paste("good_objects_length: ", good_objects_length, sep=""))
 
-		# open file connection
-		# Read current JSON file
-		#filepath <- paste("../data/", filename, sep="")
-		filepath <- paste(PSI_DATA_DIRECTORY_PATH, "metadata-pums.json", sep="")
-
-		if(!file.exists(filepath)){
-			fileConn<-file(filepath)
-			writeLines('{"data":{"previous":0,"variables":{}}}', fileConn)	# create json file with only {}
-			close(fileConn)
-			#print(paste("ERROR in 'Calculate_stats.R -> append_release_to_file'!  File not found! ", filepath, sep=""))
-		}
-
-		filedata <- fromJSON(filepath)
+		if (is.null(release)) release <- jsonlite::fromJSON('{"data":{"previous":0,"variables":{}}}')
 
 		# determine the batch ID
-		batch_id <- filedata$data$previous + 1
+		batch_id <- release$data$previous + 1
 
-		for (i in 1:good_objects_length) {
-			filedata <- append_release_to_file(filedata, good_objects[[i]]$single_stat_release,
-				 good_objects[[i]]$variable, good_objects[[i]]$stat, batch_id)
-		}
+		for (i in 1:good_objects_length)
+			release <- append_release_to_file(release,
+        good_objects[[i]]$single_stat_release,
+        good_objects[[i]]$variable, good_objects[[i]]$stat, batch_id)
 
 		# increment batch ID
-		filedata$data$previous <- batch_id
-
-		# Overwrite to file
-		fileconn <- file(filepath)
-		writeLines(toJSON(filedata), fileconn)
-		close(fileconn)
-
+		release$data$previous <- batch_id
 	}
-	else{
-		releaseJSON <- "Only ATTs were computed."
-	}
-	return(list(globals=globals, df=df, releaseJSON=releaseJSON))
+	return(list(globals=globals, df=df, release=release))
 	#write json from dpReleases
 
 

@@ -15,6 +15,7 @@ services:
       - ROOK_SVC_URL=/rook-custom/
       - DJANGO_SETTINGS_MODULE=psiproject.settings.local
       - PSI_DATA_DIRECTORY_PATH=/psi_volume/data
+      - RELEASE_OUTPUT_PATH=/psi_volume/output
     command: python manage.py runserver 0.0.0.0:8080
     volumes:
       - .:/psi_volume

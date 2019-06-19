@@ -65,7 +65,7 @@ Docker Image list:
 - To deploy, run the following commands.  
   - Note: if the service is already running, use the "Stop the service" commands first
 
-### Subsquent Deploys
+### Subsequent Deploys
 
 ```
 cd psi-deploy

@@ -51,6 +51,7 @@ privateStatistics.app <-function(env){
         fileid <- everything$fileid
         apitoken <- everything$apitoken
         transforms <- everything$transforms
+        release <- everything$release # optional past release to augment
     }
 
     ## Check the epsilons budgeted for the statistics come under the global epsilon
@@ -175,7 +176,7 @@ privateStatistics.app <-function(env){
 # '
     if(!warning) {
         #releasedMetadata <- calculate_stats(data, df, globals)
-        releasedMetadata <- calculate_stats_with_PSIlence(data,df,globals)
+        releasedMetadata <- calculate_stats_with_PSIlence(data, df, globals, release)
         cat("Cleared release function \n")
 
         result <- jsonlite:::toJSON(releasedMetadata, digits=8)
