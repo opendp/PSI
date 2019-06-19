@@ -385,13 +385,13 @@ if(production && fileid=="") {
 }
 
 if (!hostname && !production) {
-    hostname="localhost:8080";
+    hostname="0.0.0.0:8080";
 } else if (!hostname && production) {
     hostname="beta.dataverse.org"; 		//this will change when/if the production host changes
 }
 
 if (!production) {
-    var rappURL = "http://localhost:8000/custom/";  		// base URL for the R apps:
+    var rappURL = "http://0.0.0.0:8000/custom/";  		// base URL for the R apps:
 } else {
     var rappURL = "https://beta.dataverse.org/custom/";	//this will change when/if the production host changes
 }
@@ -797,14 +797,16 @@ function talktoRtwo() {
       Process a successful response from the rook "privateStatisticsapp"
     */
    function statisticsSuccess(json) {
-       console.log("start: statisticsSuccess")
+       console.log("start: statisticsSuccess");
        console.log("json in stat s: ", json);
 
        let reportCallback = response => {
-           let reportElement = document.getElementById('pdf-viewer-object');
+           let reportURL = `${rappURL}${response.report_url.replace(/^\/+/g, '')}`;
 
-           reportElement.data = `${rappURL}${response.report_url.replace(/^\/+/g, '')}`
-           reportElement.style.display = "block"
+           let reportElement = document.getElementById('pdf-viewer-object');
+           reportElement.data = reportURL;
+           reportElement.style.display = "block";
+           document.getElementById('pdf-alternate-url').href = reportURL;
        };
        release = json.release;
        makeCorsRequest(`${rappURL}reportGeneratorApp`, reportCallback, console.warn, JSON.stringify(release));
