@@ -13,6 +13,12 @@ LABEL organization="PSI" \
 RUN R -e 'library(devtools);install_github("privacytoolsproject/PSI-Library")'
 
 # -------------------------------------
+# Install Pandoc
+# -------------------------------------
+RUN apt-get update && \
+    apt-get install -y pandoc
+
+# -------------------------------------
 # Copy the repo over
 #   - future: ignore the tworavens django dirs
 #     and assets, be more selective
