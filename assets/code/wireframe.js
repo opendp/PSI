@@ -18,7 +18,7 @@ if(production && fileid=="") {
 }
 
 if (!hostname && !production) {
-       hostname="0.0.0.0:8080";
+       hostname="localhost:8080";
 } else if (!hostname && production) {
     hostname="dataverse-demo.iq.harvard.edu"; //this will change when/if the production host changes
 }

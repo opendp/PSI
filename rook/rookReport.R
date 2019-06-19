@@ -1,5 +1,7 @@
 rookReport.app <- function(params, body) {
 
+  body <- gsub("tableJSON=", "", body)
+
   if (!dir.exists(RELEASE_OUTPUT_PATH))
     dir.create(RELEASE_OUTPUT_PATH, recursive = TRUE)
 
@@ -17,7 +19,7 @@ rookReport.app <- function(params, body) {
     merge='true'
   )
   
-  write(substring(body, 2), releasePath)
+  write(body, releasePath)
   rmarkdown::render(
     templatePath, 
     params=reportParams, 

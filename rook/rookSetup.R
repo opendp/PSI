@@ -142,7 +142,7 @@ parsePOST <- function(env, app) {
   result <- app(parameters, body)
   
   response <- Response$new(headers = list("Access-Control-Allow-Origin"="*"))
-  response$write(jsonlite::toJSON(list(success=jsonlite::unbox(T), data=result)))
+  response$write(jsonlite::toJSON(result))
   response$finish()
 }
 

@@ -50,3 +50,30 @@ def view_rook_route(request, app_name_in_url):
     user_resp = get_json_success('success',
                                  data=json_info)
     return JsonResponse(user_resp)
+
+
+@login_required(login_url='login')
+def download_rook_route(request, filename):
+    """Route the call to Rook and back"""
+
+    print('filename', filename)
+
+    rook_svc_url = '{0}{1}{2}'.format(settings.ROOK_SERVER_BASE, 'rook-files/', filename)
+
+    print('rook_svc_url download', rook_svc_url)
+    try:
+        rservice_req = requests.get(rook_svc_url)
+    except ConnectionError:
+        user_msg = 'R Server not responding: %s' % rook_svc_url
+        print('err_msg', user_msg)
+        return JsonResponse(get_json_error(user_msg))
+
+
+    print('status code from rook call: %d' % rservice_req.status_code)
+
+    # print('rservice_req content', rservice_req.content)
+
+    return HttpResponse(
+        rservice_req.content,
+        status=rservice_req.status_code,
+        content_type=rservice_req.headers['Content-Type'])

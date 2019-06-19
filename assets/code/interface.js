@@ -385,7 +385,7 @@ if(production && fileid=="") {
 }
 
 if (!hostname && !production) {
-    hostname="0.0.0.0:8080";
+    hostname="localhost:8080";
 } else if (!hostname && production) {
     hostname="beta.dataverse.org"; 		//this will change when/if the production host changes
 }
@@ -801,15 +801,15 @@ function talktoRtwo() {
        console.log("json in stat s: ", json);
 
        let reportCallback = response => {
-           let reportURL = `${rappURL}${response.report_url.replace(/^\/+/g, '')}`;
 
+           let reportURL = `${ROOK_SVC_URL}${response.report_url.replace(/^\/+/g, '')}`;
            let reportElement = document.getElementById('pdf-viewer-object');
            reportElement.data = reportURL;
            reportElement.style.display = "block";
            document.getElementById('pdf-alternate-url').href = reportURL;
        };
        release = json.release;
-       makeCorsRequest(`${rappURL}reportGeneratorApp`, reportCallback, console.warn, JSON.stringify(release));
+       makeCorsRequest(`${ROOK_SVC_URL}reportGeneratorApp`, reportCallback, console.warn, JSON.stringify(release));
        estimated = true;
 
        // In production, if PSI has been called with an API token, then try to deposit metadata to dataverse when DP statistics have been successfully released
