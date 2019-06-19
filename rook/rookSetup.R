@@ -7,15 +7,13 @@
 ##
 source("rookconfig.R") # global variables such as "IS_PRODUCTION_MODE"
 
-default_output_path <- paste(getwd(), "/rook-files/", sep="")
-RELEASE_OUTPUT_PATH <- Sys.getenv(x='RELEASE_OUTPUT_PATH', unset=default_output_path)
-
-packageList<-c("Rook","jsonlite","openssl", "devtools")
+packageList<-c("Rook","jsonlite","openssl", "devtools", "rmarkdown", "tinytex")
 for(i in 1:length(packageList)){
-    if (!require(packageList[i],character.only = TRUE)){
-        install.packages(packageList[i], repos="http://lib.stat.cmu.edu/R/CRAN/")
-    }
+  if (!require(packageList[i], character.only = TRUE)) {
+    install.packages(packageList[i], repos = "http://lib.stat.cmu.edu/R/CRAN/")
+  }
 }
+if (is.null(tinytex::tinytex_root())) tinytex::install_tinytex()
 
 #update.packages(ask = FALSE, dependencies = c('Suggests'), oldPkgs=packageList, repos="http://lib.stat.cmu.edu/R/CRAN/")
 
@@ -143,8 +141,8 @@ parsePOST <- function(env, app) {
 
   result <- app(parameters, body)
   
-  response <- Response$new(headers = list( "Access-Control-Allow-Origin"="*"))
-  response$write(jsonlite::toJSON(result))
+  response <- Response$new(headers = list("Access-Control-Allow-Origin"="*"))
+  response$write(jsonlite::toJSON(list(success=jsonlite::unbox(T), data=result)))
   response$finish()
 }
 

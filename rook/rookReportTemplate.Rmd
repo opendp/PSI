@@ -24,7 +24,7 @@ options(xtable.comment = FALSE)
 
 # load differential privacy release
 release <- if (is.null(params$metadata)) jsonlite::fromJSON(params$path) else params$metadata
-metadata <- release$data
+release <- release$data
 ```
 
 
@@ -118,28 +118,37 @@ mergeEstimates <- function(statistic) {
 
 ```{r variables, results='asis'}
 
-printEstimate <- function(metadata) {
-  
+printEstimate <- function(metadata, name) {
+
     # cat('\nRelease:\n')
-    print(xtable::xtable(as.data.frame(metadata$release)), include.rownames=FALSE)
-    
+    if (grepl('histogram', name)) {
+        barplot(as.matrix(metadata$release$values))
+        cat('  ')
+    }
+    else
+        print(xtable::xtable(as.data.frame(metadata$release)), include.rownames=FALSE)
+
     cat('\n')
-    
-    if ('accuracy' %in% names(metadata)) 
-      cat('The released statistic differs from the actual statistic by at most ', metadata$accuracy$error, 
-          ' with ', (1 - metadata$accuracy$alpha) * 100, '% confidence. ', sep='')
-    
+
+    if ('accuracy' %in% names(metadata)) {
+      if (is.recursive(metadata$accuracy))
+        cat('The released statistic differs from the actual statistic by at most ', metadata$accuracy$error,
+            ' with ', (1 - metadata$accuracy$alpha) * 100, '% confidence. ', sep='')
+      else
+        cat('The released statistic differs from the actual statistic by at most ', metadata$accuracy, '. ', sep='')
+    }
+
     descriptors <- c()
-    
+
     if (any(metadata$merged))
       descriptors <- c(descriptors, 'by reweighting several released estimates based on the variance of each estimate')
-    
+
     if (any(metadata$post_process))
       descriptors <- c(descriptors, 'through post-processing of previous releases at no additional privacy cost')
-    
+
     if (length(descriptors) > 0)
       cat(paste0('This statistic was acquired ', paste0(descriptors, collapse=", and "), '. '))
-    
+
     cat('The algorithm used was "', metadata$algorithm$name, '"', sep = "")
     if (length(metadata$algorithm$arguments)) {
       cat(', with arguments:\n')
@@ -147,11 +156,11 @@ printEstimate <- function(metadata) {
       colnames(arguments) <- NULL
       print(xtable::xtable(arguments), include.rownames=FALSE)
       cat('\n')
-      
+
     } else cat('. ')
-    
+
     if (!is.null(metadata$algorithm$formula)) cat('The regression formula is "', metadata$algorithm$formula, '". ', sep = "")
-      
+
     cat('\n')
 }
 
@@ -162,12 +171,12 @@ printStatistic <- function(statistic, name) {
   # in most situations, there is only one instance of a statistic
   if (length(instances) == 1L) {
     cat('\n### Statistic: ', name, '\n', sep = "")
-    printEstimate(statistic[[instances[[1]]]])
+    printEstimate(statistic[[instances[[1]]]], instances[[1]])
   }
   else {
     for(instance in instances) {
       cat('\n### Statistic: ', instance, '\n', sep = "")
-      printEstimate(statistic[[instance]])
+      printEstimate(statistic[[instance]], instance)
     }
   }
 }
@@ -185,8 +194,8 @@ printVariable <- function(variable) {
   }
 }
 
-for (variable in names(metadata$variables)) {
+for (variable in names(release$variables)) {
   cat('\n## ', variable, '\n', sep = "")
-  printVariable(metadata$variables[[variable]])
+  printVariable(release$variables[[variable]])
 }
 ```

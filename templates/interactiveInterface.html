@@ -4,7 +4,7 @@
 {% block main_content %}
   {% include 'content/div-setdataset.html' %}
 
-    <div class="flex-container">
+    <div class="flex-container" style="height:100%; position:fixed">
         <header style="height: 134px">
             <table style="width:100%">
               <tr>
@@ -12,7 +12,7 @@
                   </td>
                   <td style='width:60%'>
                     <div title="This is the name, in Dataverse, of the selected example dataset." id="datasetName" style="text-align:center;">
-                        <h2 style="display:inline;">Dataset Name</h2>
+                        <h2 style ="display:inline;">Dataset Name</h2>
                     </div>
                     <div id="datasetSmallName" style="text-align:left;">
                     </div>
@@ -130,10 +130,11 @@
       </div>
 
 
-        <div id='pdf-viewer' class='normal-pdf'>
+        <div id='pdf-viewer' class='normal-pdf' style="height:100%">
           <div style='position: absolute; left: 0; width: 45px; z-index: 10'><button id='pdf-button' onclick="medtomaxpdf()"><span id='pdf-icon' class='glyphicon glyphicon-arrow-up' style="font-size: 2em"></span></button></div>
           <div style='position: absolute; left: 45px; z-index: 10'><button id='pdf-button-second' class="" onclick="medtominpdf()"><span id='pdf-icon-second' class='glyphicon glyphicon-arrow-down' style="font-size: 2em"></span></button></div>
-          <div id='pdf-object' class='pdf-object' style='height: 100%'><object id="pdf-viewer-object" type="application/pdf" height="100%" width="100%">
+          <div id='pdf-object' style="height:calc(100% - 434px)"><object style="display:none" id="pdf-viewer-object" type="application/pdf" width="100%" height="100%" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+              <p>It appears you don't have a PDF plugin for this browser. <a href="http://localhost:8000/custom/rook-files/report.pdf">Click here to download the PDF file.</a></p>#}
           </object></div>
 </div>
 

@@ -45,3 +45,10 @@ DATAVERSE_FILE_ACCESS_URL <- add_backslash(DATAVERSE_FILE_ACCESS_URL)
 if (nchar(DATAVERSE_FILE_ACCESS_URL)==1){
 	stop(paste('DATAVERSE_FILE_ACCESS_URL not set.  Example value: "', default_file_access_url, '"', sep=''))
 }
+
+# ------------------------------------------------
+# Set: DATAVERSE_FILE_ACCESS_URL
+#  - Make sure it ends with "/"
+# ------------------------------------------------
+default_output_path <- paste(getwd(), "/rook-files/", sep="")
+RELEASE_OUTPUT_PATH <- Sys.getenv(x='RELEASE_OUTPUT_PATH', unset=default_output_path)

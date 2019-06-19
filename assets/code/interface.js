@@ -79,9 +79,12 @@ var variable_unselected_class =
    // "opacity:0.5;"+
     "text-align: center;";
 
+
+var urlparameters = getJsonFromUrl(location.href);
+
 // toggle below for interactive query mode
 // Should only be true when called with interactiveInterface.html
-// var interactive = false;
+// var interactive = urlparameters['interactive'] === 'true';
 var global_epsilon = 0.5;
 var global_delta = 0.000001;
 var global_beta = 0.05;
@@ -274,6 +277,7 @@ function medtomaxpdf() {
   document.getElementById("pdf-button").setAttribute('onclick', 'maxtomedpdf()');
   document.getElementById("pdf-viewer").setAttribute('class', 'full-pdf');
   document.getElementById("pdf-icon-second").setAttribute('class', "");
+  document.getElementById("pdf-object").setAttribute('style', "height: 100%");
   document.getElementById("pdf-button-second").setAttribute('class', "gone");
 }
 
@@ -293,6 +297,7 @@ function maxtomedpdf() {
   document.getElementById('pdf-icon').setAttribute('class', 'glyphicon glyphicon-arrow-up');
   document.getElementById("pdf-button").setAttribute('onclick', 'medtomaxpdf()');
   document.getElementById("pdf-viewer").setAttribute('class', 'normal-pdf');
+  document.getElementById("pdf-object").setAttribute('style', "height: calc(100% - 434px)");
   document.getElementById("pdf-icon-second").setAttribute('class', "glyphicon glyphicon-arrow-down");
   document.getElementById("pdf-button-second").setAttribute('class', "");
 }
@@ -303,7 +308,7 @@ function mintomedpdf() {
   document.getElementById("pdf-viewer").setAttribute('class', 'normal-pdf');
   document.getElementById("pdf-icon-second").setAttribute('class', "glyphicon glyphicon-arrow-down");
   document.getElementById("pdf-button-second").setAttribute('class', "");
-  document.getElementById("pdf-object").setAttribute('style', "height: 100%");
+  document.getElementById("pdf-object").setAttribute('style', "height: calc(100% - 434px)");
   document.getElementById("budget-section").setAttribute('style', "height: 300px");
 }
 
@@ -322,10 +327,6 @@ function getJsonFromUrl() {
   });
   return result;
 }
-
-var urlparameters = getJsonFromUrl(location.href);
-console.log("url parameters");
-console.log(urlparameters);
 
 if(urlparameters['fileid']){
   fileid = urlparameters['fileid'];
@@ -390,7 +391,7 @@ if (!hostname && !production) {
 }
 
 if (!production) {
-    var rappURL = "http://0.0.0.0:8000/custom/";  		// base URL for the R apps:
+    var rappURL = "http://localhost:8000/custom/";  		// base URL for the R apps:
 } else {
     var rappURL = "https://beta.dataverse.org/custom/";	//this will change when/if the production host changes
 }
@@ -672,16 +673,12 @@ function submit(){
 				}
 			}
 		}
-		if(no_stats_selected){
-			alert("You have not selected any statistics to submit.");
-		}
-		else{
-			if(confirm("This will finalize your current selections and spend your privacy budget on them. This action cannot be undone.")){
-				var submit_info = window.open("");  // Have to open in main thread, and then adjust in async callback, as most browsers won't allow new tab creation in async function
-				talktoRtwo(submit_info);  // so we're going to use the btn argument, which is present, but no longer used, to carry the new window object
-			}
-		}
-	}
+
+        if (no_stats_selected)
+            alert("You have not selected any statistics to submit.");
+        else if (confirm("This will finalize your current selections and spend your privacy budget on them. This action cannot be undone."))
+            talktoRtwo();
+    }
 }
 
 function submit_interactive(){
@@ -704,9 +701,9 @@ function submit_interactive(){
 			var remaining = global_epsilon-global_fe;
 			confirm_message = 'This action will spend a portion of your finite privacy budget and cannot be undone. Your remaining epsilon budget will be '+remaining.toFixed(4)+'. Are you sure you want to continue?';
 			if(confirm(confirm_message)){
-				var submit_info = window.open("");  // Have to open in main thread, and then adjust in async callback, as most browsers won't allow new tab creation in async function
+				// var submit_info = window.open("");  // Have to open in main thread, and then adjust in async callback, as most browsers won't allow new tab creation in async function
 				//unblock below when actually calculating stats
-				talktoRtwo(submit_info);
+				talktoRtwo();
 				//subtract batch parameters from global parameters and set new batch parameters defaulted to 10% of the new global ones.
 				set_new_globals();
 				//save underlying table for current batch
@@ -781,16 +778,16 @@ function set_new_globals(){
 //
 // Lots of duplicated code, however.
 
-function talktoRtwo(btn) {
+let release;
+function talktoRtwo() {
     //check completeness here too
   	// if secrecy of the sample is active, provide boosted privacy parameters
 
-   var estimated=false;
-   var base = rappURL;
+   let estimated=false;
 
    function storeMetaSuccess(){
       console.log("metadata to dataverse: SUCCESS");
-   };
+   }
 
    function storeMetaFail(){
       console.log("metadata to dataverse: FAILURE");
@@ -800,36 +797,38 @@ function talktoRtwo(btn) {
       Process a successful response from the rook "privateStatisticsapp"
     */
    function statisticsSuccess(json) {
-      console.log("start: statisticsSuccess")
-      console.log("json in stat s: ", json);
-      let released_statistics = JSON.stringify(json);
+       console.log("start: statisticsSuccess")
+       console.log("json in stat s: ", json);
 
-      estimated=true;
+       let reportCallback = response => {
+           let reportElement = document.getElementById('pdf-viewer-object');
 
-      var paragraph = "<pre> <code>" + released_statistics + "</code> </pre>";
-      btn.document.write(splash(json));
-      // TODO Send JSON of releases to dataverse here
-      var releaseJSON = released_statistics.releaseJSON;
-      console.log(releaseJSON);
+           reportElement.data = `${rappURL}${response.report_url.replace(/^\/+/g, '')}`
+           reportElement.style.display = "block"
+       };
+       release = json.release;
+       makeCorsRequest(`${rappURL}reportGeneratorApp`, reportCallback, console.warn, JSON.stringify(release));
+       estimated = true;
 
-      // In production, if PSI has been called with an API token, then try to deposit metadata to dataverse when DP statistics have been successfully released
-      if(apitokenavailable & production){
-        console.log("attempting to post metadata to dataverse")
-        console.log("writemetadataurl out: ", writemetadataurl);
-        makeCorsRequest2(writemetadataurl, storeMetaSuccess, storeMetaFail, testJSON);
-      };
+       // In production, if PSI has been called with an API token, then try to deposit metadata to dataverse when DP statistics have been successfully released
+       if (apitokenavailable && production) {
+           console.log("attempting to post metadata to dataverse")
+           console.log("writemetadataurl out: ", writemetadataurl);
+           makeCorsRequest2(writemetadataurl, storeMetaSuccess, storeMetaFail, testJSON);
+       }
 
    }  // end: statisticsSuccess
 
 
-   function estimateFail(warning) {
-     estimated=true;
-     console.log("ran estimateFail")
-     alert(warning)
-   }
+    function estimateFail(warning) {
+        estimated = true;
+        console.log("ran estimateFail")
+        alert(warning)
+    }
+
 // JMIdea always use functioning
   // if (SS_value_past != "") {
-    var jsonout = JSON.stringify({ dict: inputted_metadata, indices: column_index, stats: statistic_list, metadata: metadata_list, globals: {eps: global_fe, del: global_fd, Beta: global_beta, n: global_size, grouped_var_dict: grouped_var_dict}, fileid: fileid, apitoken: apitoken, transforms: generateTransform()});
+    var jsonout = JSON.stringify({release, dict: inputted_metadata, indices: column_index, stats: statistic_list, metadata: metadata_list, globals: {eps: global_fe, del: global_fd, Beta: global_beta, n: global_size, grouped_var_dict: grouped_var_dict}, fileid: fileid, apitoken: apitoken, transforms: generateTransform()});
   // }
    //else {
    // var jsonout = JSON.stringify({ dict: inputted_metadata, indices: column_index, stats: statistic_list, metadata: metadata_list, globals: {eps: global_epsilon, del: global_delta, Beta: global_beta, n: global_size}, fileid: fileid });

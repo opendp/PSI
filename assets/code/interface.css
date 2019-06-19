@@ -204,14 +204,6 @@ footer {
   padding: 0;
 }
 
-.normal-pdf {
-  height: 275px;
-  margin: 0.5em;
-  float: left;
-  overflow: auto;
-  position: relative;
-}
-
 .full-pdf {
   position: absolute;
   top: 0;
@@ -229,8 +221,9 @@ footer {
 }
 
 .pdf-object {
-  position: absolute;
-  left: 0;
+  /*position: absolute;*/
+  /*left: 0;*/
+  height: calc(100% - 434px);
   width: 100%;
 }
 
