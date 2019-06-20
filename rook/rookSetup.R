@@ -7,13 +7,12 @@
 ##
 source("rookconfig.R") # global variables such as "IS_PRODUCTION_MODE"
 
-packageList<-c("Rook","jsonlite","openssl", "devtools", "rmarkdown", "tinytex", "xtable", "knitr")
+packageList<-c("Rook","jsonlite","openssl", "devtools", "rmarkdown", "xtable", "knitr")
 for(i in 1:length(packageList)){
   if (!require(packageList[i], character.only = TRUE)) {
     install.packages(packageList[i], repos = "http://lib.stat.cmu.edu/R/CRAN/")
   }
 }
-if (is.null(tinytex::tinytex_root())) tinytex::install_tinytex()
 
 #update.packages(ask = FALSE, dependencies = c('Suggests'), oldPkgs=packageList, repos="http://lib.stat.cmu.edu/R/CRAN/")
 

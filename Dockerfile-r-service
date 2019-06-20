@@ -13,10 +13,13 @@ LABEL organization="PSI" \
 RUN R -e 'library(devtools);install_github("privacytoolsproject/PSI-Library")'
 
 # -------------------------------------
-# Install Pandoc
+# Install Tex Base
 # -------------------------------------
 RUN apt-get update && \
-    apt-get install -y pandoc
+    apt-get install -y pandoc \
+    texlive-full
+
+RUN tlmgr init-usertree
 
 # -------------------------------------
 # Copy the repo over
