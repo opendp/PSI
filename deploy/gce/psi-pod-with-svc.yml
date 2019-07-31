@@ -77,8 +77,8 @@ spec:
         value: "/psi_volume/data"
       - name: DJANGO_SETTINGS_MODULE
         value: psiproject.settings.psi_gce_settings
-      - name: ROOK_SVC_URL
-        value: http://0.0.0.0:8000/custom/
+      - name: FLASK_SVC_URL
+        value: http://0.0.0.0:8000/
       - name: SECRET_KEY
         valueFrom:
           secretKeyRef:
@@ -105,9 +105,9 @@ spec:
       initialDelaySeconds: 15
       periodSeconds: 10
   # --------------------------------
-  # 3 of 3: rook service (psi happening here!)
+  # 3 of 3: flask service (psi happening here!)
   # --------------------------------
-  - name: psi-rook-service
+  - name: psi-flask-service
     image: tworavens/psi-r-service:master
     imagePullPolicy: Always
     ports:

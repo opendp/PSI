@@ -8,10 +8,10 @@ LABEL organization="PSI" \
 
 # ----------------------------------------------------
 # This contains R and specific packages
-# needed to run the PSI rook application
+# needed to run the PSI flask application
 #
 # - The Image from this Dockerfile is used as a base
-#   to copy in the Rook files and run the app in /rook
+#   to copy in the R files and run the app in /R
 #
 # ----------------------------------------------------
 
@@ -27,8 +27,7 @@ RUN apt-get update && \
 # -------------------------------------
 # Install R packages for TwoRavens
 # -------------------------------------
-RUN R -e 'install.packages("Rook", repos="http://cran.rstudio.org")' && \
-    R -e 'install.packages("jsonlite", repos="http://cran.rstudio.org")' && \
+RUN R -e 'install.packages("jsonlite", repos="http://cran.rstudio.org")' && \
     R -e 'install.packages("openssl", repos="http://cran.rstudio.org")' && \
     R -e 'install.packages("devtools", repos="http://cran.rstudio.org")' && \
     R -e 'install.packages("VGAM", repos="http://cran.rstudio.org")'

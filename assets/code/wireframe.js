@@ -35,7 +35,7 @@ if (fileid && !dataurl) {
 }
 
 if (!production) {
-    // base URL for the R apps:
+	// base URL for the R apps:
     var rappURL = "http://0.0.0.0:8000/custom/";
 } else {
     var rappURL = "https://dataverse-demo.iq.harvard.edu/custom/"; //this will change when/if the production host changes
@@ -291,7 +291,7 @@ function talktoR(btn, df, x, y, globals) {
   		globals["del"] = globals["del"]*(big_n/n)
   	}
   	var jsonout = JSON.stringify({ df: df, fileid: fileid, globals: globals});  // Make this a local reference eventually
-    urlcall = base+"privateStatistics";
+    urlcall = base+"privateStatistics.app";
     console.log("urlcall out: ", urlcall);
   
     makeCorsRequest(urlcall,btn, statisticsSuccess, estimateFail, jsonout);
@@ -306,7 +306,7 @@ function talktoR(btn, df, x, y, globals) {
   	}
   	var jsonout = JSON.stringify({ df: df, x: x, y: y, btn:btn, globals:globals});
   	console.log(jsonout)
-    urlcall = base+"privateAccuracies";
+    urlcall = base+"privateAccuracies.app`";
     console.log("urlcall out: ", urlcall);
     allResults = [];
     makeCorsRequest(urlcall,btn, estimateSuccess, estimateFail, jsonout);
@@ -726,7 +726,7 @@ grid.onCellChange.subscribe(function (e, args){
 
 
    if(CompleteRow(row) === true){
-		//MAKE ROOK CALL
+		//MAKE FLASK CALL
 	
 		df = data;
 		x = row+1;

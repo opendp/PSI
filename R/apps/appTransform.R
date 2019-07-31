@@ -1,5 +1,5 @@
 ##
-## rookTransform.R
+## appTransform.R
 ##
 ## 6/27/15
 ##
@@ -10,9 +10,8 @@
 # May consider returning a good name for the variable (instead of letting the user create it)
 
 # TODO put a size limit on the formula we accept
-verifyTransform.app <- function(env) {
-
-    source("rookconfig.R") # global variables such as "IS_PRODUCTION_MODE"
+verifyTransform.app <- function(everything) {
+    requirePackages(c(packageList.any, packageList.report))
 
     if(IS_PRODUCTION_MODE) {
         sink(file = stderr(), type = "output")
@@ -21,25 +20,8 @@ verifyTransform.app <- function(env) {
     print ("Entered transformAdd app")
     # print (system2("pwd", stdout=TRUE))
 
-    request <- Request$new(env)
-    response <- Response$new(headers = list( "Access-Control-Allow-Origin"="*" ))
-
     warning <- FALSE
     message <- "nothing"
-
-    print(paste("request$POST: ", request$POST(), sep=""))
-
-    valid <- jsonlite::validate(request$POST()$tableJSON)
-
-    if(!valid) {
-        warning <- TRUE
-        message = "The request is not valid json. Check for special characters."
-    }
-
-    if(!warning) {
-        everything <- jsonlite::fromJSON(request$POST()$tableJSON)
-        # print(everything)
-    }
 
     if(is.null(everything$formula)) {
         warning <- TRUE
@@ -57,24 +39,21 @@ verifyTransform.app <- function(env) {
         }
     }
 
-
-
     if(!warning) {
-        toSend <- list()
+        toSend <- list(success=TRUE, message="The transform is verified.")
     }
     else {
-        toSend <- list("warning"=message)
+        toSend <- list(success=FALSE, message=message, "warning"=message)
     }
 
     result <- jsonlite:::toJSON(toSend)
 
-    # print("transfromAdd: sending JSON:")
+    # print("transformAdd: sending JSON:")
     # print(result)
     cat("\n")
     if(IS_PRODUCTION_MODE) {
         sink()
     }
 
-    response$write(result)
-    response$finish()
+    return(result)
 }

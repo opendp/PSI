@@ -11,8 +11,8 @@ services:
       context: ./
       dockerfile: Dockerfile-web
     environment:
-      - ROOK_SERVER_BASE=http://psi-rook-service:8000/custom/
-      - ROOK_SVC_URL=/rook-custom/
+      - FLASK_SERVER_BASE=http://psi-flask-service:8000/
+      - FLASK_SVC_URL=/flask-custom/
       - DJANGO_SETTINGS_MODULE=psiproject.settings.local
       - PSI_DATA_DIRECTORY_PATH=/psi_volume/data
       - RELEASE_OUTPUT_PATH=/psi_volume/output
@@ -22,11 +22,11 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - psi-rook-service
+      - psi-flask-service
   #-------------------------------
-  # Rook service
+  # Flask service
   #-------------------------------
-  psi-rook-service:
+  psi-flask-service:
     stdin_open: true
     tty: true
     build:

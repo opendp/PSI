@@ -1,16 +1,14 @@
 ##
-##  rookPrivate
+##  appPrivate
 ##
-##  Rook apps for calling differential privacy modules and updating accuracy table on ingest of private data
-##  Initialized by rookSetup in development mode.  In production, called by TwoRaven's rApache.
+##  R apps for calling differential privacy modules and updating accuracy table on ingest of private data
 ##
 ##  12/11/14 jH
 ##
 
 
-privateStatistics.app <-function(env){
-
-    source("rookconfig.R") # global variables such as "IS_PRODUCTION_MODE"
+privateStatistics.app <-function(everything){
+    requirePackages(packageList.any)
 
     if(IS_PRODUCTION_MODE){
         sink(file = stderr(), type = "output")
@@ -19,28 +17,12 @@ privateStatistics.app <-function(env){
 
     print("Entered privateStatistics app")
 
-    request <- Request$new(env)
-    response <- Response$new(headers = list( "Access-Control-Allow-Origin"="*"))
-
     ## Run some checking on the inputs to make certain values are valid and release can go ahead
     warning <- FALSE
     message <- "nothing"
 
-
-    valid <- jsonlite::validate(request$POST()$tableJSON)
-
-    print(valid)
-
-    ## Check the POST sent to the app appears to be valid JSON
-    if(!valid) {
-        warning <- TRUE
-        message <- "The request is not valid json. Check for special characters."
-    }
-
     ## Translate the JSON into R types
     if(!warning) {
-        everything <- jsonlite::fromJSON(request$POST()$tableJSON)
-        print(everything)
 
         # Unpack JSON into component parts
         dict <- everything$dict
@@ -73,10 +55,9 @@ privateStatistics.app <-function(env){
             # with the fileid supplied and the hostname we have
             # either supplied or configured:
 
-            DATAVERSE_FILE_ACCESS_URL
             dataurl <- paste(DATAVERSE_FILE_ACCESS_URL, fileid, sep="")
 
-            # move this url to rookconfig.R
+            # move this url to config.R
             #dataurl <- paste("https://beta.dataverse.org/api/access/datafile/", fileid, sep="")
 
             # add apitoken if provided
@@ -179,13 +160,13 @@ privateStatistics.app <-function(env){
         releasedMetadata <- calculate_stats_with_PSIlence(data, df, globals, release)
         cat("Cleared release function \n")
 
-        result <- jsonlite:::toJSON(releasedMetadata, digits=8)
-        cat("Cleared JSON conversion \n")
+        result <- releasedMetadata
 
     }else{
-        result <- jsonlite:::toJSON(list(warning=message))
+        result <- list(warning=message)
     }
 
+    result <- jsonlite::toJSON(result, digits=8)
     print(result)
     cat("\n")
 
@@ -193,16 +174,14 @@ privateStatistics.app <-function(env){
         sink()
     }
 
-    response$write(result)
-    response$finish()
+    return(result)
 }
 
 
 
 
-privateAccuracies.app <- function(env){
-
-    source("rookconfig.R") # global variables such as "IS_PRODUCTION_MODE"
+privateAccuracies.app <- function(everything){
+    requirePackages(packageList.any)
 
     if(IS_PRODUCTION_MODE){
         sink(file = stderr(), type = "output")
@@ -210,29 +189,9 @@ privateAccuracies.app <- function(env){
 
     print("Entered Accuracies app")
 
-    request <- Request$new(env)
-    response <- Response$new(headers = list( "Access-Control-Allow-Origin"="*"))
-
-
     ## Run some checking on the inputs to make certain values are valid and composition can go ahead
     warning <- FALSE
     message <- "nothing"
-
-    valid <- jsonlite::validate(request$POST()$tableJSON)
-
-    print("valid")
-    print(valid)
-
-    if(!valid) {
-        warning <- TRUE
-        result <- list(warning="The request is not valid json. Check for special characters.")
-    }
-
-    if(!warning) {
-        everything <- jsonlite::fromJSON(request$POST()$tableJSON)
-        print(everything)
-    }
-
 
     # #first check contents of everything. then unpack them
     # if(is.null(everything)){
@@ -433,13 +392,5 @@ privateAccuracies.app <- function(env){
     if(IS_PRODUCTION_MODE){
         sink()
     }
-    response$write(result)
-    response$finish()
+    return(result)
 }
-
-
-
-# Other useful commands (see also "myrookrestart.R"):
-#R.server$browse("myrookapp")
-#R.server$stop()
-#R.server$remove(all=TRUE)

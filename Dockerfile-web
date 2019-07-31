@@ -1,4 +1,4 @@
-# Note: This only runs the Django app, not the rook services
+# Note: This only runs the Django app, not the flask services
 FROM python:3.6
 MAINTAINER Raman Prasad (raman_prasad@harvard.edu)
 
@@ -40,12 +40,12 @@ COPY . .
 #   (This can be overridden in docker compose/kubernetes)
 #
 # - DJANGO_SETTINGS_MODULE: Django settings
-# - ROOK_SVC_URL - rook-service docker container
+# - FLASK_SVC_URL - flask-service docker container
 # - CODE_REPOSITORY - repository where code will be copied
 # -------------------------------------
 ENV DJANGO_SETTINGS_MODULE=psiproject.settings.local \
-    ROOK_SERVER_BASE=http://0.0.0.0:8000/custom/ \
-    ROOK_SVC_URL=/rook-custom/ \
+    FLASK_SERVER_BASE=http://0.0.0.0:8000/ \
+    FLASK_SVC_URL=/flask-custom/ \
     CODE_REPOSITORY=/var/webapps/PSI \
     LC_ALL=C.UTF-8
 

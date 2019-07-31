@@ -111,6 +111,3 @@ test_setup_local/
 .Rproj.user
 *.Rproj
 .idea/
-
-# Rook-hosted files
-rook/rook-files

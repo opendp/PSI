@@ -33,8 +33,4 @@ urlpatterns = [
     # Serve the home page
     #
     re_path(r'^', views.interface, name='interface'),
-
-    # re_path(r'^%s' % views.ROOK_FILES_PATH, # 'rook-files/'
-    # 	views.view_rook_file_passthrough,
-    # 	name='view_rook_file_passthrough'),
 ]

@@ -4,7 +4,7 @@ MAINTAINER Raman Prasad (raman_prasad@harvard.edu)
 LABEL organization="PSI" \
       2ra.vn.version="0.0.6-beta" \
       2ra.vn.release-date="2018-01-11" \
-      description="Image for the PSI R service, which runs on rook."
+      description="Image for the PSI R service, which runs on flask."
 
 # -------------------------------------
 # Install R openssl library
@@ -32,7 +32,7 @@ RUN mkdir -p /var/webapps/PSI && \
     mkdir -p /psi_volume
 
 # Copy over the repository
-COPY ./rook/ /var/webapps/PSI/rook
+COPY R /var/webapps/PSI/R
 COPY ./LICENSE /var/webapps/PSI
 COPY ./README.md /var/webapps/PSI
 COPY ./data/ /var/webapps/PSI/data
@@ -44,16 +44,24 @@ COPY ./data/ /var/webapps/PSI/data
 VOLUME /psi_volume
 
 # -------------------------------------
-# Expose port for the web (rook)
+# Expose port for the web (flask)
 # -------------------------------------
 EXPOSE 8000
 
-WORKDIR /var/webapps/PSI/rook
+WORKDIR /var/webapps/PSI/R
 
 # -------------------------------------
-# Run django with "rook_nonstop.R"
+# Copy over the requirements and run them
 # -------------------------------------
-CMD Rscript rook_nonstop.R
+COPY ./requirements/ ./requirements
+RUN pip3 install --upgrade pip && \
+    pip3 install --no-cache-dir -r requirements/R-service.txt
+
+
+# -------------------------------------
+# Run flask
+# -------------------------------------
+CMD cd R; python3 runner.py
 
 # -----------------------------------------
 # -- Dev notes --

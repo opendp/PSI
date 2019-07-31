@@ -41,11 +41,11 @@ def run_local_cmd(cmd, description=None):
     fab_local(cmd)
 
 @task
-def run_rook(context):
-    """Run the rook server via the command line"""
-    cmd = 'cd rook; Rscript rook_nonstop.R'
-
-    run_local_cmd(cmd, run_rook.__doc__)
+def run_flask(context, port=8000):
+    """Run the flask server via the command line"""
+    cmd = f'cd R; python3 runner.py {port}'
+    os.environ['FLASK_SERVER_BASE'] = f'http://0.0.0.0:{port}/'
+    run_local_cmd(cmd, run_flask.__doc__)
 
 # @task
 # def create_django_superuser():
@@ -70,14 +70,16 @@ def init_db(context):
     create_test_user(context)
     create_superuser(context)
 
+
 @task
-def run_web(context):
+def run_web(context, port=8080):
     """Run the django web app"""
     init_db(context)
     print("Run web server")
-    cmd = ('python manage.py runserver 8080')
+    cmd = (f'python manage.py runserver {port}')
 
     run_local_cmd(cmd, run_web.__doc__)
+
 
 @task
 def create_superuser_random_pw(context):

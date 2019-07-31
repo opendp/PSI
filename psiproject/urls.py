@@ -27,8 +27,8 @@ urlpatterns = [\
     re_path(r'^admin/',
             admin.site.urls),
 
-    re_path(r'^rook-custom/',
-            include('psi_apps.rook_services.urls')),
+    re_path(r'^flask-custom/',
+            include('psi_apps.flask_services.urls')),
 
     re_path(r'^about$',
             view_about_page,

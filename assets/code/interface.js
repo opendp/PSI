@@ -616,8 +616,7 @@ function talktoR(action, variable, stat) {
    //}
 
    console.log(jsonout)
-   // urlcall = base+"privateAccuraciesapp";
-   urlcall = ROOK_SVC_URL + "privateAccuraciesapp"
+   urlcall = FLASK_SVC_URL + "privateAccuracies.app"
    console.log("urlcall out: ", urlcall);
    makeCorsRequest(urlcall, estimateSuccess, estimateFail, jsonout);
 }
@@ -794,7 +793,7 @@ function talktoRtwo() {
    }
 
    /**
-      Process a successful response from the rook "privateStatisticsapp"
+      Process a successful response from the R "privateStatistics.app"
     */
    function statisticsSuccess(json) {
        console.log("start: statisticsSuccess");
@@ -802,14 +801,14 @@ function talktoRtwo() {
 
        let reportCallback = response => {
 
-           let reportURL = `${ROOK_SVC_URL}${response.report_url.replace(/^\/+/g, '')}`;
+           let reportURL = `${FLASK_SVC_URL}${response.report_url.replace(/^\/+/g, '')}`;
            let reportElement = document.getElementById('pdf-viewer-object');
            reportElement.data = reportURL;
            reportElement.style.display = "block";
            document.getElementById('pdf-alternate-url').href = reportURL;
        };
        release = json.release;
-       makeCorsRequest(`${ROOK_SVC_URL}reportGeneratorApp`, reportCallback, console.warn, JSON.stringify(release));
+       makeCorsRequest(`${FLASK_SVC_URL}report.app`, reportCallback, console.warn, JSON.stringify(release));
        estimated = true;
 
        // In production, if PSI has been called with an API token, then try to deposit metadata to dataverse when DP statistics have been successfully released
@@ -838,7 +837,7 @@ function talktoRtwo() {
 
 	console.log(jsonout)
     // urlcall = base+"privateStatisticsapp";
-    urlcall = ROOK_SVC_URL + "privateStatisticsapp"
+    urlcall = FLASK_SVC_URL + "privateStatistics.app"
     console.log("urlcall out: ", urlcall);
 
     makeCorsRequest(urlcall, statisticsSuccess, estimateFail, jsonout);
@@ -913,7 +912,7 @@ function makeCorsRequest(url, callback, warningcallback, json) {
                message: "some error"}
           OR
               {success: true,
-               data: {your rook response}}
+               data: {your flask response}}
             -- which may include --
               {success: true,
                data: {
@@ -952,7 +951,7 @@ function makeCorsRequest(url, callback, warningcallback, json) {
 }
 
 
-// Make the actual CORS request.  Do NOT prefix with "tableJSON=" as used in rook
+// Make the actual CORS request.
 // Use FormData for multipart request
 function makeCorsRequest2(url,callback, warningcallback, json) {
      var xhr = createCORSRequest2('POST', url);
@@ -2346,7 +2345,7 @@ function newtransform(x) {
 
     console.log(jsonout)
     // urlcall = rappURL+"verifyTransformapp";
-    urlcall = ROOK_SVC_URL + "verifyTransformapp";
+    urlcall = FLASK_SVC_URL + "verifyTransform.app";
     console.log("urlcall out: ", urlcall);
     makeCorsRequest(urlcall, newtransSuccess, newtransFailure, jsonout);
     }
@@ -2460,6 +2459,7 @@ function Validation (valid_entry, entry) {
 function ValidateInput (input, valid_entry, variable, univar) {
     // Actual input validation
     // if variable is a grouped variable, univar contains the single variable that was just edited
+    if (!input) return;
     var entry = input.value;
 
     if (entry == "") {

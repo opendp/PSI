@@ -13,18 +13,14 @@ To run locally:
           mkvirtualenv psi
           pip install -r requirements/base.txt
 
-2. Start rook:
+2. Start flask:
 
       In the Terminal, run:
         
           # Note: To point to a local Haskell transform executable, use a line similar to
-          # export TRANSFORM_HASKELL_APP_PATH=/Users/Documents/Github/PrivateZelig/transformer/transformer-exe 
-          fab run-rook
-
-      Alternatively, in R, run:
-
-          setwd ("[path to.../PSI/rook")
-          source ("rookSetup.R")
+          # export TRANSFORM_HASKELL_APP_PATH=/Users/Documents/Github/PrivateZelig/transformer/transformer-exe
+          # Note: To run on a different port, pass a --port=8001 argument 
+          fab run-flask
 
 
 3. In a separate Terminal, invoke the virtualenv and start Django:
@@ -39,9 +35,9 @@ To run locally:
           python manage.py migrate
           python manage.py runserver 8080
 
-Any port other than 8000 can be specified because rook runs on 8000.
+Any port other than 8000 can be specified because flask runs on 8000.
 
-To allow communication with rook, CORS request have to be enabled on your browser:
+To allow communication with Flask, CORS request have to be enabled on your browser:
 
 Enabling CORS request to local files on Chrome:
 `google-chrome --disable-web-security --user-data-dir="[path to ../PSI/data]"`

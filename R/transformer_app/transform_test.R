@@ -1,5 +1,5 @@
 ##
-## rookTransform.R
+## appTransform.R
 ##
 ## - 6/27/15 - Michael LoPiccolo
 ##
@@ -68,7 +68,7 @@ transformerExec <- function (formula, names, rows=NA) {
     # TODO Change this once we have a system and a location to install transformeR!
     # I won't be adding the actual executable to the git repo. On my system I just set up a quick symbolic link but will need to change that
     # TODO If there ever is an exception thrown from this, we should probably log it and maybe throw a kill switch until we can diagnose the problem.
-    return(system2("/var/webapps/PSI/rook/transformer_app/transformer-exe", input=inp, stdout=TRUE))
+    return(system2("/var/webapps/PSI/R/transformer_app/transformer-exe", input=inp, stdout=TRUE))
     #return(system2("/Users/ramanprasad/Documents/github-rp/PrivateZelig/transformer/transformer-exe", input=inp, stdout=TRUE))
 }
 
@@ -84,7 +84,7 @@ succeeded <- function (execResult) {
 # # so just make sure uniquename is not used twice in the same process.
 # openNamedPipe <- function(uniquename, executable, path=".") {
 #     if(!capabilities("fifo")) {
-#         stop("rookTransform.R: Fifo not supported, are you running Windows?")
+#         stop("appTransform.R: Fifo not supported, are you running Windows?")
 #     }
 #     pid <- Sys.getpid()
 
@@ -93,10 +93,10 @@ succeeded <- function (execResult) {
 #     fullpath <- paste(path, filename, sep=.Platform$file.sep)
 
 #     # TODO Before this, rm the path?
-#     print(paste("rookTransform.R: Running `mkfifo ", fullpath, "`", sep=""))
+#     print(paste("appTransform.R: Running `mkfifo ", fullpath, "`", sep=""))
 #     code <- system2("mkfifo", args=c(fullpath))
 #     if(code != 0) {
-#         stop(paste("rookTransform.R: Fifo could not be created, error code", code))
+#         stop(paste("appTransform.R: Fifo could not be created, error code", code))
 #     }
 
 #     # TODO I could check to see if the executable exists, but I don't know how to guarantee that this command is actually running correctly, it still opens the pipe when it fails.

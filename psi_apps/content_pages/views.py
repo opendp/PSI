@@ -22,7 +22,7 @@ def view_about_page(request):
 @login_required(login_url='login')
 def interface(request):
     """Return the interface.html template"""
-    info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
+    info_dict = dict(FLASK_SVC_URL=settings.FLASK_SVC_URL,
                      CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
 
 
@@ -33,7 +33,7 @@ def interface(request):
 @login_required(login_url='login')
 def interactive(request):
     """Return the interactiveInterface.html template"""
-    info_dict = dict(ROOK_SVC_URL=settings.ROOK_SVC_URL,
+    info_dict = dict(FLASK_SVC_URL=settings.FLASK_SVC_URL,
                      CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
     return render(request,
                   'interactiveInterface.html',

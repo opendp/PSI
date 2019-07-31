@@ -34,7 +34,7 @@ git push # push it to github
 - When Travis finishes, the master image should be updated here:
   - https://hub.docker.com/r/privacytoolsproject/psi-web/tags/
 
-- If you've updated the Rook section, also look for this image to be complete:
+- If you've updated the Flask section, also look for this image to be complete:
   - https://hub.docker.com/r/privacytoolsproject/psi-r-service/tags/
   or check build status here: https://hub.docker.com/r/privacytoolsproject/psi-r-service/builds/
   - Note: This build starts on Docker -- _after_ the (previous build)[https://hub.docker.com/r/privacytoolsproject/psi-web/tags/] is completed
@@ -49,9 +49,9 @@ The docker images are being pulled from [hub.docker](https://hub.docker.com/r/pr
 Docker Image list:
 
 - [privacytoolsproject/psi-web](https://hub.docker.com/r/tworavens/psi-web/tags/)
-  - Contains the main web service which routes calls to rook.
+  - Contains the main web service which routes calls to Flask.
 - [privacytoolsproject/psi-r-service](https://hub.docker.com/r/tworavens/psi-r-service/tags/)
-  - Rook applications, including the core PSI code is run here
+  - R applications, including the core PSI code is run here
 - [privacytoolsproject/psi-nginx](https://hub.docker.com/r/tworavens/psi-nginx/tags/)
   - In deployment, nginx handles all requests, either sending them to psi-web, or handling static file* requests directly.  (* css, js, etc)
 
@@ -128,7 +128,7 @@ kubectl describe pod psi-pod
 # Logs
 #
 kubectl logs psi-pod psi-web
-kubectl logs psi-pod psi-rook-service
+kubectl logs psi-pod psi-flask-service
 kubectl logs psi-pod psi-nginx
 
 # To tail a log, add the "-f" option as in:
@@ -142,6 +142,6 @@ kubectl logs -f psi-pod psi-web
 # Log into running container
 #
 kubectl exec -it psi-pod -c  psi-web /bin/bash
-kubectl exec -ti psi-pod -c psi-rook-service /bin/bash
+kubectl exec -ti psi-pod -c psi-flask-service /bin/bash
 kubectl exec -ti psi-pod -c psi-nginx /bin/bash
 ```

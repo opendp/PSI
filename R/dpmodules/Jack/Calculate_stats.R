@@ -6,11 +6,6 @@
 # after the user completes the table interface and clicks submit. It will return the values
 # that will overwrite the metadata in dataverse.
 
-# This function may throw an error on an ill-formed request,
-# but we make sure it does not do so contingent on the data.
-source("rookconfig.R")
-
-
 enforce_constraints <- function(toprocess, df){
 	#get full list of constraints
 	meta <- df[,c("Variable","Type", "Statistic","Lower_Bound","Upper_Bound","Number_of_Bins","Granularity","Treatment_Variable", "Bin_Names")]

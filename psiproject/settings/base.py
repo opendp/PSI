@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'psi_apps',
-    'psi_apps.rook_services',
+    'psi_apps.flask_services',
     'psi_apps.content_pages',
     'psi_apps.psi_auth',
 ]
@@ -137,20 +137,20 @@ def add_backslash(name, val):
     return val.strip()
 
 # --------------------------------------------------
-# Url for the actual rook server
+# Url for the actual flask server
 # --------------------------------------------------
-ROOK_SERVER_BASE = os.environ.get('ROOK_SERVER_BASE',
-                                  'http://0.0.0.0:8000/custom/')
-add_backslash('ROOK_SERVER_BASE', ROOK_SERVER_BASE)
+FLASK_SERVER_BASE = os.environ.get('FLASK_SERVER_BASE',
+                                  'http://0.0.0.0:8000/')
+add_backslash('FLASK_SERVER_BASE', FLASK_SERVER_BASE)
 
 # --------------------------------------------------
 # Used by the UI, routes through django or nginx->django
 #
-#  Example values: "/custom/", "http://psiproject.org/rook-custom/
+#  Example values: "/custom/", "http://psiproject.org/flask-custom/
 # --------------------------------------------------
-ROOK_SVC_URL = os.environ.get('ROOK_SVC_URL',
-                              '/rook-custom/')
-add_backslash('ROOK_SVC_URL', ROOK_SVC_URL)
+FLASK_SVC_URL = os.environ.get('FLASK_SVC_URL',
+                              '/flask-custom/')
+add_backslash('FLASK_SVC_URL', FLASK_SVC_URL)
 
 PAGE_CACHE_TIME = 0 # dev time
 
