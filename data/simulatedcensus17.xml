@@ -8,8 +8,8 @@
     <varQnty>9</varQnty>
   </dimensns>
   <dataDscr>
-    <var name="par_county" intrvl="contin"/>
-    <var name="par_tract" intrvl="contin"/>
+    <var name="par_county" intrvl="discrete"/>
+    <var name="par_tract" intrvl="discrete"/>
     <var name="kid_pik" intrvl="contin"/>
     <var name="kir" intrvl="contin"/>
     <var name="kid_inc" intrvl="contin"/>
