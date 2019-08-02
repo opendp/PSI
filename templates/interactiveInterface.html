@@ -88,28 +88,44 @@
                     </h4> -->
 
          </header>
+        <div style="overflow:auto;height:100%">
+            <div style="overflow:auto;height:70%">
 
-      <div id='budget-section' class='budget-section' style="height: 300px">
-        <!-- Variable Selection -->
-        <nav id="nudge_variable_sidebar" class="variable_sidebar variable_sidebar_compress">
-            <!-- Searchbar -->
-            <input id='live-search-box' style="display:none" type="text" class="live-search-box" placeholder="Search variable names">
-            <!-- Variable List -->
-            <ul id="variable_sidebar" class="live-search-list"></ul>
-           <button id="group_vars" class="group-vars-button" onclick="group_vars_window()">Multivariate Statistics</button>
+            <!-- Variable Selection -->
+            <nav id="nudge_variable_sidebar" class="variable_sidebar variable_sidebar_compress">
+                <!-- Searchbar -->
+                <input id='live-search-box' style="display:none" type="text" class="live-search-box"
+                       placeholder="Search variable names">
+                <!-- Variable List -->
+                <ul id="variable_sidebar" class="live-search-list"></ul>
+                <button id="group_vars" class="group-vars-button" onclick="group_vars_window()">Multivariate
+                    Statistics
+                </button>
 
-             <input id="new-transform-box" size=16 style="display:none" type="text" class="transformation-box" placeholder="Name <- Formula" onfocusout="newtransform(this)"> <button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal' data-target='#myModal' data-id='transformer'><span class='glyphicon glyphicon-question-sign' style='color:"+qmark_color+";font-size:"+qmark_size+";'></span></button>
+                <input id="new-transform-box" size=16 style="display:none" type="text" class="transformation-box"
+                       placeholder="Name <- Formula" onfocusout="newtransform(this)">
+                <button type='button' class='manualinfo' data-load-url='psiIntroduction.html' data-toggle='modal'
+                        data-target='#myModal' data-id='transformer'><span class='glyphicon glyphicon-question-sign'
+                                                                           style='color:"+qmark_color+";font-size:"+qmark_size+";'></span>
+                </button>
 
-        </nav>
+                <br>
+                <div class="text-center">
+                    <a href="#myModal4" data-toggle="modal" data-dismiss="modal"><button onclick="generate_modal4()" class="btn btn-default">Edit Types</button></a>
+                    <a href="#myModal6" data-toggle="modal" data-dismiss="modal"><button onclick="generate_modal6()" class="btn btn-default">Edit Bounds</button></a>
+                    <a href="#myModal7" data-toggle="modal" data-dismiss="modal"><button onclick="generate_modal7()" class="btn btn-default">Edit Bin Names</button></a>
+                </div>
+
+            </nav>
 
 
-        <article class="main middle_column_compress">
-            <!-- Page Content: Bubbles -->
-            <div id="bubble_form" style=""></div>
+            <article class="main middle_column_compress">
+                <!-- Page Content: Bubbles -->
+                <div id="bubble_form" style=""></div>
 
-        </article>
+            </article>
 
-        <!-- Epsilon Sidebar Table -->
+            <!-- Epsilon Sidebar Table -->
         <nav id="epsilon_sidebar" class="epsilon_sidebar epsilon_sidebar_fixed">
             <div id="epsilon_sidebar_top"></div>
             <div id="epsilon_sidebar_bottom">
@@ -127,15 +143,15 @@
                </div>
             </div>
         </nav>
-      </div>
+                </div>
 
 
-        <div id='pdf-viewer' class='normal-pdf' style="height:100%">
-          <div style='position: absolute; left: 0; width: 45px; z-index: 10'><button id='pdf-button' onclick="medtomaxpdf()"><span id='pdf-icon' class='glyphicon glyphicon-arrow-up' style="font-size: 2em"></span></button></div>
-          <div style='position: absolute; left: 45px; z-index: 10'><button id='pdf-button-second' class="" onclick="medtominpdf()"><span id='pdf-icon-second' class='glyphicon glyphicon-arrow-down' style="font-size: 2em"></span></button></div>
-          <div id='pdf-object' style="height:calc(100% - 434px)"><object style="display:none" id="pdf-viewer-object" type="application/pdf" width="100%" height="100%" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
-              <p>It appears you don't have a PDF plugin for this browser. <a id='pdf-alternate-url'>Click here to download the PDF file.</a></p>#}
-          </object></div>
+        <object style="display:none" id="pdf-viewer-object" type="application/pdf" width="100%" height="700px" alt="pdf"
+                pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+            <p>It appears you don't have a PDF plugin for this browser. <a id="pdf-alternate-url">Click here to download
+                the PDF file.</a></p>#}
+        </object>
+    </div>
 </div>
 
 
@@ -301,6 +317,56 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal opening_modal_back fade" id="myModal6" data-backdrop="static" data-keyboard="false">
+        <div class="opening_modal modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">&times;</button>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): A Private Data Sharing Interface</h3>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h4>Data Ranges</h4>
+
+                        <p>Set the lower and upper bounds of the data for each of the variables in the dataset by entering the appropriate values in the text fields below.</p>
+                        <p>Clicking on a variable will select it. Setting the bounds for a selected variable will set the bounds for all other selected variables at the same time.</p>
+                    </div>
+                    <div>
+                        <ul></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#myModal4" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(3)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#myModal7" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="update_modal_progress(5);" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal opening_modal_back fade" id="myModal7" data-backdrop="static" data-keyboard="false">
+        <div class="opening_modal modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">&times;</button>
+                    <h3 class="modal-title" style="text-align: center;"> <img src="{% static "images/dpr.png" %}" width="200" > PSI (&Psi;): A Private Data Sharing Interface</h3>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <h4>Bin Names</h4>
+
+                        <p>Set the bin names for each of categorial variable in the dataset by entering the appropriate values in the text fields below.</p>
+                        <p>Clicking on a variable will select it. Setting the bin names for a selected variable will set the bounds for all other selected variables at the same time.</p>
+                    </div>
+                    <div>
+                        <ul></ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <a href="#myModal6" id="modal6back" data-toggle="modal" data-dismiss="modal" onclick=" update_ed(); update_modal_progress(4)" class="btn btn-default" style="float: left" role="button">Back</a><a href="#" data-toggle="modal" data-dismiss="modal" class="btn btn-info" onclick="hide_modal_progress()" role="button">Next</a><button type="button" class="btn btn-default" data-dismiss="modal" onclick="edit_window_closed(); hide_modal_progress();">Close</button>
                 </div>
             </div>
         </div>
