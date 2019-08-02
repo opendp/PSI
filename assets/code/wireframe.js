@@ -523,8 +523,8 @@ function undo() {
    	  }
    	  typeMap[Variables[j]] = type
     }
-    //for demo only
-    typeMap[Variables[3]]="Numerical";
+    //for PUMS demo only
+    //typeMap[Variables[3]]="Numerical";
     
     // dataset name trimmed to 12 chars
     var temp = xml.documentElement.getElementsByTagName("fileName");
