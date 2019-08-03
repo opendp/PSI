@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <codebook>
   <fileTxt>
-    <fileName>simulated census 17</fileName>
+    <fileName>Simulated OI Data</fileName>
   </fileTxt>
   <dimensns>
     <caseQnty>219594</caseQnty>
