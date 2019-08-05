@@ -12,7 +12,7 @@ rm(list=ls())
 
 xmlDataverseCreate <- function(filename, removelist){
 
-  data <- read.csv(filename)
+  data <- read.csv(filename, nrow=5000)
   print(dim(data))
 
   print(!(names(data) %in% removelist))
@@ -23,7 +23,7 @@ xmlDataverseCreate <- function(filename, removelist){
   print(names(data))
   print(dim(data))
   print(summary(data))
-  hist(data$par_county)
+
 
 
 
