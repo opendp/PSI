@@ -105,7 +105,7 @@ privateStatistics.app <-function(env){
                 data <- read.csv(pums5_csv_filepath);
                 #data <- read.csv("../data/PUMS5extract10000.csv")  # data has a different relative path on server
             } else {
-              pums5_csv_filepath <- paste(PSI_DATA_DIRECTORY_PATH, "simulatedcensus17.csv", sep="")
+              pums5_csv_filepath <- paste(PSI_DATA_DIRECTORY_PATH, "hxdata2.csv", sep="")
 
               data <- read.csv(pums5_csv_filepath);
                 #data <- read.csv("../data/PUMS5extract10000.csv")
