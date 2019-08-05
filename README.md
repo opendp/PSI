@@ -6,24 +6,37 @@ This is a repository for the frontend, backend, and cloud deployment of the PSI 
 - Reference: https://privacytools.seas.harvard.edu/project-description
 - System Paper: https://arxiv.org/abs/1609.04340
 
-To run locally:
 
-1. Using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/), create a virtualenv and install Install dependencies:
+### Initial Setup
+1. Install system dependencies (latest python 3, pdf renderer)  
+       For Mac use brew:
+          brew install python pandoc
+   
+       For Linux use apt-get:
+          apt-get install python pandoc
 
+2. Install virtualenvwrapper 
+        For Mac use: `https://stackoverflow.com/a/49528037`
+
+3. Using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/), create a virtualenv and install Install dependencies:
+   
           mkvirtualenv psi
           pip install -r requirements/base.txt
 
-2. Start flask:
 
-      In the Terminal, run:
-        
-          # Note: To point to a local Haskell transform executable, use a line similar to
-          # export TRANSFORM_HASKELL_APP_PATH=/Users/Documents/Github/PrivateZelig/transformer/transformer-exe
-          # Note: To run on a different port, pass a --port=8001 argument 
+### Run Servers
+1. Start flask:
+
+      Note: To point to a local Haskell transform executable, use a line similar to  
+      export TRANSFORM_HASKELL_APP_PATH=/Users/Documents/Github/PrivateZelig/transformer/transformer-exe  
+      Note: To run on a different port, pass a --port=8001 argument
+      
+          workon psi 
           fab run-flask
 
 
-3. In a separate Terminal, invoke the virtualenv and start Django:
+2. In a separate Terminal, invoke the virtualenv and start Django:
+      Note: To run on a different port, pass a --port=8081 argument
 
           workon psi
           fab run-web
@@ -43,7 +56,7 @@ Enabling CORS request to local files on Chrome:
 `google-chrome --disable-web-security --user-data-dir="[path to ../PSI/data]"`
 
 Then PSI page can be brought up as:
-http://localhost:8080
+http://127.0.0.1:8080
 
 ---
 
