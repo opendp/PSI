@@ -69,6 +69,8 @@ xmlDataverseCreate <- function(filename, removelist){
 # test <- xmlDataverseCreate(filename = "simulatedCensus_17.csv", removelist = myremovelist)
 
 
-
+### This is the call for edx data
+# myremovelist <- c("roles_isFinance", "roles_isLibrary", "roles_isSales", "roles_isAdmin", "roles", "forumRoles_isModerator", "forumRoles_isStudent", "forumRoles_isBetaTester", "forumRoles_isInstructor", "forumRoles_isStaff", "registered")
+# test <- xmlDataverseCreate(filename = "hxdata.csv", removelist=myremovelist")
 
 
