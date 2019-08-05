@@ -117,7 +117,7 @@ calculate_stats <- function(toprocess, df, globals, fakebinlist = c()){
 		d <- as.numeric(as.character(df$Delta[i]))
 		up <- as.numeric(as.character(df$Upper_Bound[i]))
 		lo <- as.numeric(as.character(df$Lower_Bound[i]))
-		gr <- as.numeric(as.character(df$Granularity[i]))
+		gr <- as.numeric(as.character(df$Number_of_Bins[i])) #as.numeric(metadata$Granularity[i])
 		bins <- as.numeric(as.character(df$Number_of_Bins[i]))
 		col <-  which(colnames(toprocess) == df$Variable[i])
 		att <- df$Variable[i]
@@ -352,10 +352,19 @@ calculate_stats_with_PSIlence <- function(data, df, globals, release=NULL){
 
 		else if(stat=="quantile"){
 			releaseNames[i] <- as.character(var)
-			gran <- as.numeric(df$Granularity[i])
+			gran <- as.numeric(df$Number_of_Bins[i]) #as.numeric(df$Granularity[i])
 			up <- as.numeric(df$Upper_Bound[i])
 			lo <- as.numeric(df$Lower_Bound[i])
 			rng <- c(lo,up)
+
+			print(type)
+			print(var)
+			print(n)
+			print(gran)
+			print(rng)
+			print(eps_i)
+
+
 			impute.rng <- rng
 		    if (missing_type == "fixed_value"){
 		    		fixed_val <- as.numeric(missing_input)
@@ -376,7 +385,10 @@ calculate_stats_with_PSIlence <- function(data, df, globals, release=NULL){
 			if(class(var)=="list"){
 				var <- unlist(var)
 			}
+			print("GOT HERE dptree")
 			out <- dpTree$new(mechanism='mechanismLaplace', var.type=type, variable=var, n=n, rng=rng, gran=gran, epsilon=eps_i, impute.rng=impute.rng)
+			print("out-")
+			print(out)
 			col <-  which(colnames(data) == var)
 			input <- data[,col]
 		}

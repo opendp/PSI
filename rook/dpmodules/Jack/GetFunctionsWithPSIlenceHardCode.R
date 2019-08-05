@@ -66,11 +66,27 @@ get_accuracies <- function(metadata, n, Beta){
 			new_acc <- mean.getAccuracy(epsilon=eps_i, n=n, alpha=Beta, rng=rng)
 		}
 		else if(stat=="quantile"){
-			granularity <- as.numeric(metadata$Granularity[i])
+			print("GOT HERE get_accuracies quantile")
+			print("metadata-")
+			print(metadata)
+			print(names(metadata))
+			granularity <- as.numeric(metadata$Number_of_Bins[i]) #as.numeric(metadata$Granularity[i])
 			up <- as.numeric(metadata$Upper_Bound[i]) 
 			lo <- as.numeric(metadata$Lower_Bound[i])
 			rng <- c(lo,up)
+			print("granularity-")
+			print(granularity)
+			print("Nbins-")
+			print(as.numeric(metadata$Number_of_Bins[i]))
+			print("rng-")
+			print(rng)
+			print("Beta-")
+			print(Beta)
+			print("epsilon-")
+			print(eps_i)
 			new_acc <- tree.getAccuracy(epsilon=eps_i, alpha=Beta, rng=rng, gran=granularity) 
+			print("new_acc-")
+			print(new_acc)
 		}
 		else if(stat=="histogram"){
 			n.bins <- as.numeric(metadata$Number_of_Bins[i])
@@ -146,7 +162,7 @@ get_parameters <- function(new_accuracy, i, metadata, n, Beta){
 			new_eps <- mean.getParameters(accuracy=new_accuracy, n=n, alpha=Beta, rng=rng)
 		}
 		else if(stat=="quantile"){
-			granularity <- as.numeric(metadata$Granularity[i])
+			granularity <- as.numeric(metadata$Number_of_Bins[i]) #as.numeric(metadata$Granularity[i])
 			up <- as.numeric(metadata$Upper_Bound[i]) 
 			lo <- as.numeric(metadata$Lower_Bound[i])
 			rng <- c(lo,up)
