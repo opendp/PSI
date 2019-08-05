@@ -79,7 +79,7 @@ def getXML(request):
     #file = open(os.path.join(settings.BASE_DIR, "data/pumsmetaui.xml"))
     #return HttpResponse(file.read())
     fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
-                 'pumsmetaui.xml')
+                 'simulatedcensus17.xml')
 
     file_info = load_file_contents(fpath)
     if not file_info.success:

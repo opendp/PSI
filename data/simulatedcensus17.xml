@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codebook>
+  <fileTxt>
+    <fileName>Simulated OI Data</fileName>
+  </fileTxt>
+  <dimensns>
+    <caseQnty>219594</caseQnty>
+    <varQnty>9</varQnty>
+  </dimensns>
+  <dataDscr>
+    <var name="par_county" intrvl="discrete"/>
+    <var name="par_tract" intrvl="discrete"/>
+    <var name="kid_pik" intrvl="contin"/>
+    <var name="kir" intrvl="contin"/>
+    <var name="kid_inc" intrvl="contin"/>
+    <var name="lnkid_inc" intrvl="contin"/>
+    <var name="par_rank" intrvl="contin"/>
+    <var name="par_inc" intrvl="contin"/>
+    <var name="lnpar_inc" intrvl="contin"/>
+  </dataDscr>
+</codebook>

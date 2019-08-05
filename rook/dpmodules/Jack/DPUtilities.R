@@ -166,7 +166,16 @@ GUI <- function(df, action, globals, rownum=0, printerror=FALSE){
     
     if(action == "betaChange"){
 			# only need to update accuracies in this case
+			print("GOT HERE betaChange")
+			print("df-")
+			print(df)
+			print("n-")
+			print(n)
+			print("Beta-")
+			print(Beta)
 			return_accuracies <- get_accuracies(df, n, Beta)
+			print("return-accuracies-")
+			print(return_accuracies)
 			if(class(return_accuracies) == "character" && return_accuracies == "error"){
 				message <-"Error in get_accuracies: statistic not found or Beta invalid"
 				if(printerror){
@@ -234,7 +243,19 @@ GUI <- function(df, action, globals, rownum=0, printerror=FALSE){
 	# If no error, set new privacy parameters and call get_accuracies and check for error
 	df$Epsilon <- new_params[, 1]
 	df$Delta <- new_params[, 2]
+
+
+
+	print("GOT HERE accuracy edit")
+			print("df-")
+			print(df)
+			print("n-")
+			print(n)
+			print("Beta-")
+			print(Beta)
 	return_accuracies <- get_accuracies(df, n, Beta)
+			print("return accuracies-")
+			print(return_accuracies)
 	
 	if(class(return_accuracies) == "character" && return_accuracies == "error"){
 			message <- "Error in get_accuracies: statistic not found" 
