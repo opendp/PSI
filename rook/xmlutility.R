@@ -12,7 +12,7 @@ rm(list=ls())
 
 xmlDataverseCreate <- function(filename, removelist){
 
-  data <- read.csv(filename, nrow=5000)
+  data <- read.csv(filename)
   print(dim(data))
 
   print(!(names(data) %in% removelist))
@@ -196,6 +196,6 @@ typeGuess <- function(data) {
 
 ### This is the call for edx data
 # myremovelist <- c("roles_isFinance", "roles_isLibrary", "roles_isSales", "roles_isAdmin", "roles", "forumRoles_isModerator", "forumRoles_isStudent", "forumRoles_isBetaTester", "forumRoles_isInstructor", "forumRoles_isStaff", "registered")
-# test <- xmlDataverseCreate(filename = "hxdata.csv", removelist=myremovelist)
+# test <- xmlDataverseCreate(filename = "hxdata2.csv", removelist=myremovelist)
 
 
