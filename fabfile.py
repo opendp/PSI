@@ -72,6 +72,13 @@ def init_db(context):
 
 
 @task
+def run_frontend(context, port=8080):
+    """Run vue frontend"""
+    cmd = f'cd frontend; npm run serve -- --port {port}'
+    run_local_cmd(cmd, run_frontend.__doc__)
+
+
+@task
 def run_web(context, port=8080):
     """Run the django web app"""
     init_db(context)

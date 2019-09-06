@@ -1,6 +1,7 @@
 from django.urls import path, re_path
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.views.generic import TemplateView
 
 from . import views
 
@@ -33,4 +34,8 @@ urlpatterns = [
     # Serve the home page
     #
     re_path(r'^', views.interface, name='interface'),
+
+    re_path(r'^vue$',
+            TemplateView.as_view(template_name="application.html"),
+            name="app")
 ]

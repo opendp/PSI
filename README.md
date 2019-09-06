@@ -8,12 +8,12 @@ This is a repository for the frontend, backend, and cloud deployment of the PSI 
 
 
 ### Initial Setup
-1. Install system dependencies (latest python 3, pdf renderer)  
+1. Install system dependencies (latest python 3, pdf renderer, nodejs for npm)  
        For Mac use brew:
-          brew install python pandoc
+          brew install python pandoc nodejs
    
        For Linux use apt-get:
-          apt-get install python pandoc
+          apt-get install python pandoc nodejs
 
 2. Install virtualenvwrapper 
         For Mac use: `https://stackoverflow.com/a/49528037`
@@ -21,11 +21,18 @@ This is a repository for the frontend, backend, and cloud deployment of the PSI 
 3. Using [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/), create a virtualenv and install Install dependencies:
    
           mkvirtualenv psi
+          workon psi
           pip install -r requirements/base.txt
+          npm install
 
 
 ### Run Servers
-1. Start flask:
+1. Start frontend:
+      
+          workon psi
+          fab run-frontend
+
+2. Start flask:
 
       Note: To point to a local Haskell transform executable, use a line similar to  
       export TRANSFORM_HASKELL_APP_PATH=/Users/Documents/Github/PrivateZelig/transformer/transformer-exe  
@@ -35,7 +42,7 @@ This is a repository for the frontend, backend, and cloud deployment of the PSI 
           fab run-flask
 
 
-2. In a separate Terminal, invoke the virtualenv and start Django:
+3. In a separate Terminal, invoke the virtualenv and start Django:
       Note: To run on a different port, pass a --port=8081 argument
 
           workon psi

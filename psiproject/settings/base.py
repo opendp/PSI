@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'webpack_loader',
     'psi_apps',
     'psi_apps.flask_services',
     'psi_apps.content_pages',
@@ -127,7 +128,15 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATICFILES_DIRS = [join(BASE_DIR, 'assets')]
+FRONTEND_DIR = join(BASE_DIR, 'frontend')
+
+STATICFILES_DIRS = [FRONTEND_DIR, join(BASE_DIR, 'assets')]
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': '/bundles/',  # must end with slash
+        'STATS_FILE': os.path.join(FRONTEND_DIR, 'webpack-stats.json'),
+    }
+}
 
 
 def add_backslash(name, val):
