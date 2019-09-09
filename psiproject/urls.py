@@ -19,7 +19,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from psi_apps.content_pages.views import view_about_page
 
-urlpatterns = [\
+urlpatterns = [
     re_path(r'auth/', include('psi_apps.psi_auth.urls')),
 
     re_path(r'auth/', include('django.contrib.auth.urls')),
@@ -35,7 +35,8 @@ urlpatterns = [\
             name='view_about_page'),
 
     re_path(r'^',
-            include('psi_apps.content_pages.urls')),]
+            include('psi_apps.content_pages.urls')),
+]
 
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL,

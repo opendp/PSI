@@ -38,11 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'webpack_loader',
     'psi_apps',
     'psi_apps.flask_services',
     'psi_apps.content_pages',
     'psi_apps.psi_auth',
+    'webpack_loader',
 ]
 
 MIDDLEWARE = [
@@ -60,10 +60,13 @@ ROOT_URLCONF = 'psiproject.urls'
 LOGIN_REDIRECT_URL = 'interface'
 LOGOUT_REDIRECT_URL = 'login'
 
+TEMPLATES_DIR = join(BASE_DIR, 'templates')
+FRONTEND_DIR = join(BASE_DIR, 'frontend')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [join(BASE_DIR, 'templates'),],
+        'DIRS': [TEMPLATES_DIR, ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -128,13 +131,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-FRONTEND_DIR = join(BASE_DIR, 'frontend')
-
-STATICFILES_DIRS = [FRONTEND_DIR, join(BASE_DIR, 'assets')]
+STATICFILES_DIRS = [FRONTEND_DIR, join(BASE_DIR, 'frontend/assets')]
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'BUNDLE_DIR_NAME': '/bundles/',  # must end with slash
-        'STATS_FILE': os.path.join(FRONTEND_DIR, 'webpack-stats.json'),
+        'BUNDLE_DIR_NAME': 'frontend/dist/',  # must end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'frontend/webpack-stats.json'),
     }
 }
 

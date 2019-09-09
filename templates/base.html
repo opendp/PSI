@@ -3,52 +3,28 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>{% if page_title %}{{ page_title }}{% else %}Budgeting Tool{% endif %}</title>
-
-    <!-- Linking to Javascript/CSS libraries -->
-    <link rel="stylesheet" href="{% static "libraries/bootstrap-3.3.7/dist/css/bootstrap.min.css" %}">
-    <link href="{% static "libraries/css/simple-sidebar.css" %}" rel="stylesheet">
-
-    <!-- jquery / bootstrap -->
-    <script src="{% static "libraries/jquery/1.12.4/jquery.min.js" %}"></script>
-    <script src="{% static "libraries/bootstrap-3.3.7/dist/js/bootstrap.min.js" %}"></script>
-
-    <!-- jquery ui / bootstrap slider -->
-    <script src="{% static "libraries/jqueryui/1.10.3/jquery-ui.min.js" %}"></script>
-    <link rel="stylesheet" type="text/css" href="{% static "libraries/bootstrap-slider/bootstrap-slider.min.css" %}">
-    <script type="text/javascript" src="{% static "libraries/bootstrap-slider/bootstrap-slider.min.js" %}"></script>
-
-    <!-- D3 -->
-    <script type="text/javascript" src="{% static "lib/d3.v3.min.js" %}"></script>
-
-    <!-- hopscotch -->
-    <link rel="stylesheet" href="{% static "libraries/hopscotch/css/hopscotch.css" %}"></link>
-    <script type="text/javascript" src="{% static "libraries/hopscotch/js/hopscotch.js" %}"></script>
-
-
-    <link rel="stylesheet" type="text/css" href="{% static "code/interface.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "code/login.css" %}">
-    {% block additional_header_code %}
-    {% endblock %}
     <script>
-      // ----------------------------
-      // global js settings from server
-      // ----------------------------
-      const FLASK_SVC_URL = '{{ FLASK_SVC_URL }}';
-      const CONTENT_PAGES_BASE_URL = '{{ CONTENT_PAGES_BASE_URL }}';
+        // ----------------------------
+        // global js settings from server
+        // ----------------------------
+        const FLASK_SVC_URL = '{{ FLASK_SVC_URL }}';
+        const CONTENT_PAGES_BASE_URL = '{{ CONTENT_PAGES_BASE_URL }}';
     </script>
-
 </head>
 <body>
 
 
-    <main>
-        {% block main_content %}
-        {% endblock %}
+<main>
+    {% block main_content %}
+    {% endblock %}
 
-        {% block content %}
-        {% endblock %}
-    </main>
+    {% block content %}
+    {% endblock %}
+</main>
 
 </body>
 

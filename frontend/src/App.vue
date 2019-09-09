@@ -13,19 +13,23 @@
 </template>
 
 <script>
-    import HelloWorld from './components/HelloWorld';
-    import Header from './components/Header';
+    import HelloWorld from './components/HelloWorld.vue';
+    import Header from './components/Header.vue';
 
-    let username = "TEST";
+    // let username = "TEST";
+    // let LOGOUT_URL = '';
+    // let VIEW_CONTENT_PAGE_URL = '';
 
     export default {
         name: 'App',
         components: {
-            HelloWorld,
-            Header
+            Header,
+            HelloWorld
         },
         data: () => ({
-            //
+            LOGOUT_URL: '',
+            username: 'TEST',
+            VIEW_CONTENT_PAGE_URL: ''
         }),
     };
 </script>

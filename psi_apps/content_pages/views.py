@@ -40,6 +40,20 @@ def interactive(request):
                   info_dict)
 
 
+@login_required(login_url='login')
+def application(request):
+    """Return the vue application template"""
+    info_dict = {
+        'FLASK_SVC_URL': settings.FLASK_SVC_URL,
+        'CONTENT_PAGES_BASE_URL': reverse('viewContentPageBase')
+    }
+    print(info_dict)
+
+    return render(request,
+                  'application.html',
+                  info_dict)
+
+
 @cache_page(settings.PAGE_CACHE_TIME)
 def view_content_page(request, page_name='psiIntroduction.html'):
     """Render a template from this project "/templates/content/(page_name)" directory"""

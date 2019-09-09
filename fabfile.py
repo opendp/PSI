@@ -72,9 +72,9 @@ def init_db(context):
 
 
 @task
-def run_frontend(context, port=8080):
+def run_frontend(context, port=8081):
     """Run vue frontend"""
-    cmd = f'cd frontend; npm run serve -- --port {port}'
+    cmd = f'cd frontend; npm run build -- --port {port}'
     run_local_cmd(cmd, run_frontend.__doc__)
 
 
@@ -83,7 +83,7 @@ def run_web(context, port=8080):
     """Run the django web app"""
     init_db(context)
     print("Run web server")
-    cmd = (f'python manage.py runserver {port}')
+    cmd = f'python manage.py runserver {port}'
 
     run_local_cmd(cmd, run_web.__doc__)
 
