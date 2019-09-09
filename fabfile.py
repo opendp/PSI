@@ -72,9 +72,9 @@ def init_db(context):
 
 
 @task
-def run_frontend(context, port=8081):
+def run_frontend(context):
     """Run vue frontend"""
-    cmd = f'cd frontend; npm run build -- --port {port}'
+    cmd = f'cd frontend; npm run start'
     run_local_cmd(cmd, run_frontend.__doc__)
 
 

@@ -23,6 +23,7 @@ PSI_DATA_DIRECTORY_PATH = os.environ.get(\
                                 'PSI_DATA_DIRECTORY_PATH',
                                 join(BASE_DIR, 'data'))
 
+DEBUG = True
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -138,9 +139,9 @@ STATICFILES_DIRS = [
 
 WEBPACK_LOADER = {
     'DEFAULT': {
-        # 'CACHE': not DEBUG,
-        'BUNDLE_DIR_NAME': 'dist/',  # must end with slash
-        'STATS_FILE': os.path.join(BASE_DIR, 'frontend', 'webpack-stats.json'),
+        'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'build/',  # must end with slash
+        'STATS_FILE': join(FRONTEND_DIR, 'webpack-stats.json'),
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
         'IGNORE': [r'.+\.hot-update.js', r'.+\.map']

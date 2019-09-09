@@ -2,7 +2,7 @@ var path = require('path');
 var webpack = require('webpack');   // for django-webpack
 var BundleTracker = require('webpack-bundle-tracker');     // for django-webpack
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin')
+const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
 
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -47,13 +47,20 @@ module.exports = {
                     }
                 ]
             },
-            { test: /\.vue$/, use: 'vue-loader' },
             {
-                test: /\.png$/,
-                use: [{
-                    loader: 'file-loader',
-                    options: {}
-                }]
+                test: /\.vue$/,
+                use: 'vue-loader'
+            },
+            {
+                test: /\.(png|jpe?g|gif)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            publicPath: '/static/build/'
+                        }
+                    },
+                ],
             }
         ]
     },

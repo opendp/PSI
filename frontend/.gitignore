@@ -3,6 +3,8 @@ node_modules
 /dist
 */bundles
 
+webpack-stats.json
+
 # local env files
 .env.local
 .env.*.local
