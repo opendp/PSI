@@ -18,7 +18,7 @@
     <div id="root"></div>
 
     {# injected files from webpack #}
-    {% render_bundle 'about' 'js' %}
-    {% render_bundle 'app' 'js' %}
+    {% render_bundle 'chunk-vendors' %}
+    {% render_bundle 'vue_app_01' %}
 
 {% endblock %}

@@ -130,12 +130,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+TEST_DIRECT_STATIC = join(BASE_DIR, 'frontend')
 
-STATICFILES_DIRS = [FRONTEND_DIR, join(BASE_DIR, 'frontend/assets')]
+STATICFILES_DIRS = [
+    FRONTEND_DIR,
+]
+
 WEBPACK_LOADER = {
     'DEFAULT': {
-        'BUNDLE_DIR_NAME': 'frontend/dist/',  # must end with slash
-        'STATS_FILE': os.path.join(BASE_DIR, 'frontend/webpack-stats.json'),
+        # 'CACHE': not DEBUG,
+        'BUNDLE_DIR_NAME': 'dist/',  # must end with slash
+        'STATS_FILE': os.path.join(BASE_DIR, 'frontend', 'webpack-stats.json'),
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
     }
 }
 

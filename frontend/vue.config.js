@@ -1,28 +1,56 @@
 const BundleTracker = require("webpack-bundle-tracker");
 
+const pages = {
+    'vue_app_01': {
+        entry: './src/main.js',
+        chunks: ['chunk-vendors']
+    },
+};
+
 module.exports = {
-    publicPath: "http://0.0.0.0:8080/",
+    pages: pages,
+    filenameHashing: false,
+    productionSourceMap: false,
+    publicPath: process.env.NODE_ENV === 'production'
+        ? ''
+        : 'http://localhost:8080/',
     outputDir: './dist/',
 
     chainWebpack: config => {
 
         config.optimization
-            .splitChunks(false);
+            .splitChunks({
+                cacheGroups: {
+                    vendor: {
+                        test: /[\\/]node_modules[\\/]/,
+                        name: "chunk-vendors",
+                        chunks: "all",
+                        priority: 1
+                    },
+                },
+            });
+
+        Object.keys(pages).forEach(page => {
+            config.plugins.delete(`html-${page}`);
+            config.plugins.delete(`preload-${page}`);
+            config.plugins.delete(`prefetch-${page}`);
+        })
 
         config
             .plugin('BundleTracker')
             .use(BundleTracker, [{filename: '../frontend/webpack-stats.json'}]);
 
         config.resolve.alias
-            .set('__STATIC__', 'static');
+            .set('__STATIC__', 'static')
 
         config.devServer
-            .public('http://0.0.0.0:8080')
-            .host('0.0.0.0')
+            .public('http://localhost:8080')
+            .host('localhost')
             .port(8080)
-            // .hotOnly(true)
-            // .watchOptions({poll: 1000})
+            .hotOnly(true)
+            .watchOptions({poll: 1000})
             .https(false)
-            .headers({"Access-Control-Allow-Origin": ["\*"]})
+            .headers({"Access-Control-Allow-Origin": ["*"]})
+
     }
 };

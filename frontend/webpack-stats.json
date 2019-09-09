@@ -1,1 +1,20 @@
-{"status":"done","publicPath":"http://0.0.0.0:8080/","chunks":{"about":[{"name":"about.js","publicPath":"http://0.0.0.0:8080/about.js","path":"/home/shoe/PSI/PSI/frontend/dist/about.js"}],"app":[{"name":"app.js","publicPath":"http://0.0.0.0:8080/app.js","path":"/home/shoe/PSI/PSI/frontend/dist/app.js"}]}}
+{
+  "status": "done",
+  "publicPath": "/home/shoe/PSI/PSI/frontend/dist/",
+  "chunks": {
+    "chunk-vendors": [
+      {
+        "name": "chunk-vendors.js",
+        "publicPath": "/home/shoe/PSI/PSI/frontend/dist/chunk-vendors.js",
+        "path": "/home/shoe/PSI/PSI/frontend/dist/chunk-vendors.js"
+      }
+    ],
+    "vue_app_01": [
+      {
+        "name": "vue_app_01.js",
+        "publicPath": "/home/shoe/PSI/PSI/frontend/dist/vue_app_01.js",
+        "path": "/home/shoe/PSI/PSI/frontend/dist/vue_app_01.js"
+      }
+    ]
+  }
+}
