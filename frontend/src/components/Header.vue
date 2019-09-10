@@ -20,7 +20,7 @@
                 <td style='width:60%'>
                     <div title="This is the name, in Dataverse, of the selected example dataset." id="datasetName"
                          style="text-align:left;">
-                        <h2 style="display:inline;">Dataset Name</h2>
+                        <h2 style="display:inline;">{{mode}}</h2>
                     </div>
                     <div id="datasetSmallName" style="text-align:left;">
                     </div>
@@ -74,7 +74,7 @@
     // })
     export default {
         name: "Header.vue",
-        props: ['logoutUrl', 'viewContentPage', "username"]
+        props: ['logoutUrl', 'viewContentPage', "username", "mode"]
     }
 </script>
 

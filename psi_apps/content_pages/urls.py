@@ -32,7 +32,7 @@ urlpatterns = [
     # Serve interactive queries
     re_path(r'^interactive$', views.interactive, name='interactive'),
 
-    re_path(r'^vue/$',
+    re_path(r'^vue.*',
             views.application,
             name='application'),
     # Serve the home page

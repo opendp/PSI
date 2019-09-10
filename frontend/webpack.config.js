@@ -3,6 +3,7 @@ var webpack = require('webpack');   // for django-webpack
 var BundleTracker = require('webpack-bundle-tracker');     // for django-webpack
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const VuetifyLoaderPlugin = require('vuetify-loader/lib/plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -22,12 +23,17 @@ module.exports = {
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 options: {
-                    presets: ['env']
+                    presets: ["@babel/preset-env"]
                 }
             },
             {
                 test: /\.css$/,
-                use: ExtractTextPlugin.extract({use: ['vue-style-loader', 'css-loader']}),
+                use: [
+                    process.env.NODE_ENV !== 'production'
+                        ? 'vue-style-loader'
+                        : MiniCssExtractPlugin.loader,
+                    'css-loader'
+                ],
             },
             {
                 test: /\.s[ca]ss$/,

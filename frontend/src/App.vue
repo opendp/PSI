@@ -4,32 +4,32 @@
                 v-bind:logoutUrl="LOGOUT_URL"
                 v-bind:viewContentPage="VIEW_CONTENT_PAGE_URL"
                 v-bind:user="username"
+                v-bind:mode="getMode()"
         ></Header>
 
         <v-content>
-            <HelloWorld/>
+            <Canvas/>
         </v-content>
     </v-app>
 </template>
 
 <script>
-    import HelloWorld from './components/HelloWorld.vue';
+    import Canvas from './components/Canvas.vue';
     import Header from './components/Header.vue';
-
-    // let username = "TEST";
-    // let LOGOUT_URL = '';
-    // let VIEW_CONTENT_PAGE_URL = '';
 
     export default {
         name: 'App',
         components: {
             Header,
-            HelloWorld
+            Canvas
         },
         data: () => ({
+            getMode() {
+                return this.$route.params.mode || 'budgeter';
+            },
             LOGOUT_URL: '',
             username: 'TEST',
             VIEW_CONTENT_PAGE_URL: ''
-        }),
+        })
     };
 </script>
