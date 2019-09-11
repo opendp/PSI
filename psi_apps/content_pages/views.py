@@ -13,7 +13,7 @@ default_user_groups = [
     {
         "groupId": 1,
         "usernames": [
-            "dev_admin"
+            "dev_admin", "test"
         ],
         "maximumEpsilon": .1,
         "privacyDefinition": {}

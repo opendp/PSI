@@ -1,14 +1,16 @@
 <template>
     <v-app>
         <Header
+                v-bind:datasetName="datasetName()"
                 v-bind:logoutUrl="LOGOUT_URL"
                 v-bind:viewContentPage="VIEW_CONTENT_PAGE_URL"
                 v-bind:username="username"
                 v-bind:mode="getMode()"
+                v-bind:selectedMenu="getSelectedMenu()"
         ></Header>
 
         <v-content>
-            <Canvas/>
+            <Canvas v-bind:selectedMenu="getSelectedMenu()"/>
         </v-content>
     </v-app>
 </template>
@@ -30,6 +32,13 @@
                 let mode = this.$route.params.mode || 'budgeter';
                 if (!validModes.has(mode))
                 return mode;
+            },
+            datasetName() {
+                let workspace = this.$store.state.workspace;
+                if (workspace) return workspace.dataset.name;
+            },
+            getSelectedMenu() {
+                return this.$store.state.selectedMenu
             },
             LOGOUT_URL: '',
             username: USER_NAME,

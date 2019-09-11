@@ -1,37 +1,36 @@
 <template>
-    <multipane style="width:100%;height:100%">
-        <div :style="{ width: '400px'}">
-            <PanelDatasets
-                    v-bind:variables="variables"
-            />
-        </div>
-        <multipane-resizer></multipane-resizer>
-        <div :style="{ width: '25%', maxWidth: '50%' }">
-            <PanelStatistics
-                    v-bind:analysis="analysis"
-            />
-        </div>
-        <multipane-resizer></multipane-resizer>
-        <div :style="{ flexGrow: 1 }">
-            <PanelSummary
-                    v-bind:analysis="analysis"
-            />
-        </div>
-    </multipane>
+    <div>
+        <MenuDataset v-if="selectedMenu === 'dataset'"
+                     v-bind:datasets="datasets"
+        ></MenuDataset>
+        <MenuVariables v-if="selectedMenu === 'variables'"
+                       v-bind:variables="variables"
+        ></MenuVariables>
+        <MenuAnalysis v-if="selectedMenu === 'analysis'"
+                      v-bind:analysis="analysis"
+        ></MenuAnalysis>
+        <MenuRelease v-if="selectedMenu === 'release'"
+                     v-bind:release="release"
+        ></MenuRelease>
+    </div>
 </template>
 
 <script>
     import store from '../store';
 
-    import {Multipane, MultipaneResizer} from 'vue-multipane';
-
-    import PanelDatasets from './PanelVariables.vue';
-    import PanelStatistics from './PanelStatistics.vue';
-    import PanelSummary from './PanelSummary.vue';
+    import MenuDataset from "./MenuDataset.vue";
+    import MenuAnalysis from "./MenuAnalysis.vue";
+    import MenuVariables from "./MenuVariables.vue";
+    import MenuRelease from "./MenuRelease.vue";
 
     export default {
         name: 'Canvas',
+        props: ['selectedMenu'],
         computed: {
+            datasets() {
+                if (store.state.workspace)
+                    return [store.state.workspace.dataset]
+            },
             variables() {
                 if (store.state.workspace)
                     return store.state.workspace.dataset.variables
@@ -39,15 +38,17 @@
             analysis() {
                 if (store.state.workspace)
                     return store.state.workspace.analysis
+            },
+            release() {
+                if (store.state.workspace)
+                    return store.state.workspace.release
             }
         },
         components: {
-            Multipane,
-            MultipaneResizer,
-
-            PanelDatasets,
-            PanelStatistics,
-            PanelSummary
+            MenuDataset,
+            MenuAnalysis,
+            MenuVariables,
+            MenuRelease
         }
     }
 </script>
