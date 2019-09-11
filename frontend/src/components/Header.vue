@@ -4,13 +4,21 @@
         <table style="width:100%">
             <tr>
                 <td>
-                    <div class="dropdown">
-                        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">{{username}}
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li><a :href="logoutUrl">Logout</a></li>
-                        </ul>
+                    <div class="text-center">
+                        <v-menu offset-y>
+                            <template v-slot:activator="{ on }">
+                                <v-btn v-on="on">
+                                    {{username}}
+                                </v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item v-for="(item, index) in [{name: 'logout', action: 'logout'}]"
+                                             :key="index"
+                                             @click="userAction(item.action)">
+                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
                     </div>
                 </td>
             </tr>
@@ -37,7 +45,8 @@
                             onclick="edit_parameters_window()">Edit Parameters
                     </button>
                     <button type="button" class="manualinfo" :data-load-url="viewContentPage" data-toggle="modal"
-                            data-target="#myModal" data-id="parameters"><span class="glyphicon glyphicon-question-sign"></span></button>
+                            data-target="#myModal" data-id="parameters"><span
+                            class="glyphicon glyphicon-question-sign"></span></button>
 
 
                     <div id='display_parameters'>
@@ -67,14 +76,14 @@
 </template>
 
 <script>
-    // let qmark_color = "#090533"; //old value: #FA8072
-    // let qmark_size = "15px"; // old value: 12px
-    // export default Vue.component('header', {
-    //     props: ['logoutUrl', 'viewContentPage']
-    // })
     export default {
         name: "Header.vue",
-        props: ['logoutUrl', 'viewContentPage', "username", "mode"]
+        props: ['logoutUrl', 'viewContentPage', "username", "mode"],
+        data: () => ({
+            userAction(value) {
+                this.$store.dispatch(value)
+            }
+        })
     }
 </script>
 

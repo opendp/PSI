@@ -2,7 +2,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from django.urls import reverse_lazy, reverse
 from django.views import generic
-from psi_apps.content_pages.views import interface
+from psi_apps.content_pages.views_old import interface
 from django.conf import settings
 from django.shortcuts import render, get_object_or_404, redirect
 from .forms import CustomUserCreationForm

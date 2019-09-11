@@ -1,43 +1,97 @@
-from os.path import join, normpath, split
-
-# from django.conf import settings
-from django.conf import settings
-from django.urls import reverse
-from django.views.decorators.cache import cache_page
-from django.http import HttpResponseRedirect, HttpResponse, Http404, JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
-from psi_apps.utils.file_helper import load_file_as_json, load_file_contents
-from psi_apps.utils.view_helper import get_json_error, get_json_success
+from django.http import JsonResponse
+from django.urls import reverse
+from django.conf import settings
+from django.shortcuts import render
+
+import json
+
+from psi_apps.content_pages.models import KEY_SUCCESS, KEY_DATA, KEY_MESSAGE
 
 
-@cache_page(settings.PAGE_CACHE_TIME)
-def view_about_page(request):
-    """This view redirects to 'assets/about/index.html' """
+default_user_groups = [
+    {
+        "groupId": 1,
+        "usernames": [
+            "dev_admin"
+        ],
+        "maximumEpsilon": .1,
+        "privacyDefinition": {}
+    },
+    {
+        "groupId": 2,
+        "usernames": [
+            "test_user"
+        ]
+    }
+]
 
-    static_about_page = join(settings.STATIC_URL, 'about', 'index.html')
+default_datasets = [
+    {
+        "datasetId": 1,
+        "name": "PUMS",
+        "records": 2000,
+        "variables": [
+            {
+                "name": "age",
+                "metadata": {},
+                "metadataDefault": {
+                    "type": "numeric",
+                    "minimum": 0,
+                    "maximum": 100
+                }
+            },
+            {
+                "name": "educ",
+                "metadata": {},
+                "metadataDefault": {
+                    "type": "numeric",
+                    "minimum": 0,
+                    "maximum": 12
+                }
+            },
+            {
+                "name": "sex",
+                "metadata": {},
+                "metadataDefault": {
+                    "type": "categorical",
+                    "categories": [0, 1]
+                }
+            }
+        ]
+    }
+]
 
-    return HttpResponseRedirect(static_about_page)
-
-@login_required(login_url='login')
-def interface(request):
-    """Return the interface.html template"""
-    info_dict = dict(FLASK_SVC_URL=settings.FLASK_SVC_URL,
-                     CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
-
-
-    return render(request,
-                  'interface.html',
-                  info_dict)
-
-@login_required(login_url='login')
-def interactive(request):
-    """Return the interactiveInterface.html template"""
-    info_dict = dict(FLASK_SVC_URL=settings.FLASK_SVC_URL,
-                     CONTENT_PAGES_BASE_URL=reverse('viewContentPageBase'))
-    return render(request,
-                  'interactiveInterface.html',
-                  info_dict)
+default_workspaces = [
+    {
+        "workspaceId": 1,
+        "datasetId": 1,
+        "userGroupIds": [1, 2],
+        "analysis": [
+            {
+                "nodeId": 1,
+                "name": "add",
+                "children": [
+                    {"dataset": "PUMS", "variable": "age"},
+                    {"dataset": "PUMS", "variable": "educ"}
+                ]
+            },
+            {
+                "nodeId": 2,
+                "name": "mean",
+                "children": [{"id": 1}],
+                "metadata": {}
+            },
+            {
+                "nodeId": 3,
+                "name": "mean",
+                "children": [
+                    {"dataset": "PUMS", "variable": "sex"}
+                ]
+            }
+        ]
+    }
+]
 
 
 @login_required(login_url='login')
@@ -45,69 +99,89 @@ def application(request):
     """Return the vue application template"""
     info_dict = {
         'FLASK_SVC_URL': settings.FLASK_SVC_URL,
-        'CONTENT_PAGES_BASE_URL': reverse('viewContentPageBase')
+        'CONTENT_PAGES_BASE_URL': reverse('viewContentPageBase'),
+        'USER_NAME': request.user.username
     }
-    print(info_dict)
 
     return render(request,
                   'application.html',
                   info_dict)
 
 
-@cache_page(settings.PAGE_CACHE_TIME)
-def view_content_page(request, page_name='psiIntroduction.html'):
-    """Render a template from this project "/templates/content/(page_name)" directory"""
-    template_name = normpath(join('content', page_name))
+@login_required(login_url='login')
+def list_workspaces(request):
+    """list workspaces available to the user"""
+    username = request.user.username
+    user_groups = {}
+    for group in default_user_groups:
+        if username in group['usernames']:
+            user_groups[group['groupId']] = group
 
-    # sanity check, and
-    #
-    path_parts = split(template_name)
-    if not len(path_parts) == 2 and \
-        path_parts[0] == 'content' and \
-        path_parts[1] == page_name:
-        raise Http404('content page not found: %s' % page_name)
+    def find_user_group(group_ids):
+        for group_id in group_ids:
+            if group_id in user_groups:
+                return group_id
 
-    return render(request,
-                  template_name)
+    candidates = []
+    for workspace in default_workspaces:
+        parent_group_id = find_user_group(workspace['userGroupIds'])
+        if parent_group_id is not None:
+            candidates.append({"workspace": workspace, "groupId": parent_group_id})
+
+    listing_data = [{
+        "workspaceId": candidate['workspace']['workspaceId'],
+        "datasetId": candidate['workspace']['datasetId'],
+        "analysis": candidate['workspace']['analysis'],
+        "userGroup": user_groups[candidate['groupId']]
+    } for candidate in candidates]
+
+    return JsonResponse({
+        KEY_SUCCESS: True,
+        KEY_DATA: listing_data,
+        KEY_MESSAGE: 'datasets loaded successfully'
+    })
+
 
 @login_required(login_url='login')
-def getData(request):
-    """Return a default/test preprocess file: preprocess_4_v1-0.json"""
-    fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
-                 'preprocess_4_v1-0.json')
+def get_workspace(request):
+    """get workspace by id"""
+    json_data = json.loads(request.body)
+    workspace_id = json_data['workspaceId']
+    username = request.user.username
 
-    json_info = load_file_as_json(fpath)
-    if not json_info.success:
-        return JsonResponse(get_json_error(json_info.err_msg))
+    user_groups = {}
+    for group in default_user_groups:
+        if username in group['usernames']:
+            user_groups[group['groupId']] = group
 
-    return JsonResponse(json_info.result_obj)
+    workspace = next((i for i in default_workspaces if i['workspaceId'] == workspace_id), None)
+    if workspace is None:
+        return JsonResponse({
+            KEY_SUCCESS: False,
+            KEY_MESSAGE: f"no workspace found with workspace id {workspace_id}"
+        })
 
-    #
-    #return JsonResponse(\
-    #            get_json_success('success',
-    #                             data=json_info.result_obj))
+    user_group_id = next((i for i in workspace['userGroupIds'] if i in user_groups), None)
+    if user_group_id is None:
+        return JsonResponse({
+            KEY_SUCCESS: False,
+            KEY_MESSAGE: f"not authorized to view workspace id {workspace_id}"
+        })
+    user_group = user_groups[user_group_id]
 
-@login_required(login_url='login')
-def getXML(request):
-    """Return the default/test xml data: pumsmetaui.xml"""
-    #file = open(os.path.join(settings.BASE_DIR, "data/pumsmetaui.xml"))
-    #return HttpResponse(file.read())
-    fpath = join(settings.PSI_DATA_DIRECTORY_PATH,
-                 'pumsmetaui.xml')
+    dataset = next((i for i in default_datasets if i['datasetId'] == workspace['datasetId']), None)
+    if dataset is None:
+        return JsonResponse({
+            KEY_SUCCESS: False,
+            KEY_MESSAGE: f"no dataset id {workspace['datasetId']} found for workspace {workspace_id}"
+        })
 
-    file_info = load_file_contents(fpath)
-    if not file_info.success:
-        return JsonResponse(get_json_error(file_info.err_msg))
-
-    return HttpResponse(file_info.result_obj,
-                        content_type="application/xml")
-
-    #return JsonResponse(\
-    #            get_json_success('success',
-    #                             data=json_info.result_obj))
-
-@login_required(login_url='login')
-def view_monitoring_alive(request):
-    """For kubernetes liveness check"""
-    return JsonResponse(dict(status="ok",
-                             message="PSI python server up"))
+    return JsonResponse({
+        KEY_SUCCESS: True,
+        KEY_MESSAGE: "workspace succesfully retrieved",
+        KEY_DATA: {
+            "analysis": workspace['analysis'],
+            "user_group": user_group,
+            "dataset": dataset
+        }
+    })

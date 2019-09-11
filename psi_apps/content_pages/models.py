@@ -11,3 +11,8 @@ class DataSet(models.Model):
 
 		def __unicode__(self):
 			return self.title
+
+
+KEY_SUCCESS = 'success'
+KEY_DATA = 'data'
+KEY_MESSAGE = 'message'

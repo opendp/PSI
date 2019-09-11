@@ -3,78 +3,62 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex);
 
-let store = new Vuex.Store({
+export default new Vuex.Store({
     state: {
-        datasets: [
-            {
-                name: 'PUMS',
-                records: 2000,
-                variables: [
-                    {
-                        name: 'age',
-                        metadata: {},
-                        metadataDefault: {
-                            type: 'numeric',
-                            minimum: 0,
-                            maximum: 100
-                        }
-                    },
-                    {
-                        name: 'educ',
-                        metadata: {},
-                        metadataDefault: {
-                            type: 'numeric',
-                            minimum: 0,
-                            maximum: 12
-                        }
-                    },
-                    {
-                        name: 'sex',
-                        metadata: {},
-                        metadataDefault: {
-                            type: 'categorical',
-                            categories: [0, 1]
-                        }
-                    }
-                ]
-            }
-        ],
-        analysis: [
-            {
-                id: 1,
-                name: 'add',
-                children: [
-                    {dataset: 'PUMS', variable: 'age'},
-                    {dataset: 'PUMS', variable: 'educ'}
-                ]
-            },
-            {
-                id: 2,
-                name: 'mean',
-                children: [{id: 1}]
-            },
-            {
-                id: 3,
-                name: 'mean',
-                children: [
-                    {dataset: 'PUMS', variable: 'sex'}
-                ]
-            }
-        ]
+        workspaceList: [],
+        workspace: undefined
     },
     mutations: {
-        setVariableMetadata(dataset, variable, value) {
-            let candidate = store.state.datasets[dataset].variables
+        SET_VARIABLE_METADATA(state, {variable, value}) {
+            let candidate = state.workspace.dataset.variables
                 .find(variableMeta => variableMeta.name === variable);
             if (!candidate) return;
             candidate.metadata = value;
+        },
+        LOGOUT() {
+            // TODO: call logout url
+            console.log('Logging out');
+        },
+        SET_WORKSPACE(state, workspace){
+            state.workspace = workspace;
+        },
+        SET_WORKSPACE_LIST(state, workspaceList) {
+            state.workspaceList = workspaceList;
         }
     },
     actions: {
         setVariableMetadata({commit}, value) {
-            commit('setVariableMetadata', value)
+            commit('SET_VARIABLE_METADATA', value)
+        },
+
+        logout({commit}) {commit('LOGOUT')},
+
+        fetchWorkspaceList({commit}, specifications) {
+            return Vue.axios.post('listWorkspaces', specifications)
+                .then(response => {
+                    if (response.status !== 200) {
+                        console.log(response.config.url, " request failed with status ", response.status);
+                        console.log(response);
+                        return;
+                    }
+                    if (response.data.success)
+                        commit('SET_WORKSPACE_LIST', response.data.data);
+                    else console.log(response.data.message)
+                })
+        },
+
+        fetchWorkspace({commit}, workspaceId) {
+            return Vue.axios.post('getWorkspace', {workspaceId})
+                .then(response => {
+                    if (response.status !== 200) {
+                        console.log(response.config.url, " request failed with status ", response.status);
+                        console.log(response);
+                        return;
+                    }
+                    if (response.data.success)
+                        commit('SET_WORKSPACE', response.data.data);
+                    else console.log(response.data.message)
+                })
         }
     }
 });
-
-export default store;

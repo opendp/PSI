@@ -13,7 +13,7 @@ module.exports = {
     entry: './src/main.js',
     output: {
         path: path.resolve(__dirname, 'build'),
-        filename: 'privacy_app-[hash].js'
+        filename: 'privacy_app.js'
     },
     devtool: 'eval-source-map',
     module: {
@@ -73,7 +73,7 @@ module.exports = {
     plugins: [
         new VueLoaderPlugin(),
         new VuetifyLoaderPlugin(),
-        new ExtractTextPlugin('privacy_styles-[hash].css'),
+        new ExtractTextPlugin('privacy_styles.css'),
         new BundleTracker({filename: './webpack-stats.json'}),
     ]
 };

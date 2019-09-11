@@ -2,19 +2,19 @@
     <multipane style="width:100%;height:100%">
         <div :style="{ width: '400px'}">
             <PanelDatasets
-                    v-bind:datasets="datasets"
+                    v-bind:variables="variables"
             />
         </div>
         <multipane-resizer></multipane-resizer>
         <div :style="{ width: '25%', maxWidth: '50%' }">
             <PanelStatistics
-                    v-bind:statistics="statistics"
+                    v-bind:analysis="analysis"
             />
         </div>
         <multipane-resizer></multipane-resizer>
         <div :style="{ flexGrow: 1 }">
             <PanelSummary
-                    v-bind:statistics="statistics"
+                    v-bind:analysis="analysis"
             />
         </div>
     </multipane>
@@ -25,18 +25,20 @@
 
     import {Multipane, MultipaneResizer} from 'vue-multipane';
 
-    import PanelDatasets from './PanelDatasets.vue';
+    import PanelDatasets from './PanelVariables.vue';
     import PanelStatistics from './PanelStatistics.vue';
     import PanelSummary from './PanelSummary.vue';
 
     export default {
         name: 'Canvas',
         computed: {
-            datasets() {
-                return store.state.datasets
+            variables() {
+                if (store.state.workspace)
+                    return store.state.workspace.dataset.variables
             },
-            statistics() {
-                return store.state.analysis
+            analysis() {
+                if (store.state.workspace)
+                    return store.state.workspace.analysis
             }
         },
         components: {

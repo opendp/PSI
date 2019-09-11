@@ -45,6 +45,8 @@
   },
   "dependencies": {
     "vuetify-loader": "^1.3.0",
-    "webpack-bundle-tracker": "^0.4.2-beta"
+    "webpack-bundle-tracker": "^0.4.2-beta",
+    "axios": "latest",
+    "vue-axios": "latest"
   }
 }

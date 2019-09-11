@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-for="(statistic, i) in statistics"
+        <div v-if="analysis" v-for="(statistic, i) in analysis"
              :key="i">
             {{statistic.name}}
         </div>
@@ -10,7 +10,7 @@
 <script>
     export default {
         name: "PanelStatistics",
-        props: ['statistics']
+        props: ['analysis']
     }
 </script>
 

@@ -3,7 +3,7 @@
         <Header
                 v-bind:logoutUrl="LOGOUT_URL"
                 v-bind:viewContentPage="VIEW_CONTENT_PAGE_URL"
-                v-bind:user="username"
+                v-bind:username="username"
                 v-bind:mode="getMode()"
         ></Header>
 
@@ -17,6 +17,8 @@
     import Canvas from './components/Canvas.vue';
     import Header from './components/Header.vue';
 
+    let validModes = new Set(['budgeter', 'researcher']);
+
     export default {
         name: 'App',
         components: {
@@ -25,10 +27,12 @@
         },
         data: () => ({
             getMode() {
-                return this.$route.params.mode || 'budgeter';
+                let mode = this.$route.params.mode || 'budgeter';
+                if (!validModes.has(mode))
+                return mode;
             },
             LOGOUT_URL: '',
-            username: 'TEST',
+            username: USER_NAME,
             VIEW_CONTENT_PAGE_URL: ''
         })
     };

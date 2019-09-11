@@ -8,7 +8,7 @@ export default new Router({
     routes: [
         {
             path: '/:mode',
-            name: 'budgeter',
+            name: 'app',
             component: App,
         }
     ]
