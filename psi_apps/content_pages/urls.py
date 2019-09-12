@@ -14,7 +14,11 @@ urlpatterns = [
             views.application,
             name='application'),
 
-    re_path(r'^listWorkspaces',
+    re_path(r'^listDatasets$',
+            views.list_datasets,
+            name='list-datasets'),
+
+    re_path(r'^listWorkspaces$',
             views.list_workspaces,
             name='list-workspaces'),
 

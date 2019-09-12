@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
     state: {
+        datasetList: [],
         workspaceList: [],
         workspace: undefined,
 
@@ -25,6 +26,9 @@ export default new Vuex.Store({
         SET_WORKSPACE(state, workspace) {
             state.workspace = workspace;
         },
+        SET_DATASET_LIST(state, datasetList) {
+            state.datasetList.push(...datasetList)
+        },
         SET_WORKSPACE_LIST(state, workspaceList) {
             state.workspaceList = workspaceList;
         },
@@ -41,18 +45,30 @@ export default new Vuex.Store({
             commit('LOGOUT')
         },
 
+        fetchDatasetList({commit}, specifications) {
+            return Vue.axios.post('listDatasets', specifications).then(response => {
+                if (response.status !== 200) {
+                    console.log(response.config.url, " request failed with status ", response.status);
+                    console.log(response);
+                    return;
+                }
+                if (response.data.success)
+                    commit('SET_DATASET_LIST', response.data.data);
+                else console.log(response.data.message)
+            })
+        },
+
         fetchWorkspaceList({commit}, specifications) {
-            return Vue.axios.post('listWorkspaces', specifications)
-                .then(response => {
-                    if (response.status !== 200) {
-                        console.log(response.config.url, " request failed with status ", response.status);
-                        console.log(response);
-                        return;
-                    }
-                    if (response.data.success)
-                        commit('SET_WORKSPACE_LIST', response.data.data);
-                    else console.log(response.data.message)
-                })
+            return Vue.axios.post('listWorkspaces', specifications).then(response => {
+                if (response.status !== 200) {
+                    console.log(response.config.url, " request failed with status ", response.status);
+                    console.log(response);
+                    return;
+                }
+                if (response.data.success)
+                    commit('SET_WORKSPACE_LIST', response.data.data);
+                else console.log(response.data.message)
+            })
         },
 
         fetchWorkspace({commit}, workspaceId) {

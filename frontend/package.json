@@ -18,7 +18,9 @@
   "homepage": "https://github.com/privacytoolsproject/PSI#readme",
   "devDependencies": {
     "@babel/core": "^7.6.0",
+    "@babel/plugin-transform-runtime": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
+    "@babel/runtime": "^7.6.0",
     "babel-loader": "^8.0.6",
     "babel-preset-env": "^1.7.0",
     "css-loader": "^3.2.0",

@@ -10,10 +10,17 @@ Vue.use(VueAxios, axios);
 
 Vue.config.productionTip = false;
 
-store.dispatch('fetchWorkspaceList').then(() => {
-    if (store.state.workspaceList.length === 1)
-      store.dispatch('fetchWorkspace', store.state.workspaceList[0].workspaceId)
-});
+let load = async () => {
+    await store.dispatch('fetchDatasetList');
+
+    if (store.state.datasetList.length !== 1) return;
+    await store.dispatch('fetchWorkspaceList', {datasetId: store.state.datasetList[0].datasetId});
+
+    if (store.state.workspaceList.length === 1) return;
+    await store.dispatch('fetchWorkspace', store.state.workspaceList[0].workspaceId)
+};
+
+load().then(() => console.log('(page loaded)'));
 
 new Vue({
     router,

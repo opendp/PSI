@@ -1,7 +1,9 @@
 <template>
     <div>
         <MenuDataset v-if="selectedMenu === 'dataset'"
-                     v-bind:datasets="datasets"
+                     v-bind:datasetList="this.$store.state.datasetList"
+                     v-bind:workspaceList="this.$store.state.workspaceList"
+                     v-bind:workspace="this.$store.state.workspace"
         ></MenuDataset>
         <MenuVariables v-if="selectedMenu === 'variables'"
                        v-bind:variables="variables"
@@ -27,9 +29,8 @@
         name: 'Canvas',
         props: ['selectedMenu'],
         computed: {
-            datasets() {
-                if (store.state.workspace)
-                    return [store.state.workspace.dataset]
+            datasetList() {
+
             },
             variables() {
                 if (store.state.workspace)

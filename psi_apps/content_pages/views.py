@@ -109,9 +109,25 @@ def application(request):
 
 
 @login_required(login_url='login')
+def list_datasets(request):
+    """list datasets available to the user"""
+    # TODO: implement logic
+
+    return JsonResponse({
+        KEY_SUCCESS: True,
+        KEY_DATA: default_datasets,
+        KEY_MESSAGE: f'all datasets visible to {request.user.username} returned'
+    })
+
+
+@login_required(login_url='login')
 def list_workspaces(request):
     """list workspaces available to the user"""
+    post = json.loads(request.body)
+    dataset_id = post.get('datasetId', None)
+
     username = request.user.username
+
     user_groups = {}
     for group in default_user_groups:
         if username in group['usernames']:
@@ -124,9 +140,14 @@ def list_workspaces(request):
 
     candidates = []
     for workspace in default_workspaces:
+        if dataset_id is not None and workspace['datasetId'] != dataset_id:
+            continue
+
         parent_group_id = find_user_group(workspace['userGroupIds'])
-        if parent_group_id is not None:
-            candidates.append({"workspace": workspace, "groupId": parent_group_id})
+        if parent_group_id is None:
+            continue
+
+        candidates.append({"workspace": workspace, "groupId": parent_group_id})
 
     listing_data = [{
         "workspaceId": candidate['workspace']['workspaceId'],
