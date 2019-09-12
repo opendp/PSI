@@ -29,9 +29,6 @@
         name: 'Canvas',
         props: ['selectedMenu'],
         computed: {
-            datasetList() {
-
-            },
             variables() {
                 if (store.state.workspace)
                     return store.state.workspace.dataset.variables

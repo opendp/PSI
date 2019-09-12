@@ -41,12 +41,10 @@
             'logoutUrl',
             'viewContentPage',
             "username",
-            "selectedMode"
+            "selectedMode",
+            "selectedMenu"
         ],
         data: () => ({
-            selectedMenu() {
-                return this.$store.state.selectedMenu
-            },
             userAction(value) {
                 this.$store.dispatch(value)
             },
