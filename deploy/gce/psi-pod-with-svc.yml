@@ -20,7 +20,7 @@ spec:
   # IP mapped to psiprivacy.org
   #   - psi-static-ip-with-domain
   #
-  loadBalancerIP: 35.238.103.175
+  loadBalancerIP: 34.67.125.198
 ---
 # ---------------------------
 # PSI prototype app - Kubernetes Pod File
