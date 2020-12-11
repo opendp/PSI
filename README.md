@@ -16,9 +16,9 @@ To run locally:
 2. Start rook:
 
       In the Terminal, run:
-        
+
           # Note: To point to a local Haskell transform executable, use a line similar to
-          # export TRANSFORM_HASKELL_APP_PATH=/Users/Documents/Github/PrivateZelig/transformer/transformer-exe 
+          # export TRANSFORM_HASKELL_APP_PATH=/Users/Documents/Github/PrivateZelig/transformer/transformer-exe
           fab run-rook
 
       Alternatively, in R, run:
@@ -30,11 +30,13 @@ To run locally:
 3. In a separate Terminal, invoke the virtualenv and start Django:
 
           workon psi
+          export DJANGO_SETTINGS_MODULE=psiproject.settings.local
           fab run-web
 
       Alternatively:
 
           workon psi
+          export DJANGO_SETTINGS_MODULE=psiproject.settings.local
           python manage.py check
           python manage.py migrate
           python manage.py runserver 8080

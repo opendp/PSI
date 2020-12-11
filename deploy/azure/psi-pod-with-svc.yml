@@ -59,9 +59,10 @@ spec:
   # 2 of 3: web app container (django)
   # --------------------------------
   - name: psi-web
-    image: tworavens/psi-web:master
+    #image: tworavens/psi-web:master
+    imsge: tworavens/psi-web:2020-1211
     imagePullPolicy: Always
-    command: ["psi_start.sh"]
+    command: ["psi_start_azure.sh"]
     ports:
      # Main web port; nginx makes this available via port 80
      - containerPort: 8080
@@ -75,7 +76,7 @@ spec:
       - name: PSI_DATA_DIRECTORY_PATH
         value: "/psi_volume/data"
       - name: DJANGO_SETTINGS_MODULE
-        value: psiproject.settings.psi_gce_settings
+        value: psiproject.settings.psi_azure_settings
       - name: ROOK_SVC_URL
         value: http://0.0.0.0:8000/custom/
       - name: SECRET_KEY
