@@ -60,7 +60,7 @@ spec:
   # --------------------------------
   - name: psi-web
     #image: tworavens/psi-web:master
-    imsge: tworavens/psi-web:2020-1211
+    image: tworavens/psi-web:2020-1211
     imagePullPolicy: Always
     command: ["psi_start_azure.sh"]
     ports:
