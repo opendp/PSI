@@ -1,5 +1,5 @@
 # Install requirements from the PSI service
-Django==2.1.7
+Django==2.2.24
 requests==2.20.0
 
 # fabric
