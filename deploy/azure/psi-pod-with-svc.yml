@@ -19,7 +19,9 @@ spec:
   #
   # IP mapped to psiprivacy.org
   #
-  loadBalancerIP: 52.151.200.161
+  #loadBalancerIP: 52.151.200.161
+  # Created on 8.16.2021
+  loadBalancerIP: 52.249.185.246
 ---
 # ---------------------------
 # PSI prototype app - Kubernetes Pod File
