@@ -5,6 +5,7 @@ This is a repository for the frontend, backend, and cloud deployment of the PSI 
 - Reference: https://privacytools.seas.harvard.edu/project-description
 - System Paper: https://arxiv.org/abs/1609.04340
 - [Screenshots of the site may be seen below](#screenshots)
+  - <img alt="var2" width="120px" src="screenshots/screenshot-03.png" />
 
 To run locally:
 
