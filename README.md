@@ -4,6 +4,7 @@ This is a repository for the frontend, backend, and cloud deployment of the PSI 
 
 - Reference: https://privacytools.seas.harvard.edu/project-description
 - System Paper: https://arxiv.org/abs/1609.04340
+- [Screenshots of the site may be seen below](#screenshots)
 
 To run locally:
 
@@ -74,3 +75,18 @@ For any changes to his repository, please use the following workflow:
     - *If you are making a change that takes days/weeks, update your branch more frequently.
 5. [Create a pull request](https://help.github.com/articles/creating-a-pull-request/#creating-the-pull-request)
 6. Notify @tercer or @jackmurtagh of the pull request
+
+
+## Screenshots
+
+### Starting screen
+
+<img alt="opening screen" width="800px" src="screenshots/screenshot-01.png" />
+
+### Specifying a DP Statistic
+
+<img alt="var1" width="800px" src="screenshots/screenshot-02.png" />
+
+### Specifying a 2nd DP Statistic
+
+<img alt="var2" width="800px" src="screenshots/screenshot-03.png" />
